@@ -12,3 +12,50 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.add-new-icon {
+  transition: transform 1s;
+}
+
+.add-new-icon:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.bit-man-card {
+  transition: transform 1s;
+}
+
+.bit-man-card:hover {
+  transform: scale(1.1);
+  -webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 1);
+  -moz-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 1);
+  z-index: 1;
+}
+
+.card-header {
+  text-align: center;
+}
+
+textarea {
+  resize: none;
+}
+
+.podaci-wrapper {
+  border-bottom: 2px solid black;
+}
+
+.komunikacija-container{
+  border-left: 2px solid rgb(56, 56, 56);
+}
+
+.program-select{
+  border: 2px solid rgb(214, 214, 214);
+}
