@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap4-modal';
 import updateStudents from "../webhooks/updateStudents";
 import getAddNewStudentDropdowns from "../webhooks/getAddNewStudentDropdowns";
+import getKlaseiSertifikati from "../webhooks/getKlaseiSerifikati";
+import IosConstruct from 'react-ionicons/lib/IosConstruct';
 
 class StudentDetailsModal extends Component {
     constructor(props) {
@@ -10,10 +12,15 @@ class StudentDetailsModal extends Component {
             editMode: false,
             data: [],
             addNewStudentDropdowns: {},
+            studentPohadjaniProgrami: [],
+
+            dropdownPohadjaniProgrami: [],
+            showDropdownPohadjaniProgrami: false,
+            dropdownSertifikati: [],
         }
     }
 
-    datumRodjenjaHumanRead = (inputDate) => {
+    dateHumanRead = (inputDate) => {
         const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
         const date = new Date(inputDate)
         const dd = date.getDate();
@@ -29,6 +36,7 @@ class StudentDetailsModal extends Component {
             data: this.props.data
         })
     }
+
     depositToState = (event) => {
         const stateName = event.target.getAttribute("data-statename")
         this.setState({
@@ -47,9 +55,8 @@ class StudentDetailsModal extends Component {
     }
 
     okButton = () => {
-        if (this.state.editMode === false) {
-            this.props.closeStudentDetailsModal();
-        } else {
+        if (this.state.editMode === true ||
+            this.state.showStudentDetailsModal === true) {
             const data = this.state.data;
             updateStudents(data).then((response) => {
                 if (response.status === 200 && response.ok === true) {
@@ -58,6 +65,9 @@ class StudentDetailsModal extends Component {
                     alert(response)
                 }
             })
+        } else {
+            this.props.closeStudentDetailsModal();
+            this.closeAddProgramToStudent();
         }
     }
 
@@ -71,16 +81,53 @@ class StudentDetailsModal extends Component {
         })
     }
 
+    getAndSetKlaseiSertifikati = () => {
+        let dropdownPohadjaniProgrami = [];
+        getKlaseiSertifikati().then((response) => {
+            response.forEach(element => {
+                const datumZavrsetka = this.dateHumanRead(element.datumZavrsetka);
+                const klasa = `${element.naziv} - ${datumZavrsetka}`
+                dropdownPohadjaniProgrami.push(klasa)
+                this.setState({
+                    dropdownPohadjaniProgrami
+                })
+            });
+        })
+    }
+
+    openAddProgramToStudent = () => {
+        this.setState({
+            showDropdownPohadjaniProgrami: true
+        })
+    }
+
+    closeAddProgramToStudent = () => {
+        this.setState({
+            showDropdownPohadjaniProgrami: false
+        })
+    }
+    mapStateToDropdownOptions = (stateArray) => {
+        return stateArray.map((element) => {
+            return <option key={element} value={element}>{element}</option>
+        })
+    }
+
+    componentDidUpdated(prevProps, prevState){
+        this.setState({
+            data: this.props.data
+        })
+    }
 
     componentDidMount() {
         this.getAndSetNewStudentDropdowns();
+        this.getAndSetKlaseiSertifikati();
     };
 
 
     render() {
 
         return (
-            <Modal visible={this.props.visible} onClickBackdrop={this.closeStudentDetailsModal} fade={true} >
+            <Modal visible={this.props.visible} onClickBackdrop={this.closeStudentDetailsModal} fade={true} className="modal-container">
                 <div className="modal-header">
                     <h5 className="modal-title w-100 d-flex justify-content-between">
                         <div>
@@ -103,7 +150,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Matični broj:
-                            </span>
+                                </span>
                                 <span className="w-50">
                                     {this.state.editMode ? <input type="number" data-statename="maticniBroj" value={this.state.data.maticniBroj} onChange={this.depositToState} /> : this.props.data.maticniBroj}
                                 </span>
@@ -111,23 +158,23 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Datum rođenja:
-                            </span>
+                                </span>
                                 <span className="w-50">
-                                    {this.datumRodjenjaHumanRead(this.props.data.datumRodjenja)}
+                                    {this.dateHumanRead(this.props.data.datumRodjenja)}
                                 </span>
                             </div>
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Mesto:
-                            </span>
+                                </span>
                                 <span className="w-50">
-                                    {this.state.editMode ? <input data-statename="mesto" value={this.state.data.mesto} onChange={this.depositToState} /> : this.props.data.mesto}
+                                    {this.props.data.mesto}
                                 </span>
                             </div>
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Email adresa:
-                            </span>
+                                </span>
                                 <span className="w-50">
                                     {this.state.editMode ? <input data-statename="emailAdresa" value={this.state.data.emailAdresa} onChange={this.depositToState} /> : <a href={`mailto:${this.props.data.emailAdresa}`}>{this.props.data.emailAdresa}</a>}
                                 </span>
@@ -135,7 +182,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Broj telefona:
-                            </span>
+                                </span>
                                 <span className="w-50">
                                     {this.state.editMode ? <input type="tel" data-statename="brojTelefona" value={this.state.data.brojTelefona} onChange={this.depositToState} /> : <a href={`tel:${this.props.data.brojTelefona}`}>{this.props.data.brojTelefona}</a>}
                                 </span>
@@ -151,7 +198,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Linkedin:
-                            </span>
+                                </span>
                                 <span className="w-50">
                                     {this.state.editMode ? <input data-statename="linkedin" value={this.state.data.linkedin} onChange={this.depositToState} /> : <a href={this.props.data.linkedin} target="_blank">{this.props.data.linkedin}</a>}
                                 </span>
@@ -159,7 +206,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Facebook:
-                            </span>
+                                </span>
                                 <span className="w-50">
                                     {this.state.editMode ? <input data-statename="facebook" value={this.state.data.facebook} onChange={this.depositToState} /> : <a href={this.props.data.facebook} target="_blank">{this.props.data.facebook}</a>}
                                 </span>
@@ -167,7 +214,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Instagram:
-                            </span>
+                                </span>
                                 <span className="w-50">
                                     {this.state.editMode ? <input data-statename="instagram" value={this.state.data.instagram} onChange={this.depositToState} /> : <a href={this.props.data.instagram} target="_blank">{this.props.data.instagram}</a>}
                                 </span>
@@ -182,16 +229,27 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Pohađani programi:
-                        </span>
+                                </span>
                                 <span className="w-50">
                                     {/* mesto za programe */}
                                 </span>
+                                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddProgramToStudent} />
+                                {this.state.showDropdownPohadjaniProgrami &&
+                                    <div>
+                                        <select data-statename="pohadjaniProgrami" onChange={this.depositToState}>
+                                            <option>Izaberi program</option>
+                                            {this.mapStateToDropdownOptions(this.state.dropdownPohadjaniProgrami)}
+                                        </select>
+                                        <button type="button" className="btn btn-success" onClick={this.okButton}>
+                                            Dodaj
+                                    </button>
+                                    </div>}
                             </div>
 
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Sertifikati:
-                        </span>
+                                </span>
                                 <span className="w-50">
                                     {/* mesto za sertifikate */}
                                 </span>
@@ -200,7 +258,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Veštine:
-                        </span>
+                                </span>
                                 <span className="w-50">
                                     {/* mesto za skills */}
                                 </span>
@@ -209,7 +267,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Pozicije:
-                        </span>
+                                </span>
                                 <span className="w-50">
                                     {/* mesto za pozicije */}
                                 </span>
@@ -218,7 +276,7 @@ class StudentDetailsModal extends Component {
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
                                     Status:
-                        </span>
+                                </span>
                                 <span className="w-50">
                                     {/* dropdown trenutni status */}
                                 </span>
@@ -248,9 +306,6 @@ class StudentDetailsModal extends Component {
                     <button type="button" className="btn btn-success" onClick={this.okButton}>
                         {this.state.editMode ? "Sačuvaj izmene" : "OK"}
                     </button>
-                    {/* <button type="button" className="btn btn-success" onClick={this.okButton}>
-                        {this.state.editMode ? "Sačuvaj izmene" : "OK"}
-                    </button> */}
                 </div>
             </Modal>
         );

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MdPersonAdd from 'react-ionicons/lib/MdPersonAdd';
 import AddNewStudentModal from './AddNewStudentModal';
-import AddNewProgramModal from "./AddNewProgramModal";
+import AddNewClassModal from "./AddNewClassModal";
 import NewStudentCreatedSuccessfullyModal from "./NewStudentCreatedSuccessufullyModal";
 import StudentDetailsModal from "./StudentDetailsModal";
 import getStudents from "../webhooks/getStudents";
@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       addNewStudentModal: false,
-      addNewProgramModal: false,
+      addNewClassModal: false,
       newStudentCreatedSuccessfully: false,
       studentiAll: [],
       studentZaDetaljeModal: {},
@@ -32,15 +32,15 @@ class App extends Component {
     })
   }
 
-  openAddNewProgramModal = () => {
+  openAddNewClassModal = () => {
     this.setState({
-      addNewProgramModal: true,
+      addNewClassModal: true,
     })
   }
 
-  closeAddNewProgramModal = () => {
+  closeAddNewClassModal = () => {
     this.setState({
-      addNewProgramModal: false,
+      addNewClassModal: false,
     })
   }
 
@@ -102,11 +102,11 @@ class App extends Component {
     return (
       <div className="p-5">
         <MdPersonAdd onClick={this.openNewBitManModal} color="#0e3572" fontSize="2.4vw" className="add-new-icon" />
-        <button type="button" className="btn btn-primary ml-5" onClick={this.openAddNewProgramModal}>
-          Dodaj novi program ili kurs
+        <button type="button" className="btn btn-primary ml-5" onClick={this.openAddNewClassModal}>
+          Dodaj novu klasu polaznika
         </button>
         <AddNewStudentModal visible={this.state.addNewStudentModal} closeNewBitManModal={this.closeNewBitManModal} newStudentCreatedSuccessfullyModal={this.newStudentCreatedSuccessfullyModal} />
-        <AddNewProgramModal visible={this.state.addNewProgramModal} closeAddNewProgramModal={this.closeAddNewProgramModal}/>
+        <AddNewClassModal visible={this.state.addNewClassModal} closeAddNewClassModal={this.closeAddNewClassModal}/>
         <NewStudentCreatedSuccessfullyModal visible={this.state.newStudentCreatedSuccessfully} closeNewStudentCreatedSuccessufullyModal={this.closeNewStudentCreatedSuccessufullyModal} />
         <StudentDetailsModal data={this.state.studentZaDetaljeModal} visible={this.state.showStudentDetailsModal} closeStudentDetailsModal={this.closeStudentDetailsModal} />
 

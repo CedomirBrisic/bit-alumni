@@ -64,10 +64,6 @@ class AddNewStudentModal extends Component {
     }
 
 
-    componentDidMount() {
-        this.getAndSetNewStudentDropdowns();
-    };
-
     createNewStudent = () => {
         const data = {
             ime: this.state.ime,
@@ -157,6 +153,9 @@ class AddNewStudentModal extends Component {
             })
         })
     }
+    componentDidMount() {
+        this.getAndSetNewStudentDropdowns();
+    };
 
     render() {
         return (

@@ -52,10 +52,14 @@ textarea {
   border-bottom: 2px solid black;
 }
 
-.komunikacija-container{
+.komunikacija-container {
   border-left: 2px solid rgb(56, 56, 56);
 }
 
-.program-select{
+.program-select {
   border: 2px solid rgb(214, 214, 214);
+}
+
+.modal-dialog {
+  max-width: 960px;
 }
