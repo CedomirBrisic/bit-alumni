@@ -15,6 +15,17 @@ class AddNewClassModal extends Component {
         }
     }
 
+
+    humanReadDate = (inputDate) => {
+        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+        const date = new Date(inputDate)
+        const dd = date.getDate();
+        const mm = months[date.getMonth()];
+        const yy = date.getFullYear();
+
+        return `${dd}. ${mm} ${yy}.`
+    }
+
     setType = (event) => {
         const type = event.target.getAttribute("data-type");
         this.setState({
@@ -32,11 +43,12 @@ class AddNewClassModal extends Component {
         const naziv = this.state.type;
         let sertifikati = [];
         
+        const datumZavrsetkaToSend = this.humanReadDate(this.state.datumZavrsetka);
         (naziv === "Frontend Bootcamp" ? sertifikati=["Successfully attended", "Basic", "Advanced"] : sertifikati=["Successfully attended"])
 
         const data = {
             naziv: naziv,
-            datumZavrsetka : this.state.datumZavrsetka,
+            datumZavrsetka : datumZavrsetkaToSend,
             sertifikati: sertifikati
         }
 
@@ -71,15 +83,6 @@ class AddNewClassModal extends Component {
         })
     }
 
-    humanReadDate = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
-        const date = new Date(inputDate)
-        const dd = date.getDate();
-        const mm = months[date.getMonth()];
-        const yy = date.getFullYear();
-
-        return `${dd}. ${mm} ${yy}.`
-    }
 
     render() {
 
@@ -100,7 +103,6 @@ class AddNewClassModal extends Component {
                             onChange={this.setDatumZavrsetka}
                         />
                     </div>
-
                 </div>
                 <div className="modal-footer">
                     <div>{this.state.type &&

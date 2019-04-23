@@ -16,7 +16,8 @@ class App extends Component {
       newStudentCreatedSuccessfully: false,
       studentiAll: [],
       studentZaDetaljeModal: {},
-      showStudentDetailsModal: false
+      showStudentDetailsModal: false,
+      slectedStudentMaticniBroj: ""
     }
   }
 
@@ -66,6 +67,21 @@ class App extends Component {
   componentDidMount() {
     this.getStudentsFromStudenti()
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.studentiAll !== this.state.studentiAll && this.state.slectedStudentMaticniBroj) {
+    const maticniBroj =this.state.slectedStudentMaticniBroj
+    const studenti = this.state.studentiAll
+    const studentZaDetaljeModal = studenti.find((student) => {
+      return student.maticniBroj === maticniBroj
+    })
+      this.setState({
+        studentZaDetaljeModal
+      })
+    }
+  }
+
+
   openStudentDetailsModal = (event) => {
     const maticniBroj = event.target.getAttribute("data-maticnibroj")
     const studenti = this.state.studentiAll
@@ -74,7 +90,8 @@ class App extends Component {
     })
     this.setState({
       studentZaDetaljeModal,
-      showStudentDetailsModal: true
+      showStudentDetailsModal: true,
+      slectedStudentMaticniBroj: maticniBroj
     })
   }
 
@@ -88,7 +105,6 @@ class App extends Component {
 
   mapStudentiAll = () => {
     if (this.state.studentiAll) {
-
       return this.state.studentiAll.map((student) => {
         return <BitManCard key={student.maticniBroj} data={student} openStudentDetailsModal={this.openStudentDetailsModal} />
       })
@@ -106,9 +122,9 @@ class App extends Component {
           Dodaj novu klasu polaznika
         </button>
         <AddNewStudentModal visible={this.state.addNewStudentModal} closeNewBitManModal={this.closeNewBitManModal} newStudentCreatedSuccessfullyModal={this.newStudentCreatedSuccessfullyModal} />
-        <AddNewClassModal visible={this.state.addNewClassModal} closeAddNewClassModal={this.closeAddNewClassModal}/>
+        <AddNewClassModal visible={this.state.addNewClassModal} closeAddNewClassModal={this.closeAddNewClassModal} />
         <NewStudentCreatedSuccessfullyModal visible={this.state.newStudentCreatedSuccessfully} closeNewStudentCreatedSuccessufullyModal={this.closeNewStudentCreatedSuccessufullyModal} />
-        <StudentDetailsModal data={this.state.studentZaDetaljeModal} visible={this.state.showStudentDetailsModal} closeStudentDetailsModal={this.closeStudentDetailsModal} />
+        <StudentDetailsModal data={this.state.studentZaDetaljeModal} visible={this.state.showStudentDetailsModal} closeStudentDetailsModal={this.closeStudentDetailsModal} getStudentsFromStudenti={this.getStudentsFromStudenti} />
 
         <div className="bit-people-cars-container d-flex justify-content-around row mt-5">
           {this.mapStudentiAll()}
