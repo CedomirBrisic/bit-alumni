@@ -6,6 +6,7 @@ import NewStudentCreatedSuccessfullyModal from "./NewStudentCreatedSuccessufully
 import StudentDetailsModal from "./StudentDetailsModal";
 import getStudents from "../webhooks/getStudents";
 import BitManCard from "./BitManCard";
+import AddNewFirmModal from "./AddNewFirmModal"
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class App extends Component {
       studentiAll: [],
       studentZaDetaljeModal: {},
       showStudentDetailsModal: false,
-      slectedStudentMaticniBroj: ""
+      slectedStudentMaticniBroj: "",
+      showAddNewFirm: false,
     }
   }
 
@@ -113,6 +115,18 @@ class App extends Component {
     }
   }
 
+  openAddNewFirm = () => {
+    this.setState({
+      showAddNewFirm: true
+    })
+  }
+
+  closeAddNewFirm = () => {
+    this.setState({
+      showAddNewFirm: false
+    })
+  }
+
   render() {
 
     return (
@@ -121,8 +135,13 @@ class App extends Component {
         <button type="button" className="btn btn-primary ml-5" onClick={this.openAddNewClassModal}>
           Dodaj novu klasu polaznika
         </button>
+        <button type="button" className="btn btn-primary ml-5" onClick={this.openAddNewFirm}>
+          Dodaj novu kompaniju
+        </button>
         <AddNewStudentModal visible={this.state.addNewStudentModal} closeNewBitManModal={this.closeNewBitManModal} newStudentCreatedSuccessfullyModal={this.newStudentCreatedSuccessfullyModal} />
         <AddNewClassModal visible={this.state.addNewClassModal} closeAddNewClassModal={this.closeAddNewClassModal} />
+        <AddNewFirmModal visible={this.state.showAddNewFirm} closeAddNewFirm={this.closeAddNewFirm} />
+        
         <NewStudentCreatedSuccessfullyModal visible={this.state.newStudentCreatedSuccessfully} closeNewStudentCreatedSuccessufullyModal={this.closeNewStudentCreatedSuccessufullyModal} />
         <StudentDetailsModal data={this.state.studentZaDetaljeModal} visible={this.state.showStudentDetailsModal} closeStudentDetailsModal={this.closeStudentDetailsModal} getStudentsFromStudenti={this.getStudentsFromStudenti} />
 

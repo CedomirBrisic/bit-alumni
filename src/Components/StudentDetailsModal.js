@@ -8,6 +8,7 @@ import updateStudentSertifikat from "../webhooks/updateStudentSertifikat";
 import updateStudentStatus from "../webhooks/updateStudentStatus";
 import updateVestineAtStudent from "../webhooks/updateVestineAtStudent";
 import IosConstruct from 'react-ionicons/lib/IosConstruct';
+import StudentPozicije from "../Components/StudentPozicije"
 
 class StudentDetailsModal extends Component {
     constructor(props) {
@@ -285,6 +286,7 @@ class StudentDetailsModal extends Component {
         })
     }
 
+
     componentDidMount() {
         this.getAndSetNewStudentDropdowns();
         this.getAndSetKlaseiSertifikati();
@@ -451,16 +453,6 @@ class StudentDetailsModal extends Component {
                                             Dodaj
                                         </button>
                                     </div>}
-
-                            </div>
-
-                            <div className="student-detail-card-attribute d-flex">
-                                <span className="w-50">
-                                    Pozicije:
-                                </span>
-                                <span className="w-50">
-                                    {/* mesto za pozicije */}
-                                </span>
                             </div>
 
                             <div className="student-detail-card-attribute d-flex">
@@ -493,6 +485,10 @@ class StudentDetailsModal extends Component {
                             </span>
                         </div>
                     </div>
+
+
+                    {this.props.visible &&
+                    <StudentPozicije studentData={this.props.data} />}
 
 
                     {/* ----- KOMUNIKACIJA ----- */}
