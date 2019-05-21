@@ -44,6 +44,7 @@ class AddNewFirmModal extends Component {
             brojTelefona: "",
             website: "",
         })
+        this.props.closeAddNewFirm();
 
     }
 

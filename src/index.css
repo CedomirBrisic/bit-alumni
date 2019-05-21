@@ -63,3 +63,13 @@ textarea {
 .modal-dialog {
   max-width: 960px;
 }
+
+.filter-item {
+  background-color: green;
+  padding: 0.1vw 1vw;
+  color: #ffffff;
+}
+
+.form-check-label:hover {
+  cursor: pointer;
+}

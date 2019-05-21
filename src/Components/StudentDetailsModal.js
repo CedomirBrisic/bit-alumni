@@ -457,7 +457,7 @@ class StudentDetailsModal extends Component {
 
                             <div className="student-detail-card-attribute d-flex">
                                 <span className="w-50">
-                                    Status:
+                                    Trenutni status:
                                 </span>
                                 <span className="w-50">
                                     {this.props.data.status &&
@@ -467,7 +467,7 @@ class StudentDetailsModal extends Component {
                                 {this.state.showChangeStatus &&
                                     <div>
                                         <select data-statename="selectedStatus" onChange={this.depositDodatneInformacijeToState}>
-                                            <option>Izaberi Status</option>
+                                            <option>Izaberi trenutni Status</option>
                                             {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.statusi)}
                                         </select>
                                         <button type="button" className="btn btn-success" onClick={this.dodajStatus}>
@@ -488,12 +488,12 @@ class StudentDetailsModal extends Component {
 
 
                     {this.props.visible &&
-                    <StudentPozicije studentData={this.props.data} />}
+                    <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti}/>}
 
 
                     {/* ----- KOMUNIKACIJA ----- */}
                     <div className="komunikacija-container">
-                        komunikacija
+                        Komunikacija
                     </div>
                 </div>
 
