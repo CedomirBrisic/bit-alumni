@@ -7,10 +7,11 @@ import AddNewStudentModal from './AddNewStudentModal';
 import AddNewClassModal from "./AddNewClassModal";
 import NewStudentCreatedSuccessfullyModal from "./NewStudentCreatedSuccessufullyModal";
 import StudentDetailsModal from "./StudentDetailsModal";
+import StudentiByFirm from "./StudentiByFirma";
 import getStudents from "../webhooks/getStudents";
+import getFirms from "../webhooks/getFirms";
 import BitManCard from "./BitManCard";
 import AddNewFirmModal from "./AddNewFirmModal"
-import { platform } from 'os';
 
 class App extends Component {
   constructor(props) {
@@ -25,6 +26,11 @@ class App extends Component {
       showStudentDetailsModal: false,
       slectedStudentMaticniBroj: "",
       showAddNewFirm: false,
+      imeZaPretragu: "",
+      listStudenti: true,
+      listFirme: false,
+      firmeAll: [],
+      selectedFirmaForFilter: "",
     }
   }
 
@@ -72,8 +78,20 @@ class App extends Component {
       })
     })
   }
+  getAndSetFirms = () => {
+    const firme = [];
+    getFirms().then((response) => {
+      response.forEach(element => {
+        firme.push(element)
+      });
+      this.setState({
+        firmeAll: firme,
+      })
+    })
+  }
   componentDidMount() {
-    this.getStudentsFromStudenti()
+    this.getStudentsFromStudenti();
+    this.getAndSetFirms();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -108,7 +126,6 @@ class App extends Component {
       studentZaDetaljeModal: {},
       showStudentDetailsModal: false
     })
-    // this.getStudentsFromStudenti()
   }
 
   openAddNewFirm = () => {
@@ -124,13 +141,15 @@ class App extends Component {
   }
 
   mapStudentsForRender = () => {
-    if (this.state.studentiForRender == 0) {
-      return <h1>Nema studenata koji ispunjavaju zadate kriterijume</h1>
-    } else if (this.state.studentiForRender[0] !== undefined) {
+    if (this.state.studentiForRender[0] !== undefined) {
+      const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
       return this.state.studentiForRender.map((student) => {
-        return <BitManCard key={student.maticniBroj}
-          data={student}
-          openStudentDetailsModal={this.openStudentDetailsModal} />
+        const imeIprezime = `${student.ime.toLowerCase()} ${student.prezime.toLowerCase()}`;
+        if (imeIprezime.includes(imeZaPretragu)) {
+          return <BitManCard key={student.maticniBroj}
+            data={student}
+            openStudentDetailsModal={this.openStudentDetailsModal} />
+        }
       })
     }
   }
@@ -358,12 +377,37 @@ class App extends Component {
     }
 
 
+    //--- FILTER VESTINE ---//
 
-
-
-
-
-
+    if (filterVestinePropertyNames.length > 0) {
+      let studentiForRenderMezzanine = studentiForRender;
+      studentiForRender = [];
+      const filterVestine = [];
+      const propertiesValues = Object.values(filters.vestine);
+      const checkIfTrueValue = propertiesValues.indexOf(true);
+      if (checkIfTrueValue !== -1) {
+        filterVestinePropertyNames.forEach((propertyName) => {
+          if (filters.vestine[propertyName]) {
+            filterVestine.push(propertyName)
+          }
+        })
+        studentiForRenderMezzanine.forEach(student => {
+          let studentVestineCounter = 0;
+          if (student.vestine) {
+            for (let i = 0; i < filterVestine.length; i++) {
+              if (student.vestine.indexOf(filterVestine[i]) !== -1) {
+                studentVestineCounter++
+              }
+            }
+            if (studentVestineCounter == filterVestine.length) {
+              studentiForRender.push(student)
+            }
+          }
+        })
+      } else {
+        studentiForRender = studentiForRenderMezzanine;
+      }
+    }
 
     const studentiForRenderDuplicatesRemoved = [];
 
@@ -374,9 +418,56 @@ class App extends Component {
       }
     })
 
-
     this.setState({
       studentiForRender: studentiForRenderDuplicatesRemoved
+    })
+  }
+
+
+
+  //----- FIRME VIEW -----//
+
+  selectFirmaForFilter = (event) => {
+    const selectedFirmaNaziv = event.target.getAttribute("data-firma");
+    this.state.firmeAll.forEach((firma) => {
+      if (selectedFirmaNaziv == firma.nazivKompanije) {
+        this.setState({
+          selectedFirmaForFilter: firma
+        })
+
+      }
+    })
+  }
+
+  mapFirmeForSelect = () => {
+    if (!this.state.imeZaPretragu) {
+      return this.state.firmeAll.map((firma) => {
+        return <button type="button" className={`btn  col-3 ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-success" : "btn-secondary"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
+      })
+    } else {
+      const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
+      return this.state.firmeAll.map((firma) => {
+        const nazivFirme = firma.nazivKompanije.toLowerCase();
+        if (nazivFirme.includes(imeZaPretragu)) {
+          return <button type="button" className={`btn  col-3 ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-success" : "btn-secondary"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
+        }
+      })
+    }
+  }
+
+
+  setPretragaValue = (event) => {
+    this.setState({
+      imeZaPretragu: event.target.value,
+      selectedFirmaForFilter: ""
+    })
+  }
+
+  toggleView = () => {
+    this.setState({
+      listStudenti: !this.state.listStudenti,
+      listFirme: !this.state.listFirme,
+      imeZaPretragu: ""
     })
   }
 
@@ -394,7 +485,10 @@ class App extends Component {
         Dodaj novu klasu polaznika </button>
       <button type="button" className="btn btn-primary ml-5"
         onClick={this.openAddNewFirm} >
-        Dodaj novu kompaniju/firmu</button>
+        Dodaj novu kompaniju</button>
+      <button type="button" className="btn btn-primary ml-5"
+        onClick={this.toggleView} >
+        Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
 
       <AddNewStudentModal visible={this.state.addNewStudentModal}
         closeNewBitManModal={this.closeNewBitManModal}
@@ -405,9 +499,6 @@ class App extends Component {
 
       <AddNewFirmModal visible={this.state.showAddNewFirm}
         closeAddNewFirm={this.closeAddNewFirm} />
-
-      <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
-
       <NewStudentCreatedSuccessfullyModal visible={this.state.newStudentCreatedSuccessfully}
         closeNewStudentCreatedSuccessufullyModal={this.closeNewStudentCreatedSuccessufullyModal} />
       <StudentDetailsModal data={this.state.studentZaDetaljeModal}
@@ -415,9 +506,58 @@ class App extends Component {
         closeStudentDetailsModal={this.closeStudentDetailsModal}
         getStudentsFromStudenti={this.getStudentsFromStudenti} />
 
-      <div className="bit-people-cars-container d-flex justify-content-around row mt-5" > {this.mapStudentsForRender()}
-      </div>
 
+
+      {/* ----- STUDENTI VIEW ----- */}
+
+      {this.state.listStudenti &&
+        <div>
+          <input className="w-50" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+          <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
+
+          <div className="d-flex justify-content-around mt-5">
+            {!this.state.imeZaPretragu &&
+              <div className="d-flex flex-column align-items-center">
+                <div>Ukupan broj studenata:</div>
+                <div><b>{this.state.studentiForRender.length}</b></div>
+              </div>}
+          </div>
+          <div className="bit-people-cars-container d-flex justify-content-around row mt-5" > {this.mapStudentsForRender()}
+          </div>
+        </div>}
+
+
+      {/* ----- FIRME VIEW ----- */}
+      {this.state.listFirme &&
+        <div className="d-flex flex-column">
+          <input className="w-50" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+          <div className="btn-group row" role="group" aria-label="Basic example">
+            {this.mapFirmeForSelect()}
+          </div>
+
+          {this.state.selectedFirmaForFilter &&
+            <div className="mt-5 w-50">
+              <div className="d-flex justify-content-between">
+                <span>Naziv kompanije</span>
+                <span><b>{this.state.selectedFirmaForFilter.nazivKompanije}</b></span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span>website:</span>
+                <span><b><a href={`${this.state.selectedFirmaForFilter.website}`} target="_blank">{this.state.selectedFirmaForFilter.website}</a></b></span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span>Email:</span>
+                <span><b><a href={`mailto:${this.state.selectedFirmaForFilter.emailAdresa}`}>{this.state.selectedFirmaForFilter.emailAdresa}</a></b></span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span>Telefon:</span>
+                <span><b><a href={`tel:${this.state.selectedFirmaForFilter.brojTelefona}`}>{this.state.selectedFirmaForFilter.brojTelefona}</a></b></span>
+              </div>
+            </div>
+          }
+          <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter.nazivKompanije} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal}/>
+        </div>
+      }
     </div >);
   }
 }

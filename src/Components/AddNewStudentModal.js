@@ -81,32 +81,41 @@ class AddNewStudentModal extends Component {
             komentar: this.state.komentar
         }
 
-        postNewStudentAtStudenti(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
-                this.props.closeNewBitManModal()
-                this.props.newStudentCreatedSuccessfullyModal(true)
-            } else {
-                this.setState({
-                    createNewStudentFailed: true
-                })
-            }
-        })
-        this.setState({
-            ime: "",
-            prezime: "",
-            maticniBroj: "",
-            emailAdresa: "",
-            pol: "",
-            linkedin: "",
-            facebook: "",
-            instagram: "",
-            mesto: "",
-            obrazovanje: "",
-            datumRodjenja: "",
-            brojTelefona: "",
-            komentar: ""
-        })
+        if (this.state.maticniBroj.length == 13) {
+            postNewStudentAtStudenti(data).then((response) => {
+                if (response.status === 200 && response.ok === true) {
+                    this.props.closeNewBitManModal()
+                    this.props.newStudentCreatedSuccessfullyModal(true)
+                } else {
+                    this.setState({
+                        createNewStudentFailed: true
+                    })
+                }
+            })
+            this.setState({
+                ime: "",
+                prezime: "",
+                maticniBroj: "",
+                emailAdresa: "",
+                pol: "",
+                linkedin: "",
+                facebook: "",
+                instagram: "",
+                mesto: "",
+                obrazovanje: "",
+                datumRodjenja: "",
+                brojTelefona: "",
+                komentar: ""
+            })
+        } else {
+            alert(`Matični broj nije dobar
+            - treba da ima 13 cifara`)
+        }
+
     }
+
+
+
     closeNewBitManModal = () => {
         this.setState({
             addNewMestoEditor: false,

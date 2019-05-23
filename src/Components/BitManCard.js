@@ -10,6 +10,15 @@ const datumRodjenjaHumanRead = (inputDate) => {
     return `${dd}. ${mm} ${yy}.`
 }
 
+const showWorkPosition = (studentData) => {
+    if (studentData.status == "Na praksi" ||
+        studentData.status == "Zaposlen") {
+        if (studentData.status == studentData.pozicije[studentData.pozicije.length - 1].status) {
+            return studentData.pozicije[studentData.pozicije.length - 1].firma
+        }
+    }
+}
+
 
 const BitManCard = (props) => {
 
@@ -18,12 +27,13 @@ const BitManCard = (props) => {
             <div className="card-header d-flex p-0">
                 {props.data.pol === "alumnus" ? <img src={require('../images/bitMan.jpg')} alt="bit-man" className="img-fluid w-50 h-100" /> : <img src={require('../images/bitWoman.jpg')} alt="bit-man" className="img-fluid w-50 h-100" />}
                 <div className="d-flex flex-column justify-content-center align-items-center w-100">
-                    {/* <div>
-                        {props.data.program.name}
+                    <div>
+                        {props.data.status}
                     </div>
                     <div>
-                        {props.data.program.format}
-                    </div> */}
+                        <b>{showWorkPosition(props.data)}</b>
+
+                    </div>
                 </div>
             </div>
             <div className="card-body p-0 mt-3">

@@ -12,8 +12,9 @@ class StudentPozicije extends Component {
             firmeDropdown: [],
             allFirmeiKompanije: {},
             selectedFirma: "",
+            selectedStatus: "",
             pocetak: "",
-            svrsetak: "",
+            // svrsetak: "",
             pozicijeToSend: []
         }
     }
@@ -29,7 +30,7 @@ class StudentPozicije extends Component {
             
             return `${dd}. ${mm} ${yy}.`
         } else {
-            return "Nismo sigurni..."
+            return "Nemamo podatak"
         }
     }
 
@@ -46,8 +47,9 @@ class StudentPozicije extends Component {
         let pozicijeToSend = [];
         const newPozicija = {
             firma: this.state.selectedFirma,
+            status: this.state.selectedStatus,
             pocetak: this.state.pocetak,
-            svrsetak: this.state.svrsetak
+            // svrsetak: this.state.svrsetak
         }
         if (this.props.studentData.pozicije) {
             pozicijeToSend = this.props.studentData.pozicije;
@@ -114,7 +116,11 @@ class StudentPozicije extends Component {
                             <b>{pozicija.firma}</b>
                         </div>
                         <div>
-                            Od - {this.dateHumanRead(pozicija.pocetak)}<br />Do - {this.dateHumanRead(pozicija.svrsetak)}
+                            <i>{pozicija.status}</i>
+                        </div>
+                        <div>
+                            Od - {this.dateHumanRead(pozicija.pocetak)}<br />
+                            {/* Do - {this.dateHumanRead(pozicija.svrsetak)} */}
                         </div>
                     </div>
                 return output
@@ -122,17 +128,17 @@ class StudentPozicije extends Component {
         }
     }
 
-
-
-
-
-
-
     depositSelectedFirma = (event) => {
         this.setState({
             selectedFirma: event.target.value
         })
     }
+    depositSelectedStatus = (event) => {
+        this.setState({
+            selectedStatus: event.target.value
+        })
+    }
+    
 
     setPocetak = (date) => {
         this.setState({
@@ -140,11 +146,11 @@ class StudentPozicije extends Component {
         })
     }
 
-    setSvrsetak = (date) => {
-        this.setState({
-            svrsetak: date
-        })
-    }
+    // setSvrsetak = (date) => {
+    //     this.setState({
+    //         svrsetak: date
+    //     })
+    // }
 
     componentDidMount() {
         this.getAndSetFirms()
@@ -162,16 +168,21 @@ class StudentPozicije extends Component {
                             <option>Izaberi firmu</option>
                             {this.mapStateToDropdownOptions(this.state.firmeDropdown)}
                         </select>
+                        <select data-statename="selectedStatus" onChange={this.depositSelectedStatus}>
+                            <option>Izaberi status</option>
+                            <option key="naPraksi" value="Na praksi">Na praksi</option>
+                            <option key="zaposlen" value="Zaposlen">Zaposlen</option>
+                        </select>
                         <div className="mt-3">Počevši od:</div>
                         <DatePicker calendarIcon={null}
                             value={this.state.pocetak}
                             onChange={this.setPocetak}
                         />
-                        <div className="mt-3">Pa sve do:</div>
+                        {/* <div className="mt-3">Pa sve do:</div>
                         <DatePicker calendarIcon={null}
                             value={this.state.svrsetak}
                             onChange={this.setSvrsetak}
-                        />
+                        /> */}
                         <button type="button" className="btn btn-success" onClick={this.dodajPoziciju}>
                             Dodaj
                         </button>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap4-modal';
+import Text from "react-format-text";
 import updateStudents from "../webhooks/updateStudents";
 import getAddNewStudentDropdowns from "../webhooks/getAddNewStudentDropdowns";
 import getKlaseiSertifikati from "../webhooks/getKlaseiSerifikati";
@@ -8,7 +9,8 @@ import updateStudentSertifikat from "../webhooks/updateStudentSertifikat";
 import updateStudentStatus from "../webhooks/updateStudentStatus";
 import updateVestineAtStudent from "../webhooks/updateVestineAtStudent";
 import IosConstruct from 'react-ionicons/lib/IosConstruct';
-import StudentPozicije from "../Components/StudentPozicije"
+import StudentPozicije from "../Components/StudentPozicije";
+import Komunikacija from "../Components/Komunikacija"
 
 class StudentDetailsModal extends Component {
     constructor(props) {
@@ -84,6 +86,7 @@ class StudentDetailsModal extends Component {
             updateStudents(data).then((response) => {
                 if (response.status === 200 && response.ok === true) {
                     this.closeStudentDetailsModal();
+                    this.props.getStudentsFromStudenti();
                 } else {
                     alert(response)
                 }
@@ -388,7 +391,18 @@ class StudentDetailsModal extends Component {
                                     {this.state.editMode ? <input data-statename="instagram" value={this.state.data.instagram} onChange={this.depositToState} /> : <a href={this.props.data.instagram} target="_blank">{this.props.data.instagram}</a>}
                                 </span>
                             </div>
+                            <div className="student-detail-card-attribute d-flex">
+                                <span className="w-50">
+                                    Komentar:
+                            </span>
+                                <span className="w-50">
+                                    {this.state.editMode ? <textarea placeholder="Komentar" rows="6" data-statename="komentar" value={this.state.data.komentar} onChange={this.depositToState}> </textarea> : <Text>{this.props.data.komentar}</Text>}
+                                </span>
+                            </div>
                         </div>
+
+
+
 
 
                         {/* ----- DODATNE INFORMACIJE ----- */}
@@ -476,24 +490,16 @@ class StudentDetailsModal extends Component {
                                     </div>}
                             </div>
                         </div>
-                        <div className="student-detail-card-attribute d-flex">
-                            <span className="w-50">
-                                Komentar:
-                            </span>
-                            <span className="w-50">
-                                {this.state.editMode ? <textarea placeholder="Komentar" rows="6" data-statename="komentar" value={this.state.data.komentar} onChange={this.depositToState}> </textarea> : this.props.data.komentar}
-                            </span>
-                        </div>
                     </div>
 
 
                     {this.props.visible &&
-                    <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti}/>}
+                        <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />}
 
 
                     {/* ----- KOMUNIKACIJA ----- */}
                     <div className="komunikacija-container">
-                        Komunikacija
+                        <Komunikacija komunikacijaData={this.props.data.komunikacija} maticniBroj={this.props.data.maticniBroj} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
                     </div>
                 </div>
 
