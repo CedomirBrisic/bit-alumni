@@ -6,7 +6,13 @@ class StudentiByFirm extends Component {
         super(props);
         this.state = {
             zaposleni: [],
-            naPraksi: []
+            naPraksi: [],
+
+            selectedFirmTrenutnoZaposleni: 0,
+            selectedFirmTrenutnoNaPraksi: 0,
+            selectedFirmIkadaZaposlenih: 0,
+            selectedFirmIkadaNaPraksi: 0,
+            zaposliloSePoslePrakse: 0,
         }
 
     }
@@ -14,16 +20,23 @@ class StudentiByFirm extends Component {
     filterStudentsForRender = () => {
         const zaposleni = [];
         const naPraksi = [];
-        if (this.props.studentiAll !== undefined && this.props.selectedFirmaForFilter !== undefined) {
+        let selectedFirmTrenutnoZaposleni = 0;
+        let selectedFirmTrenutnoNaPraksi = 0;
+        let selectedFirmIkadaZaposlenih = 0;
+        let selectedFirmIkadaNaPraksi = 0;
+        let zaposliloSePoslePrakse = 0;
+
+        if (this.props.studentiAll !== undefined && this.props.selectedFirmaForFilter.nazivKompanije !== undefined) {
             this.props.studentiAll.forEach((student) => {
                 student.pozicije.forEach((pozicija, index) => {
-                    if (pozicija.firma == this.props.selectedFirmaForFilter) {
+                    if (pozicija.firma == this.props.selectedFirmaForFilter.nazivKompanije) {
                         if (pozicija.status == "Zaposlen") {
                             if (index == student.pozicije.length - 1) {
                                 student = {
                                     ...student,
                                     aktivnaPozicija: true,
                                 }
+                                selectedFirmTrenutnoZaposleni++
                             }
                             zaposleni.push(student)
                         } else if (pozicija.status == "Na praksi") {
@@ -32,6 +45,7 @@ class StudentiByFirm extends Component {
                                     ...student,
                                     aktivnaPozicija: true,
                                 }
+                                selectedFirmTrenutnoNaPraksi++
                             }
                             naPraksi.push(student)
                         }
@@ -57,7 +71,7 @@ class StudentiByFirm extends Component {
             const indxmtbr = zaposleniMaticniBrojevi.indexOf(student.maticniBroj)
             if (indx == -1 && indxmtbr == -1) {
                 naPraksiRemovedDuplicates.push(student)
-            } else if (indxmtbr !== -1){
+            } else if (indxmtbr !== -1) {
                 naPosluSaPrakseMaticniBrojevi.push(student.maticniBroj)
             }
         })
@@ -65,8 +79,8 @@ class StudentiByFirm extends Component {
         const zaposleniRemovedDuplicates2 = [];
         zaposleniRemovedDuplicates.forEach((student) => {
             const indx = naPosluSaPrakseMaticniBrojevi.indexOf(student.maticniBroj);
-            if (indx !== -1){
-                student ={
+            if (indx !== -1) {
+                student = {
                     ...student,
                     saPrakseNaPosao: true
                 }
@@ -74,29 +88,144 @@ class StudentiByFirm extends Component {
             zaposleniRemovedDuplicates2.push(student)
         })
 
+        selectedFirmIkadaZaposlenih = zaposleniRemovedDuplicates2.length;
+        selectedFirmIkadaNaPraksi = naPraksiRemovedDuplicates.length + naPosluSaPrakseMaticniBrojevi.length;
+        zaposliloSePoslePrakse = naPosluSaPrakseMaticniBrojevi.length
 
         this.setState({
             zaposleni: zaposleniRemovedDuplicates2,
-            naPraksi: naPraksiRemovedDuplicates
+            naPraksi: naPraksiRemovedDuplicates,
+            selectedFirmTrenutnoZaposleni,
+            selectedFirmTrenutnoNaPraksi,
+            selectedFirmIkadaZaposlenih,
+            selectedFirmIkadaNaPraksi,
+            zaposliloSePoslePrakse
         })
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.selectedFirmaForFilter !== this.props.selectedFirmaForFilter) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.selectedFirmaForFilter.nazivKompanije !== this.props.selectedFirmaForFilter.nazivKompanije) {
             this.filterStudentsForRender()
         }
+    }
+    componentDidMount() {
+        this.filterStudentsForRender()
+    }
+
+    mapZaposleni = () => {
+        const zaposleniForRender = []
+        this.state.zaposleni.forEach((student) => {
+            if (student.aktivnaPozicija) {
+                zaposleniForRender.unshift(student)
+            } else {
+                zaposleniForRender.push(student)
+            }
+        })
+        return zaposleniForRender.map((student) => {
+            return <BitManCard key={student.maticniBroj}
+                data={student}
+                openStudentDetailsModal={this.props.openStudentDetailsModal} />
+        })
+    }
+
+    mapNaPraksi = () => {
+        const naPraksiForRender = []
+        this.state.naPraksi.forEach((student) => {
+            if (student.aktivnaPozicija) {
+                naPraksiForRender.unshift(student)
+            } else {
+                naPraksiForRender.push(student)
+            }
+        })
+        return naPraksiForRender.map((student) => {
+            return <BitManCard key={student.maticniBroj}
+                data={student}
+                openStudentDetailsModal={this.props.openStudentDetailsModal} />
+        })
     }
 
 
     render() {
         return (
-            `Hello from the other side...`
+            <div>
+                <div className="d-flex">
+                    <div className="mt-5 mr-5 w-25">
+                        <div className="d-flex justify-content-between">
+                            <span>Naziv kompanije</span>
+                            <span><b>{this.props.selectedFirmaForFilter.nazivKompanije}</b></span>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                            <span>website:</span>
+                            <span><b><a href={`${this.props.selectedFirmaForFilter.website}`} target="_blank">{this.props.selectedFirmaForFilter.website}</a></b></span>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                            <span>Email:</span>
+                            <span><b><a href={`mailto:${this.props.selectedFirmaForFilter.emailAdresa}`}>{this.props.selectedFirmaForFilter.emailAdresa}</a></b></span>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                            <span>Telefon:</span>
+                            <span><b><a href={`tel:${this.props.selectedFirmaForFilter.brojTelefona}`}>{this.props.selectedFirmaForFilter.brojTelefona}</a></b></span>
+                        </div>
+                    </div>
+
+                    <div className="mt-5 ml-5 w-50 d-flex">
+                        <div className="w-50">
+                            <div className="d-flex justify-content-between">
+                                <span>Trenutno na praksi:</span>
+                                <span><b>{this.state.selectedFirmTrenutnoNaPraksi}</b></span>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                <span>Trenutno radi:</span>
+                                <span><b>{this.state.selectedFirmTrenutnoZaposleni}</b></span>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                <span>Zaposlilo se posle prakse:</span>
+                                <span><b>{this.state.zaposliloSePoslePrakse}</b></span>
+                            </div>
+                        </div>
+                        <div className="w-50 ml-5">
+                            <div className="d-flex justify-content-between">
+                                <span>Bilo na praksi ili je sada:</span>
+                                <span><b>{this.state.selectedFirmIkadaNaPraksi}</b></span>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                <span>Radilo je ili radi:</span>
+                                <span><b>{this.state.selectedFirmIkadaZaposlenih}</b></span>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                <span>Ukupno studenata:</span>
+                                <span><b>{this.state.zaposleni.length + this.state.naPraksi.length}</b></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div className="d-flex flex-column">
+
+                    {this.state.zaposleni.length > 0 &&
+                        <div>
+                            <h4>Zaposleni:</h4>
+                            <div className="bit-people-cars-container d-flex justify-content-around row mt-5">
+                                {this.mapZaposleni()}
+                            </div>
+                        </div>
+                    }
+
+                    {this.state.naPraksi.length > 0 &&
+                        <div>
+                            <h4>Na praksi:</h4>
+                            <div className="bit-people-cars-container d-flex justify-content-around row mt-5">
+                                {this.mapNaPraksi()}
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         )
     }
 };
 
 export default StudentiByFirm;
-
-// return <BitManCard key={student.maticniBroj}
-// data={student}
-// openStudentDetailsModal={this.openStudentDetailsModal} />

@@ -107,8 +107,6 @@ class Komunikacija extends Component {
                     </div>
                 }
                 <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.toggleChangeKomunikacijaStatus} />
-                {/* <div>{this.props.komunikacijaData}</div>
-                <div>{this.props.maticniBroj}</div> */}
             </div>
         )
     }

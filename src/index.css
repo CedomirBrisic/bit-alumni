@@ -1,3 +1,9 @@
+*{
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -28,7 +34,8 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.bit-man-card {
+.bit-man-card,
+.student-details-button {
   transition: transform 1s;
 }
 
@@ -40,8 +47,35 @@ input[type=number]::-webkit-outer-spin-button {
   z-index: 1;
 }
 
+.bit-man-card:hover .worker-helmet,
+.bit-man-card:hover .award-ribbon{
+  animation: hidding 1s forwards;
+}
+
+.bit-man-card:hover .student-details-button {
+  transform: scale(1.1);
+}
+
+@keyframes hidding {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes showing {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .card-header {
   text-align: center;
+  position: relative;
 }
 
 textarea {
@@ -61,7 +95,10 @@ textarea {
 }
 
 .modal-dialog {
-  max-width: 960px;
+  max-width: 80vw;
+  -webkit-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 1);
+  -moz-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 1);
 }
 
 .filter-item {
@@ -72,4 +109,23 @@ textarea {
 
 .form-check-label:hover {
   cursor: pointer;
+}
+
+
+.worker-helmet {
+  position: absolute;
+  animation: showing 1s forwards;
+}
+
+
+.award-ribbon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  animation: showing 1s forwards;
+}
+
+.search-bar{
+  width: 24vw;
+  margin: 3vw auto;
 }

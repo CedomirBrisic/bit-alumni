@@ -486,7 +486,7 @@ class App extends Component {
       <button type="button" className="btn btn-primary ml-5"
         onClick={this.openAddNewFirm} >
         Dodaj novu kompaniju</button>
-      <button type="button" className="btn btn-primary ml-5"
+      <button type="button" className="btn btn-primary float-right ml-5"
         onClick={this.toggleView} >
         Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
 
@@ -512,7 +512,7 @@ class App extends Component {
 
       {this.state.listStudenti &&
         <div>
-          <input className="w-50" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+          <input className="search-bar" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
           <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
 
           <div className="d-flex justify-content-around mt-5">
@@ -530,32 +530,14 @@ class App extends Component {
       {/* ----- FIRME VIEW ----- */}
       {this.state.listFirme &&
         <div className="d-flex flex-column">
-          <input className="w-50" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+          <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
           <div className="btn-group row" role="group" aria-label="Basic example">
             {this.mapFirmeForSelect()}
           </div>
 
           {this.state.selectedFirmaForFilter &&
-            <div className="mt-5 w-50">
-              <div className="d-flex justify-content-between">
-                <span>Naziv kompanije</span>
-                <span><b>{this.state.selectedFirmaForFilter.nazivKompanije}</b></span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <span>website:</span>
-                <span><b><a href={`${this.state.selectedFirmaForFilter.website}`} target="_blank">{this.state.selectedFirmaForFilter.website}</a></b></span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <span>Email:</span>
-                <span><b><a href={`mailto:${this.state.selectedFirmaForFilter.emailAdresa}`}>{this.state.selectedFirmaForFilter.emailAdresa}</a></b></span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <span>Telefon:</span>
-                <span><b><a href={`tel:${this.state.selectedFirmaForFilter.brojTelefona}`}>{this.state.selectedFirmaForFilter.brojTelefona}</a></b></span>
-              </div>
-            </div>
+          <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal}/>
           }
-          <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter.nazivKompanije} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal}/>
         </div>
       }
     </div >);

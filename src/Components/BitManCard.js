@@ -21,18 +21,18 @@ const showWorkPosition = (studentData) => {
 
 
 const BitManCard = (props) => {
-
     return (
         <div className={`bit-man-card col-2 card text-white p-3 mb-5 ${props.data.pol === "alumnus" ? "bg-dark" : "bg-primary"}`}>
             <div className="card-header d-flex p-0">
+                {props.data.aktivnaPozicija ? <img src={require('../images/safety-helmet-150913.svg')} alt="working" className="img-fluid w-25 h-50 worker-helmet" /> : null}
                 {props.data.pol === "alumnus" ? <img src={require('../images/bitMan.jpg')} alt="bit-man" className="img-fluid w-50 h-100" /> : <img src={require('../images/bitWoman.jpg')} alt="bit-man" className="img-fluid w-50 h-100" />}
+                {props.data.saPrakseNaPosao ? <img src={require('../images/award-155595.svg')} alt="ribbon" className="img-fluid w-25 h-50 award-ribbon" /> : null}
                 <div className="d-flex flex-column justify-content-center align-items-center w-100">
                     <div>
                         {props.data.status}
                     </div>
                     <div>
                         <b>{showWorkPosition(props.data)}</b>
-
                     </div>
                 </div>
             </div>
@@ -44,8 +44,9 @@ const BitManCard = (props) => {
                 <p className="card-text">{props.data.obrazovanje}</p>
                 <p className="card-text">{datumRodjenjaHumanRead(props.data.datumRodjenja)}</p>
             </div>
-            <div className="modal-footer ">
-                <button data-maticnibroj={props.data.maticniBroj} onClick={props.openStudentDetailsModal} type="button" className={`btn ${props.data.pol === "alumnus" ? "btn-primary" : "btn-light"}`}>
+            <div className="modal-footer w-100 pl-0">
+               
+                <button data-maticnibroj={props.data.maticniBroj} onClick={props.openStudentDetailsModal} type="button" className={`btn student-details-button ${props.data.pol === "alumnus" ? "btn-primary" : "btn-light"}`}>
                     Detaljnije
               </button>
             </div>
