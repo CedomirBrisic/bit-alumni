@@ -2,6 +2,7 @@ import React, {
   Component
 } from 'react';
 import MdPersonAdd from 'react-ionicons/lib/MdPersonAdd';
+import IosPeopleOutline from 'react-ionicons/lib/IosPeopleOutline';
 import Filters from "../Components/Filters";
 import AddNewStudentModal from './AddNewStudentModal';
 import AddNewClassModal from "./AddNewClassModal";
@@ -27,8 +28,8 @@ class App extends Component {
       slectedStudentMaticniBroj: "",
       showAddNewFirm: false,
       imeZaPretragu: "",
-      listStudenti: true,
-      listFirme: false,
+      listStudenti: false,
+      listFirme: true,
       firmeAll: [],
       selectedFirmaForFilter: "",
     }
@@ -79,16 +80,31 @@ class App extends Component {
     })
   }
   getAndSetFirms = () => {
-    const firme = [];
     getFirms().then((response) => {
-      response.forEach(element => {
-        firme.push(element)
-      });
+      const firmeSortedByName = this.orderFirmsByAlphabet(response);
       this.setState({
-        firmeAll: firme,
+        firmeAll: firmeSortedByName,
       })
     })
   }
+
+  orderFirmsByAlphabet = (firme) => {
+    let responseSortedByName = firme;
+      responseSortedByName.sort(function (a, b) {
+        let firmaA = a.nazivKompanije.toLowerCase();
+        let firmaB = b.nazivKompanije.toLowerCase();
+        if (firmaA < firmaB) return -1;
+        if (firmaA > firmaB) return 1;
+        return 0
+    })
+    return responseSortedByName
+  }
+
+  orderFirmsByNumberOfStudents = () => {
+
+  }
+
+
   componentDidMount() {
     this.getStudentsFromStudenti();
     this.getAndSetFirms();
@@ -442,14 +458,14 @@ class App extends Component {
   mapFirmeForSelect = () => {
     if (!this.state.imeZaPretragu) {
       return this.state.firmeAll.map((firma) => {
-        return <button type="button" className={`btn  col-3 ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-success" : "btn-secondary"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
+        return <button type="button" className={`btn firma-filter-button ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
       })
     } else {
       const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
       return this.state.firmeAll.map((firma) => {
         const nazivFirme = firma.nazivKompanije.toLowerCase();
         if (nazivFirme.includes(imeZaPretragu)) {
-          return <button type="button" className={`btn  col-3 ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-success" : "btn-secondary"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
+          return <button type="button" className={`btn firma-filter-butto ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
         }
       })
     }
@@ -529,18 +545,25 @@ class App extends Component {
 
       {/* ----- FIRME VIEW ----- */}
       {this.state.listFirme &&
-        <div className="d-flex flex-column">
-          <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
-          <div className="btn-group row" role="group" aria-label="Basic example">
-            {this.mapFirmeForSelect()}
+        <div>
+          <div className="firm-filters-container d-flex flex-column">
+            <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+            <div className="d-flex justify-content-around">
+              <div className="btn btn-light">A-Z</div>
+              <div className="btn btn-light"><IosPeopleOutline fontSize="2.4vw" /></div>
+            </div>
+            <div className="btn-group d-flex flex-column" role="group" aria-label="Basic example">
+              {this.mapFirmeForSelect()}
+            </div>
           </div>
-
           {this.state.selectedFirmaForFilter &&
-          <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal}/>
+            <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} />
           }
         </div>
       }
-    </div >);
+    </div >
+
+    );
   }
 }
 

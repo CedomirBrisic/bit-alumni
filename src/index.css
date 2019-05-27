@@ -1,7 +1,7 @@
-*{
-box-sizing: border-box;
-margin: 0;
-padding: 0;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -48,7 +48,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .bit-man-card:hover .worker-helmet,
-.bit-man-card:hover .award-ribbon{
+.bit-man-card:hover .award-ribbon {
   animation: hidding 1s forwards;
 }
 
@@ -60,14 +60,17 @@ input[type=number]::-webkit-outer-spin-button {
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
   }
 }
+
 @keyframes showing {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -125,7 +128,19 @@ textarea {
   animation: showing 1s forwards;
 }
 
-.search-bar{
+.search-bar {
   width: 24vw;
-  margin: 3vw auto;
+  margin-top: 2.4vw;
+  margin-bottom: 2.4vw;
 }
+
+.firma-filter-button {
+  width: 100%;
+}
+
+.firm-filters-container {
+  position: absolute;
+  z-index: 1;
+}
+
+.firma-details-container {}

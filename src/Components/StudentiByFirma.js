@@ -124,7 +124,8 @@ class StudentiByFirm extends Component {
         return zaposleniForRender.map((student) => {
             return <BitManCard key={student.maticniBroj}
                 data={student}
-                openStudentDetailsModal={this.props.openStudentDetailsModal} />
+                openStudentDetailsModal={this.props.openStudentDetailsModal}
+                zaposlen={true} />
         })
     }
 
@@ -140,7 +141,8 @@ class StudentiByFirm extends Component {
         return naPraksiForRender.map((student) => {
             return <BitManCard key={student.maticniBroj}
                 data={student}
-                openStudentDetailsModal={this.props.openStudentDetailsModal} />
+                openStudentDetailsModal={this.props.openStudentDetailsModal}
+                naPraksi={true} />
         })
     }
 
@@ -148,8 +150,8 @@ class StudentiByFirm extends Component {
     render() {
         return (
             <div>
-                <div className="d-flex">
-                    <div className="mt-5 mr-5 w-25">
+                <div className="d-flex firma-details-container justify-content-end">
+                    <div className="mt-5 w-25">
                         <div className="d-flex justify-content-between">
                             <span>Naziv kompanije</span>
                             <span><b>{this.props.selectedFirmaForFilter.nazivKompanije}</b></span>
@@ -168,60 +170,55 @@ class StudentiByFirm extends Component {
                         </div>
                     </div>
 
-                    <div className="mt-5 ml-5 w-50 d-flex">
-                        <div className="w-50">
+                    <div className="mt-5 ml-5 w-25 d-flex">
+                        <div className="w-100">
+                            <div><b>Trenutno stanje:</b></div>
                             <div className="d-flex justify-content-between">
-                                <span>Trenutno na praksi:</span>
+                                <span>Praktikanata:</span>
                                 <span><b>{this.state.selectedFirmTrenutnoNaPraksi}</b></span>
                             </div>
                             <div className="d-flex justify-content-between">
-                                <span>Trenutno radi:</span>
+                                <span>Zaposlenih:</span>
                                 <span><b>{this.state.selectedFirmTrenutnoZaposleni}</b></span>
                             </div>
+                            <div className="d-flex justify-content-between">
+                                <span><b>Trenutno u kompaniji:</b></span>
+                                <span><b>{this.state.selectedFirmTrenutnoNaPraksi + this.state.selectedFirmTrenutnoZaposleni}</b></span>
+                            </div>
+                        </div>
+
+                        {/* <div className="w-50 ml-5">
+                        <div><b>Ukupno stanje:</b></div>
                             <div className="d-flex justify-content-between">
                                 <span>Zaposlilo se posle prakse:</span>
                                 <span><b>{this.state.zaposliloSePoslePrakse}</b></span>
                             </div>
-                        </div>
-                        <div className="w-50 ml-5">
                             <div className="d-flex justify-content-between">
-                                <span>Bilo na praksi ili je sada:</span>
+                                <span>Praktikanata:</span>
                                 <span><b>{this.state.selectedFirmIkadaNaPraksi}</b></span>
                             </div>
                             <div className="d-flex justify-content-between">
-                                <span>Radilo je ili radi:</span>
+                                <span>Zaposlenih:</span>
                                 <span><b>{this.state.selectedFirmIkadaZaposlenih}</b></span>
                             </div>
                             <div className="d-flex justify-content-between">
                                 <span>Ukupno studenata:</span>
                                 <span><b>{this.state.zaposleni.length + this.state.naPraksi.length}</b></span>
                             </div>
-
-                        </div>
+                        </div> */}
                     </div>
                 </div>
-
-
-
-                <div className="d-flex flex-column">
-
-                    {this.state.zaposleni.length > 0 &&
-                        <div>
-                            <h4>Zaposleni:</h4>
-                            <div className="bit-people-cars-container d-flex justify-content-around row mt-5">
-                                {this.mapZaposleni()}
-                            </div>
-                        </div>
-                    }
-
-                    {this.state.naPraksi.length > 0 &&
-                        <div>
-                            <h4>Na praksi:</h4>
-                            <div className="bit-people-cars-container d-flex justify-content-around row mt-5">
-                                {this.mapNaPraksi()}
-                            </div>
-                        </div>
-                    }
+                <div>
+                    {console.log(this.state.naPraksi.length, this.state.naPraksi.length > 0,  this.state.zaposleni.length,  this.state.zaposleni.length > 0)}
+                    {(this.state.naPraksi.length > 0 || this.state.zaposleni.length > 0) &&
+                        <div className="d-flex flex-column align-items-center mt-5">
+                            <div>Ukupan broj studenata:</div>
+                            <div><b>{this.state.zaposleni.length + this.state.naPraksi.length}</b></div>
+                        </div>}
+                    <div className="bit-people-cars-container d-flex justify-content-around row mt-5">
+                        {this.mapZaposleni()}
+                        {this.mapNaPraksi()}
+                    </div>
                 </div>
             </div>
         )

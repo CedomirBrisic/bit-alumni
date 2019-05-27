@@ -19,14 +19,30 @@ const showWorkPosition = (studentData) => {
     }
 }
 
+const calculateCardColor = (props) => {
+    if (props.zaposlen){
+        return "bg-dark text-light"
+    } else if (props.naPraksi){
+        return "bg-primary text-light"
+    } else {
+        return "bg-white text-dark"
+    }
+}
+
+const calculateCardImage = (props) => {
+    if (props.zaposlen){
+        return <img src={require('../images/bitMan.jpg')} alt="bit-man" className="img-fluid w-50 h-100" />
+    } else if (props.naPraksi) {
+        return <img src={require('../images/bitWoman.jpg')} alt="bit-man" className="img-fluid w-50 h-100" />
+    }
+}
+
 
 const BitManCard = (props) => {
     return (
-        <div className={`bit-man-card col-2 card text-white p-3 mb-5 ${props.data.pol === "alumnus" ? "bg-dark" : "bg-primary"}`}>
+        <div className={`bit-man-card col-2 card p-3 mb-5 ${calculateCardColor(props)}`} >
             <div className="card-header d-flex p-0">
-                {props.data.aktivnaPozicija ? <img src={require('../images/safety-helmet-150913.svg')} alt="working" className="img-fluid w-25 h-50 worker-helmet" /> : null}
-                {props.data.pol === "alumnus" ? <img src={require('../images/bitMan.jpg')} alt="bit-man" className="img-fluid w-50 h-100" /> : <img src={require('../images/bitWoman.jpg')} alt="bit-man" className="img-fluid w-50 h-100" />}
-                {props.data.saPrakseNaPosao ? <img src={require('../images/award-155595.svg')} alt="ribbon" className="img-fluid w-25 h-50 award-ribbon" /> : null}
+                {calculateCardImage(props)}
                 <div className="d-flex flex-column justify-content-center align-items-center w-100">
                     <div>
                         {props.data.status}
