@@ -141,9 +141,13 @@ class StudentPozicije extends Component {
     
 
     setPocetak = (date) => {
+        const newDate = new Date(date)
         this.setState({
-            pocetak: date
+            pocetak: newDate
         })
+        // this.setState({
+        //     pocetak: date
+        // })
     }
 
     // setSvrsetak = (date) => {
@@ -159,8 +163,9 @@ class StudentPozicije extends Component {
 
     render() {
         return (
-            <div className="d-flex flex-column">
-                <div className="mb-5">Istorija pozicija:</div>
+            <div className="d-flex flex-column pozicije-container">
+                <h6 className="details-card-setion-title">Istorija pozicija</h6>
+                <div className="section-title-horizontal-line"></div>
                 {this.mapPozicije()}
                 {this.state.showAddPozicija &&
                     <div>

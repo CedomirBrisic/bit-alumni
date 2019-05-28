@@ -3,6 +3,8 @@ import React, {
 } from 'react';
 import MdPersonAdd from 'react-ionicons/lib/MdPersonAdd';
 import IosPeopleOutline from 'react-ionicons/lib/IosPeopleOutline';
+import IosOptionsOutline from 'react-ionicons/lib/IosOptionsOutline';
+
 import Filters from "../Components/Filters";
 import AddNewStudentModal from './AddNewStudentModal';
 import AddNewClassModal from "./AddNewClassModal";
@@ -32,6 +34,7 @@ class App extends Component {
       listFirme: true,
       firmeAll: [],
       selectedFirmaForFilter: "",
+      showFirmeFilter: true,
     }
   }
 
@@ -79,29 +82,68 @@ class App extends Component {
       })
     })
   }
+
   getAndSetFirms = () => {
     getFirms().then((response) => {
-      const firmeSortedByName = this.orderFirmsByAlphabet(response);
+      let firmeSortedByName = response;
+      firmeSortedByName.sort(function (a, b) {
+        let firmaA = a.nazivKompanije.toLowerCase();
+        let firmaB = b.nazivKompanije.toLowerCase();
+        if (firmaA < firmaB) return -1;
+        if (firmaA > firmaB) return 1;
+        return 0
+      })
       this.setState({
         firmeAll: firmeSortedByName,
       })
     })
   }
 
-  orderFirmsByAlphabet = (firme) => {
-    let responseSortedByName = firme;
-      responseSortedByName.sort(function (a, b) {
-        let firmaA = a.nazivKompanije.toLowerCase();
-        let firmaB = b.nazivKompanije.toLowerCase();
-        if (firmaA < firmaB) return -1;
-        if (firmaA > firmaB) return 1;
-        return 0
+  orderFirmsByAlphabet = () => {
+    let firmeSortedByName = this.state.firmeAll;
+    firmeSortedByName.sort(function (a, b) {
+      let firmaA = a.nazivKompanije.toLowerCase();
+      let firmaB = b.nazivKompanije.toLowerCase();
+      if (firmaA < firmaB) return -1;
+      if (firmaA > firmaB) return 1;
+      return 0
     })
-    return responseSortedByName
+    this.setState({
+      firmeAll: firmeSortedByName,
+    })
   }
 
   orderFirmsByNumberOfStudents = () => {
+    let firmeAll = this.state.firmeAll.map((firma) => {
+      let firmaStudentCounter = 0;
+      this.state.studentiAll.forEach((student) => {
+        if (student.pozicije !== undefined) {
+          for (let i = 0; i < student.pozicije.length; i++) {
+            if (student.pozicije[i].firma == firma.nazivKompanije) {
+              firmaStudentCounter++;
+              break;
+            }
+          }
+        }
+      })
+      firma = {
+        ...firma,
+        brojStudenata: firmaStudentCounter
+      }
+      return firma
+    });
 
+    let firmeSortedByNumOfStudents = firmeAll;
+    firmeSortedByNumOfStudents.sort(function (a, b) {
+      let firmaA = a.brojStudenata;
+      let firmaB = b.brojStudenata;
+      if (firmaA < firmaB) return 1;
+      if (firmaA > firmaB) return -1;
+      return 0
+    })
+    this.setState({
+      firmeAll: firmeSortedByNumOfStudents
+    })
   }
 
 
@@ -444,7 +486,9 @@ class App extends Component {
   //----- FIRME VIEW -----//
 
   selectFirmaForFilter = (event) => {
+    event.preventDefault();
     const selectedFirmaNaziv = event.target.getAttribute("data-firma");
+    console.log("EVENT", event)
     this.state.firmeAll.forEach((firma) => {
       if (selectedFirmaNaziv == firma.nazivKompanije) {
         this.setState({
@@ -458,14 +502,14 @@ class App extends Component {
   mapFirmeForSelect = () => {
     if (!this.state.imeZaPretragu) {
       return this.state.firmeAll.map((firma) => {
-        return <button type="button" className={`btn firma-filter-button ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
+        return <button type="button" className={`btn d-flex justify-content-between firma-filter-button ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<div>{firma.brojStudenata}</div></button>
       })
     } else {
       const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
       return this.state.firmeAll.map((firma) => {
         const nazivFirme = firma.nazivKompanije.toLowerCase();
         if (nazivFirme.includes(imeZaPretragu)) {
-          return <button type="button" className={`btn firma-filter-butto ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}</button>
+          return <button type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
         }
       })
     }
@@ -487,24 +531,38 @@ class App extends Component {
     })
   }
 
+  toggleFirmeFilter = () => {
+    this.setState({
+      showFirmeFilter: !this.state.showFirmeFilter
+    })
+  }
+
+  closeFilters = () => {
+    this.setState({
+      showFirmeFilter: false
+    })
+  }
+
   render() {
 
     return (<div className="p-5" >
-      <MdPersonAdd onClick={this.openNewBitManModal}
-        color="#0e3572"
-        fontSize="2.4vw"
-        className="add-new-icon" />
+      <div className="w-75 float-right">
+        <MdPersonAdd onClick={this.openNewBitManModal}
+          color="#0e3572"
+          fontSize="2.4vw"
+          className="add-new-icon" />
 
-      <button type="button"
-        className="btn btn-primary ml-5"
-        onClick={this.openAddNewClassModal} >
-        Dodaj novu klasu polaznika </button>
-      <button type="button" className="btn btn-primary ml-5"
-        onClick={this.openAddNewFirm} >
-        Dodaj novu kompaniju</button>
-      <button type="button" className="btn btn-primary float-right ml-5"
-        onClick={this.toggleView} >
-        Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
+        <button type="button"
+          className="btn btn-primary ml-5"
+          onClick={this.openAddNewClassModal} >
+          Dodaj novu klasu polaznika </button>
+        <button type="button" className="btn btn-primary ml-5"
+          onClick={this.openAddNewFirm} >
+          Dodaj novu kompaniju</button>
+        <button type="button" className="btn btn-primary float-right ml-5"
+          onClick={this.toggleView} >
+          Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
+      </div>
 
       <AddNewStudentModal visible={this.state.addNewStudentModal}
         closeNewBitManModal={this.closeNewBitManModal}
@@ -546,18 +604,19 @@ class App extends Component {
       {/* ----- FIRME VIEW ----- */}
       {this.state.listFirme &&
         <div>
-          <div className="firm-filters-container d-flex flex-column">
+          <IosOptionsOutline fontSize="2.4vw" onClick={this.toggleFirmeFilter} className="firme-burger-menu" />
+          <div className={`firm-filters-container d-flex flex-column ${this.state.showFirmeFilter ? "enter-filters" : "exit-filters"}`}>
             <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
             <div className="d-flex justify-content-around">
-              <div className="btn btn-light">A-Z</div>
-              <div className="btn btn-light"><IosPeopleOutline fontSize="2.4vw" /></div>
+              <button type="button" className="btn btn-light" onClick={this.orderFirmsByAlphabet}>A-Z</button>
+              <button type="button" className="btn btn-light" onClick={this.orderFirmsByNumberOfStudents} ><IosPeopleOutline fontSize="2vw" /></button>
             </div>
             <div className="btn-group d-flex flex-column" role="group" aria-label="Basic example">
               {this.mapFirmeForSelect()}
             </div>
           </div>
           {this.state.selectedFirmaForFilter &&
-            <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} />
+            <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters}/>
           }
         </div>
       }

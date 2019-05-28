@@ -28,29 +28,31 @@ class StudentiByFirm extends Component {
 
         if (this.props.studentiAll !== undefined && this.props.selectedFirmaForFilter.nazivKompanije !== undefined) {
             this.props.studentiAll.forEach((student) => {
-                student.pozicije.forEach((pozicija, index) => {
-                    if (pozicija.firma == this.props.selectedFirmaForFilter.nazivKompanije) {
-                        if (pozicija.status == "Zaposlen") {
-                            if (index == student.pozicije.length - 1) {
-                                student = {
-                                    ...student,
-                                    aktivnaPozicija: true,
+                if (student.pozicije !== undefined) {
+                    student.pozicije.forEach((pozicija, index) => {
+                        if (pozicija.firma == this.props.selectedFirmaForFilter.nazivKompanije) {
+                            if (pozicija.status == "Zaposlen") {
+                                if (index == student.pozicije.length - 1) {
+                                    student = {
+                                        ...student,
+                                        aktivnaPozicija: true,
+                                    }
+                                    selectedFirmTrenutnoZaposleni++
                                 }
-                                selectedFirmTrenutnoZaposleni++
-                            }
-                            zaposleni.push(student)
-                        } else if (pozicija.status == "Na praksi") {
-                            if (index == student.pozicije.length - 1) {
-                                student = {
-                                    ...student,
-                                    aktivnaPozicija: true,
+                                zaposleni.push(student)
+                            } else if (pozicija.status == "Na praksi") {
+                                if (index == student.pozicije.length - 1) {
+                                    student = {
+                                        ...student,
+                                        aktivnaPozicija: true,
+                                    }
+                                    selectedFirmTrenutnoNaPraksi++
                                 }
-                                selectedFirmTrenutnoNaPraksi++
+                                naPraksi.push(student)
                             }
-                            naPraksi.push(student)
                         }
-                    }
-                })
+                    })
+                }
             });
         }
 
@@ -149,7 +151,7 @@ class StudentiByFirm extends Component {
 
     render() {
         return (
-            <div>
+            <div onClick={this.props.closeFilters}>
                 <div className="d-flex firma-details-container justify-content-end">
                     <div className="mt-5 w-25">
                         <div className="d-flex justify-content-between">
@@ -209,7 +211,6 @@ class StudentiByFirm extends Component {
                     </div>
                 </div>
                 <div>
-                    {console.log(this.state.naPraksi.length, this.state.naPraksi.length > 0,  this.state.zaposleni.length,  this.state.zaposleni.length > 0)}
                     {(this.state.naPraksi.length > 0 || this.state.zaposleni.length > 0) &&
                         <div className="d-flex flex-column align-items-center mt-5">
                             <div>Ukupan broj studenata:</div>

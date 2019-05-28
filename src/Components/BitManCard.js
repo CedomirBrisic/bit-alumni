@@ -62,7 +62,7 @@ const BitManCard = (props) => {
             </div>
             <div className="modal-footer w-100 pl-0">
                
-                <button data-maticnibroj={props.data.maticniBroj} onClick={props.openStudentDetailsModal} type="button" className={`btn student-details-button ${props.data.pol === "alumnus" ? "btn-primary" : "btn-light"}`}>
+                <button data-maticnibroj={props.data.maticniBroj} onClick={props.openStudentDetailsModal} type="button" className="btn student-details-button btn-light">
                     Detaljnije
               </button>
             </div>

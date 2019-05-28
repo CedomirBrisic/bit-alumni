@@ -46,8 +46,9 @@ class Komunikacija extends Component {
         })
     }
     setSelectedDate = (date) => {
+        const newDate = new Date(date)
         this.setState({
-            selectedDate: date
+            selectedDate: newDate
         })
     }
     setSelectedKomentar = (event) => {
@@ -88,8 +89,9 @@ class Komunikacija extends Component {
 
     render() {
         return (
-            <div>
-                <div className="mb-3">Komunikacija</div>
+            <div className="komunikacija-container d-flex flex-column">
+                <h6 className="details-card-setion-title">Komunikacija</h6>
+                <div className="section-title-horizontal-line"></div>
                 {this.props.komunikacijaData &&
                     this.mapKomunikacijaData()}
                 {this.state.showAddNewKomunikacija &&

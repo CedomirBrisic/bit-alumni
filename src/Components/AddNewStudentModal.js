@@ -42,8 +42,9 @@ class AddNewStudentModal extends Component {
     }
 
     setBirthDay = (date) => {
+        const newDate = new Date(date)
         this.setState({
-            datumRodjenja: date
+            datumRodjenja: newDate
         })
     }
 

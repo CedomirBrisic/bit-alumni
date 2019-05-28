@@ -34,8 +34,9 @@ class AddNewClassModal extends Component {
     }
 
     setDatumZavrsetka = (date) => {
+        const newDate = new Date(date)
         this.setState({
-            datumZavrsetka: date
+            datumZavrsetka: newDate
         })
     }
 
