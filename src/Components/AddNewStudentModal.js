@@ -171,7 +171,7 @@ class AddNewStudentModal extends Component {
         return (
             <Modal visible={this.props.visible} onClickBackdrop={this.closeNewBitManModal} fade={true} >
                 <div className="modal-header">
-                    <h5 className="modal-title">BIT Student</h5>
+                    <h5 className="modal-title"><b>BIT Polaznik</b></h5>
                 </div>
                 <div className="modal-body d-flex flex-column justify-content-around">
 

@@ -3,7 +3,8 @@ import React, {
 } from 'react';
 import MdPersonAdd from 'react-ionicons/lib/MdPersonAdd';
 import IosPeopleOutline from 'react-ionicons/lib/IosPeopleOutline';
-import IosOptionsOutline from 'react-ionicons/lib/IosOptionsOutline';
+import IosOptions from 'react-ionicons/lib/IosOptions';
+
 
 import Filters from "../Components/Filters";
 import AddNewStudentModal from './AddNewStudentModal';
@@ -30,11 +31,12 @@ class App extends Component {
       slectedStudentMaticniBroj: "",
       showAddNewFirm: false,
       imeZaPretragu: "",
-      listStudenti: false,
-      listFirme: true,
+      listStudenti: true,
+      listFirme: false,
       firmeAll: [],
       selectedFirmaForFilter: "",
       showFirmeFilter: true,
+      showStudentiFilter: true
     }
   }
 
@@ -488,7 +490,6 @@ class App extends Component {
   selectFirmaForFilter = (event) => {
     event.preventDefault();
     const selectedFirmaNaziv = event.target.getAttribute("data-firma");
-    console.log("EVENT", event)
     this.state.firmeAll.forEach((firma) => {
       if (selectedFirmaNaziv == firma.nazivKompanije) {
         this.setState({
@@ -536,30 +537,40 @@ class App extends Component {
       showFirmeFilter: !this.state.showFirmeFilter
     })
   }
+  toggleStudentiFilter = () => {
+    this.setState({
+      showStudentiFilter: !this.state.showStudentiFilter
+    })
+  }
 
   closeFilters = () => {
     this.setState({
-      showFirmeFilter: false
+      showFirmeFilter: false,
+      showStudentiFilter: false
     })
   }
 
   render() {
 
-    return (<div className="p-5" >
-      <div className="w-75 float-right">
-        <MdPersonAdd onClick={this.openNewBitManModal}
-          color="#0e3572"
-          fontSize="2.4vw"
-          className="add-new-icon" />
+    return (<div className="p-5">
+      <div className="application-buttons-container d-flex align-items-center justify-content-between">
 
-        <button type="button"
-          className="btn btn-primary ml-5"
-          onClick={this.openAddNewClassModal} >
-          Dodaj novu klasu polaznika </button>
-        <button type="button" className="btn btn-primary ml-5"
-          onClick={this.openAddNewFirm} >
-          Dodaj novu kompaniju</button>
-        <button type="button" className="btn btn-primary float-right ml-5"
+        <div className="application-buttons-wrapper-left d-flex justify-content-around">
+          <MdPersonAdd onClick={this.openNewBitManModal}
+            color="#004886"
+            fontSize="2.4vw"
+            className="add-new-student-icon" />
+
+          <button type="button"
+            className="btn btn-primary"
+            onClick={this.openAddNewClassModal} >
+            Dodaj novu klasu polaznika </button>
+          <button type="button" className="btn btn-primary"
+            onClick={this.openAddNewFirm} >
+            Dodaj novu kompaniju</button>
+        </div>
+
+        <button type="button" className="btn btn-primary application-buttons-wrapper-right"
           onClick={this.toggleView} >
           Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
       </div>
@@ -586,17 +597,19 @@ class App extends Component {
 
       {this.state.listStudenti &&
         <div>
-          <input className="search-bar" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
-          <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
-
-          <div className="d-flex justify-content-around mt-5">
+          <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleStudentiFilter} className="firme-burger-menu" />
+          <input className="search-bar student-search-bar" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+          <div className={`studenti-filters-container d-flex flex-column ${this.state.showStudentiFilter ? "enter-filters" : "exit-filters"}`}>
+            <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
+          </div>
+          <div className="d-flex justify-content-around mt-5" onClick={this.closeFilters}>
             {!this.state.imeZaPretragu &&
-              <div className="d-flex flex-column align-items-center">
-                <div>Ukupan broj studenata:</div>
+              <div className="d-flex flex-column align-items-center ime-prezime-modal-header">
+                <div><i>Ukupan broj BIT studenata:</i></div>
                 <div><b>{this.state.studentiForRender.length}</b></div>
               </div>}
           </div>
-          <div className="bit-people-cars-container d-flex justify-content-around row mt-5" > {this.mapStudentsForRender()}
+          <div className="bit-people-cars-container d-flex justify-content-around row mt-5" onClick={this.closeFilters}> {this.mapStudentsForRender()}
           </div>
         </div>}
 
@@ -604,19 +617,19 @@ class App extends Component {
       {/* ----- FIRME VIEW ----- */}
       {this.state.listFirme &&
         <div>
-          <IosOptionsOutline fontSize="2.4vw" onClick={this.toggleFirmeFilter} className="firme-burger-menu" />
+          <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleFirmeFilter} className="firme-burger-menu" />
           <div className={`firm-filters-container d-flex flex-column ${this.state.showFirmeFilter ? "enter-filters" : "exit-filters"}`}>
             <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
             <div className="d-flex justify-content-around">
               <button type="button" className="btn btn-light" onClick={this.orderFirmsByAlphabet}>A-Z</button>
               <button type="button" className="btn btn-light" onClick={this.orderFirmsByNumberOfStudents} ><IosPeopleOutline fontSize="2vw" /></button>
             </div>
-            <div className="btn-group d-flex flex-column" role="group" aria-label="Basic example">
+            <div className="btn-group firme-filters-container d-flex flex-column" role="group" aria-label="Basic example">
               {this.mapFirmeForSelect()}
             </div>
           </div>
           {this.state.selectedFirmaForFilter &&
-            <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters}/>
+            <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters} />
           }
         </div>
       }

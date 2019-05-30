@@ -96,7 +96,7 @@ class Filters extends Component {
 
             return kurseviIsertifikati.map((element) => {
                 const output =
-                    <div className="form-check">
+                    <div className="btn btn-light form-check w-100 d-flex align-items-center">
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.togglePohadjaniProgramiCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
@@ -142,7 +142,7 @@ class Filters extends Component {
 
             return mesta.map((element) => {
                 const output =
-                    <div className="form-check">
+                    <div className="form-check btn-light w-100 d-flex align-items-center">
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleMestaCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
@@ -187,7 +187,7 @@ class Filters extends Component {
 
             return vestine.map((element) => {
                 const output =
-                    <div className="form-check">
+                    <div className="form-check btn-light w-100 d-flex align-items-center">
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleVestineCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
@@ -219,7 +219,7 @@ class Filters extends Component {
 
             return status.map((element) => {
                 const output =
-                    <div className="form-check">
+                    <div className="form-check btn-light d-flex align-items-center">
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleStatusiCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
@@ -251,7 +251,7 @@ class Filters extends Component {
 
             return prethodnoObrazovanje.map((element) => {
                 const output =
-                    <div className="form-check">
+                    <div className="form-check btn-light w-100 d-flex align-items-center">
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.togglePrethodnoObrazovanjeCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
@@ -283,7 +283,7 @@ class Filters extends Component {
 
             return firmeiKompanije.map((element) => {
                 const output =
-                    <div className="form-check">
+                    <div className="form-check btn-light w-100 d-flex align-items-center">
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleFirmeiKompanijeCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
@@ -322,61 +322,155 @@ class Filters extends Component {
 
     render() {
         return (
-            <div className="d-flex justify-content-between pt-5">
-                <div>
-                    FILTERI:
-                </div>
-                <div>
-                    <div className="filter-item">Pol</div>
-                    <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="idAlumnus" key="alumnusKey" data-statename="alumnus" onClick={this.toggleStudentSex} />
-                        <label className="form-check-label" htmlFor="idAlumnus">Alumnus</label>
+            <div className="studenti-filters-wrapper">
+                <div className="accordion" id="accordionStudentiFilteri">
+
+
+                    {/* POL FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriPol">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                POL
+                                </button>
+                        </div>
+                        <div id="collapseOne" className="collapse show" aria-labelledby="filteriPol" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex justify-content-around">
+                                <div className="form-check btn btn-light d-flex align-items-center">
+                                    <input type="checkbox" className="form-check-input" id="idAlumnus" key="alumnusKey" data-statename="alumnus" onClick={this.toggleStudentSex} />
+                                    <label className="form-check-label" htmlFor="idAlumnus">Alumnus</label>
+                                </div>
+                                <div className="form-check btn btn-light d-flex align-items-center">
+                                    <input type="checkbox" className="form-check-input" id="idAlumna" key="alumnaKey" data-statename="alumna" onClick={this.toggleStudentSex} />
+                                    <label className="form-check-label" htmlFor="idAlumna">Alumna</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="idAlumna" key="alumnaKey" data-statename="alumna" onClick={this.toggleStudentSex} />
-                        <label className="form-check-label" htmlFor="idAlumna">Alumna</label>
+
+                    {/* PROGRAM i KURSEVI FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriProgramiKursevi">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                PROGRAMI i KURSEVI
+                                </button>
+                        </div>
+                        <div id="collapseTwo" className="collapse" aria-labelledby="filteriProgramiKursevi" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex flex-column justify-content-around align-items-start">
+                                {this.mapPohadjaniProgrami()}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <div className="filter-item">Programi i Kursevi</div>
-                    {this.mapPohadjaniProgrami()}
+
+                    {/* Sertifikati FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriSertifikati">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseTri" aria-expanded="false" aria-controls="collapseTri">
+                                SERTIFIKATI
+                                </button>
+                        </div>
+                        <div id="collapseTri" className="collapse" aria-labelledby="filteriSertifikati" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex justify-content-around">
+                                <div className="form-check btn-light d-flex align-items-center">
+                                    <input type="checkbox" className="form-check-input" id="successfullyAttended" key="successfullyAttendedKey" data-statename="successfully-attended" onClick={this.toggleSertifikat} />
+                                    <label className="form-check-label" htmlFor="successfullyAttended">Successfully attended</label>
+                                </div>
+                                <div className="form-check btn-light d-flex align-items-center">
+                                    <input type="checkbox" className="form-check-input" id="basicId" key="basicKey" data-statename="basic" onClick={this.toggleSertifikat} />
+                                    <label className="form-check-label" htmlFor="basicId">Basic</label>
+                                </div>
+                                <div className="form-check btn-light d-flex align-items-center">
+                                    <input type="checkbox" className="form-check-input" id="idAdvanced" key="advancedKey" data-statename="advanced" onClick={this.toggleSertifikat} />
+                                    <label className="form-check-label" htmlFor="idAdvanced">Advanced</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* TRENUTNI STATUSI FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriTrenutniStatusi">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                TRENUTNI STATUSI
+                                </button>
+                        </div>
+                        <div id="collapseFour" className="collapse" aria-labelledby="filteriTrenutniStatusi" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body row">
+                                {this.mapStatusi()}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* FIRME i KOMPANIJE FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriKompanije">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                KOMPANIJE
+                                </button>
+                        </div>
+                        <div id="collapseFive" className="collapse" aria-labelledby="filteriKompanije" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex flex-column justify-content-around align-items-start">
+                                {this.mapFirmeiKompanije()}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* OBRAZOVANJE FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriObrazovanje">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                OBRAZOVANJE
+                                </button>
+                        </div>
+                        <div id="collapseSix" className="collapse" aria-labelledby="filteriObrazovanje" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex flex-column justify-content-around align-items-start">
+                                {this.mapPrethodnoObrazovanje()}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    {/* Mesto FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriMesto">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                MESTO
+                                </button>
+                        </div>
+                        <div id="collapseSeven" className="collapse" aria-labelledby="filteriMesto" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex flex-column justify-content-around align-items-start">
+                                {this.mapMesto()}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    {/* VESTINE FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriVestine">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                VEŠTINE
+                                </button>
+                        </div>
+                        <div id="collapseEight" className="collapse" aria-labelledby="filteriVestine" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex flex-column justify-content-around align-items-start">
+                                {this.mapVestine()}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
 
-                <div>
-                    <div className="filter-item">Sertifikati</div>
-                    <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="successfullyAttended" key="successfullyAttendedKey" data-statename="successfully-attended" onClick={this.toggleSertifikat} />
-                        <label className="form-check-label" htmlFor="successfullyAttended">Successfully attended</label>
-                    </div>
-                    <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="basicId" key="basicKey" data-statename="basic" onClick={this.toggleSertifikat} />
-                        <label className="form-check-label" htmlFor="basicId">Basic</label>
-                    </div>
-                    <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="idAdvanced" key="advancedKey" data-statename="advanced" onClick={this.toggleSertifikat} />
-                        <label className="form-check-label" htmlFor="idAdvanced">Advanced</label>
-                    </div>
-                </div>
-                <div>
-                    <div className="filter-item">Status</div>
-                    {this.mapStatusi()}
-                </div>
-                <div>
-                    <div className="filter-item">Firme i Kompanije</div>
-                    {this.mapFirmeiKompanije()}
-                </div>
-                <div>
-                    <div className="filter-item">Prethodno Obrazovanje</div>
-                    {this.mapPrethodnoObrazovanje()}
-                </div>
-                <div>
-                    <div className="filter-item">Mesto</div>
-                    {this.mapMesto()}
-                </div>
-                <div>
-                    <div className="filter-item">Veštine</div>
-                    {this.mapVestine()}
-                </div>
+
+
+
             </div>
         );
     }
