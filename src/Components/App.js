@@ -36,7 +36,7 @@ class App extends Component {
       firmeAll: [],
       selectedFirmaForFilter: "",
       showFirmeFilter: true,
-      showStudentiFilter: true
+      showStudentiFilter: false
     }
   }
 
@@ -164,6 +164,8 @@ class App extends Component {
       this.setState({
         studentZaDetaljeModal
       })
+    } else if (prevState.firmeAll !== this.state.firmeAll) {
+      this.selectFirmaForFilter()
     }
   }
 
@@ -488,16 +490,30 @@ class App extends Component {
   //----- FIRME VIEW -----//
 
   selectFirmaForFilter = (event) => {
-    event.preventDefault();
-    const selectedFirmaNaziv = event.target.getAttribute("data-firma");
-    this.state.firmeAll.forEach((firma) => {
-      if (selectedFirmaNaziv == firma.nazivKompanije) {
-        this.setState({
-          selectedFirmaForFilter: firma
-        })
+    if (event !== undefined) {
+      event.preventDefault();
+      const selectedFirmaNaziv = event.target.getAttribute("data-firma");
+      this.state.firmeAll.forEach((firma) => {
+        if (selectedFirmaNaziv == firma.nazivKompanije) {
+          this.setState({
+            selectedFirmaForFilter: firma
+          })
 
+        }
+      })
+    } else if (this.state.selectedFirmaForFilter !== "") {
+      let firma = ""
+      const firmeAll = this.state.firmeAll
+      for (let i = 0; i < firmeAll.length; i++) {
+        if (firmeAll[i]._id.$oid == this.state.selectedFirmaForFilter._id.$oid) {
+          firma = firmeAll[i]
+          break;
+        }
       }
-    })
+      this.setState({
+        selectedFirmaForFilter: firma
+      })
+    }
   }
 
   mapFirmeForSelect = () => {
@@ -557,20 +573,20 @@ class App extends Component {
 
         <div className="application-buttons-wrapper-left d-flex justify-content-around">
           <MdPersonAdd onClick={this.openNewBitManModal}
-            color="#004886"
+            color="#8D1717"
             fontSize="2.4vw"
             className="add-new-student-icon" />
 
           <button type="button"
-            className="btn btn-primary"
+            className="btn btn-light"
             onClick={this.openAddNewClassModal} >
             Dodaj novu klasu polaznika </button>
-          <button type="button" className="btn btn-primary"
+          <button type="button" className="btn btn-light"
             onClick={this.openAddNewFirm} >
             Dodaj novu kompaniju</button>
         </div>
 
-        <button type="button" className="btn btn-primary application-buttons-wrapper-right"
+        <button type="button" className="btn btn-light application-buttons-wrapper-right"
           onClick={this.toggleView} >
           Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
       </div>
@@ -629,7 +645,7 @@ class App extends Component {
             </div>
           </div>
           {this.state.selectedFirmaForFilter &&
-            <StudentiByFirm selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters} />
+            <StudentiByFirm getAndSetFirms={this.getAndSetFirms} selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters} />
           }
         </div>
       }

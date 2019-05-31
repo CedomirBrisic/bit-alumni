@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import IosConstruct from 'react-ionicons/lib/IosConstruct';
-import DatePicker from 'react-date-picker';
 import Text from "react-format-text";
 import updateStudentKomunikacija from "../webhooks/updateStudentKomunikacija";
 
@@ -96,10 +95,8 @@ class Komunikacija extends Component {
                     this.mapKomunikacijaData()}
                 {this.state.showAddNewKomunikacija &&
                     <div>
-                        Datum: <DatePicker calendarIcon={null}
-                            value={this.state.selectedDate}
-                            onChange={this.setSelectedDate}
-                        />
+                        Datum:
+                        <input type="date" onChange={this.setSelectedDate}/>
                         <textarea placeholder="Komentar" rows="6" value={this.state.selectedKomentar} onChange={this.setSelectedKomentar}>
 
                         </textarea>

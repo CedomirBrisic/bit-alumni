@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap4-modal';
-import DatePicker from 'react-date-picker';
 import getAddNewStudentDropdowns from "../webhooks/getAddNewStudentDropdowns";
 import postNewProgramiAndSertifikati from "../webhooks/postNewClassAndSertifikati";
 
@@ -33,8 +32,8 @@ class AddNewClassModal extends Component {
         })
     }
 
-    setDatumZavrsetka = (date) => {
-        const newDate = new Date(date)
+    setDatumZavrsetka = (event) => {
+        const newDate = new Date(event.target.value)
         this.setState({
             datumZavrsetka: newDate
         })
@@ -43,13 +42,13 @@ class AddNewClassModal extends Component {
     postProgram = () => {
         const naziv = this.state.type;
         let sertifikati = [];
-        
+
         const datumZavrsetkaToSend = this.humanReadDate(this.state.datumZavrsetka);
-        (naziv === "Frontend Bootcamp" ? sertifikati=["Successfully attended", "Basic", "Advanced"] : sertifikati=["Successfully attended"])
+        (naziv === "Frontend Bootcamp" ? sertifikati = ["Successfully attended", "Basic", "Advanced"] : sertifikati = ["Successfully attended"])
 
         const data = {
             naziv: naziv,
-            datumZavrsetka : datumZavrsetkaToSend,
+            datumZavrsetka: datumZavrsetkaToSend,
             sertifikati: sertifikati
         }
 
@@ -80,7 +79,7 @@ class AddNewClassModal extends Component {
 
     mapPostojeciProgrami = () => {
         return this.state.postojeciProgrami.map((program) => {
-            return <button className="btn program-select" data-type={program} onClick={this.setType}>{program}</button>
+            return <button type="button" className="btn btn-light program-select" data-type={program} onClick={this.setType}>{program}</button>
         })
     }
 
@@ -93,28 +92,30 @@ class AddNewClassModal extends Component {
                     <h5 className="modal-title">Red Alert!</h5>
                 </div>
                 <div className="modal-body">
-                    <div className="student-detail-card-attribute d-flex justify-content-between align-items-center mb-3">
-                        <div className="w-100">Izaberi formu:</div>
-                        {this.state.postojeciProgrami ? this.mapPostojeciProgrami() : null}
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="add-new-class-left-item">Izaberi format:</div>
+                        <div className="add-new-class-right-item">
+                            {this.state.postojeciProgrami ? this.mapPostojeciProgrami() : null}
+                        </div>
                     </div>
-                    <div className="student-detail-card-attribute d-flex justify-content-between align-items-center">
-                        <div>Izaberi datum završetka:</div>
-                        <DatePicker calendarIcon={null}
-                            value={this.state.datumZavrsetka}
-                            onChange={this.setDatumZavrsetka}
-                        />
+                    <div className="d-flex justify-content-between align-items-center add-new-class-datumzavrsetka-wrapper">
+                        <div className="add-new-class-left-item">Izaberi datum poslednjeg dana kursa:</div>
+                        <div className="add-new-class-right-item d-flex justify-content-center">
+                            <input className="new-class-input" type="date" onChange={this.setDatumZavrsetka} />
+                        </div>
+
                     </div>
-                </div>
-                <div className="modal-footer">
-                    <div>{this.state.type &&
+                    <div className="add-new-class-naziv">{this.state.type &&
                         `${this.state.type} -`}
                         {this.state.datumZavrsetka &&
                             this.humanReadDate(this.state.datumZavrsetka)}
                     </div>
-                    <button type="button" className="btn btn-warning" onClick={this.cancelPostingNewProgram}>
+                </div>
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-warning text-success" onClick={this.cancelPostingNewProgram}>
                         Ništa, nema veze...
                     </button>
-                    <button type="button" className="btn btn-primary" onClick={this.postProgram}>
+                    <button type="button" className="btn btn-success text-warning" onClick={this.postProgram}>
                         Potvrdi
                     </button>
                 </div>

@@ -1,7 +1,7 @@
-const updateFirma = (mesto) => {
+const updateFirma = (data) => {
     return fetch("https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTfirma", {
         body: JSON.stringify({
-            mesto
+            data
         }),
         method: "PUT",
         headers: {

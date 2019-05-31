@@ -414,11 +414,11 @@ class StudentDetailsModal extends Component {
 
 
                                             <div className="d-flex justify-content-around align-items-center">
-                                                <button type="button" className="btn btn-warning edit-modal-button" onClick={this.editMode}>
+                                                <button type="button" className="btn btn-warning text-success edit-modal-button" onClick={this.editMode}>
                                                     {this.state.editMode ? "Ništa, nema veze..." : "Izmeni"}
                                                 </button>
                                                 {this.state.editMode &&
-                                                    <button type="button" className="btn edit-modal-button btn-success d-flex justify-content-center align-items-center" onClick={this.okButton}>
+                                                    <button type="button" className="btn edit-modal-button btn-success text-warning d-flex justify-content-center align-items-center" onClick={this.okButton}>
                                                         Sačuvaj
                                                     </button>
                                                 }
@@ -540,7 +540,7 @@ class StudentDetailsModal extends Component {
 
                     <div className="modal-footer d-flex justify-content-center align-items-center">
                         {!this.state.editMode &&
-                            <button type="button" className="btn ok-modal-button btn-success d-flex justify-content-center align-items-center" onClick={this.okButton}>
+                            <button type="button" className="btn ok-modal-button btn-success  d-flex justify-content-center align-items-center" onClick={this.okButton}>
                                 Zatvori
                         </button>
                         }

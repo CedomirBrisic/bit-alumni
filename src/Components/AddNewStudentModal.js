@@ -5,7 +5,6 @@ import updateMestoAtStudentiDropdowns from "../webhooks/updateMestoAtStudentiDro
 import updateObrazovanjeAtStudentiDropdowns from "../webhooks/updateObrazovanjeAStudentiDropdowns";
 import IosConstruct from 'react-ionicons/lib/IosConstruct';
 import Modal from 'react-bootstrap4-modal';
-import DatePicker from 'react-date-picker';
 
 
 class AddNewStudentModal extends Component {
@@ -36,7 +35,8 @@ class AddNewStudentModal extends Component {
     }
 
     mapStateToDropdownOptions = (stateArray) => {
-        return stateArray.map((element) => {
+        let outputArray = stateArray.sort()
+        return outputArray.map((element) => {
             return <option key={element} value={element}>{element}</option>
         })
     }
@@ -130,15 +130,24 @@ class AddNewStudentModal extends Component {
             addNewMestoEditor: true
         })
     }
+    closeAddNewMestoEditor = () => {
+        this.setState({
+            addNewMestoEditor: false
+        })
+    }
 
     putNewMesto = () => {
         const payload = this.state.newMesto;
         updateMestoAtStudentiDropdowns(payload).then((response) => {
-            this.setState({
-                addNewMestoEditor: false,
-                newMesto: "",
-            })
-            this.getAndSetNewStudentDropdowns();
+            if (response.status === 200 && response.ok === true) {
+                this.setState({
+                    addNewMestoEditor: false,
+                    newMesto: "",
+                })
+                this.getAndSetNewStudentDropdowns();
+            } else {
+                alert("ACHTUNG!!!")
+            }
         })
     }
 
@@ -147,22 +156,48 @@ class AddNewStudentModal extends Component {
             addNewObrazovanjeEditor: true
         })
     }
+    closeAddNewObrazovanjeEditor = () => {
+        this.setState({
+            addNewObrazovanjeEditor: false,
+            newObrazovanje: ""
+        })
+    }
 
     putNewObrazovanje = () => {
         const payload = this.state.newObrazovanje;
         updateObrazovanjeAtStudentiDropdowns(payload).then((response) => {
-            this.setState({
-                addNewObrazovanjeEditor: false,
-                newObrazovanje: "",
-            })
-            getAddNewStudentDropdowns().then((response) => {
-                const addNewStudentDropdowns = response[0]
+            if (response.status === 200 && response.ok === true) {
                 this.setState({
-                    addNewStudentDropdowns
+                    addNewObrazovanjeEditor: false,
+                    newObrazovanje: "",
                 })
-            })
+                getAddNewStudentDropdowns().then((response) => {
+                    const addNewStudentDropdowns = response[0]
+                    this.setState({
+                        addNewStudentDropdowns
+                    })
+                })
+            } else {
+                alert("ACHTUNG!!!")
+            }
         })
     }
+
+    editMestoButtonsClasses = () => {
+        if (this.state.addNewMestoEditor) {
+            return "enter-firma-edit"
+        } else {
+            return ""
+        }
+    }
+    editObrazovanjeButtonsClasses = () => {
+        if (this.state.addNewObrazovanjeEditor) {
+            return "enter-firma-edit"
+        } else {
+            return ""
+        }
+    }
+
     componentDidMount() {
         this.getAndSetNewStudentDropdowns();
     };
@@ -171,67 +206,82 @@ class AddNewStudentModal extends Component {
         return (
             <Modal visible={this.props.visible} onClickBackdrop={this.closeNewBitManModal} fade={true} >
                 <div className="modal-header">
-                    <h5 className="modal-title"><b>BIT Polaznik</b></h5>
+                    <h5 className="modal-title">Red Alert!</h5>
                 </div>
                 <div className="modal-body d-flex flex-column justify-content-around">
 
                     <input type="text" placeholder="Ime" data-statename="ime" value={this.state.ime} onChange={this.depositToState} />
                     <input type="text" placeholder="Prezime" data-statename="prezime" value={this.state.prezime} onChange={this.depositToState} />
                     <input type="number" placeholder="Matični broj" data-statename="maticniBroj" value={this.state.maticniBroj} onChange={this.depositToState} />
-                    <input type="email" placeholder="email" data-statename="emailAdresa" value={this.state.emailAdresa} onChange={this.depositToState} />
-                    <input type="tel" placeholder="Broj telefona" data-statename="brojTelefona" value={this.state.brojTelefona} onChange={this.depositToState} />
+                    <input type="email" placeholder="Email" data-statename="emailAdresa" value={this.state.emailAdresa} onChange={this.depositToState} />
 
-                    <div className="row">
-                        Datum rođenja:
-                        <DatePicker calendarIcon={null}
-                            value={this.state.datumRodjenja}
-                            onChange={this.setBirthDay}
-                        />
+                    <div className="add-new-student-datum-wrapper d-flex justify-content-between align-items-center">
+                        <div className="w-50">Datum rođenja:</div>
+                        <input type="date" className="w-50" onChange={this.setBirthDay} />
                     </div>
 
-                    <select data-statename="pol" onChange={this.depositToState}>
-                        <option defaultValue>Pol</option>
-                        <option value="alumnus">Muški</option>
-                        <option value="alumna">Ženski</option>
-                    </select>
 
 
-                    {/*----- MESTO -----*/}
-                    {this.state.addNewStudentDropdowns.mesta &&
-                        <div>
-                            <select data-statename="mesto" onChange={this.depositToState}>
-                                <option defaultValue>Mesto</option>
-                                {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.mesta)}
-                            </select>
-                            <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddNewMestoEditor} />
-                        </div>}
-                    {this.state.addNewMestoEditor &&
-                        <div>
-                            <input type="text" placeholder="Dodaj novo mesto" data-statename="newMesto" value={this.state.newMesto} onChange={this.depositToState} />
-                            <button type="button" className="btn btn-primary" onClick={this.putNewMesto}>
-                                Potvrdi
-                            </button>
-                        </div>}
+                    <div className="add-new-student-options-container  d-flex justify-content-between align-items-center">
+                        <select className="add-new-student-dropdown add-new-student-select" data-statename="pol" onChange={this.depositToState}>
+                            <option defaultValue>Izaberi pol</option>
+                            <option value="alumnus">Muški</option>
+                            <option value="alumna">Ženski</option>
+                        </select>
 
 
-                    {/*----- OBRAZOVANJE -----*/}
-                    {this.state.addNewStudentDropdowns.obrazovanje &&
-                        <div>
-                            <select data-statename="obrazovanje" onChange={this.depositToState}>
-                                <option defaultValue>Obrazovanje</option>
-                                {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.obrazovanje)}
-                            </select>
-                            <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddNewObrazovanjeEditor} />
-                        </div>}
-                    {this.state.addNewObrazovanjeEditor &&
-                        <div>
-                            <input type="text" placeholder="Dodaj novo obrazovanje" data-statename="newObrazovanje" value={this.state.newObrazovanje} onChange={this.depositToState} />
-                            <button type="button" className="btn btn-primary" onClick={this.putNewObrazovanje}>
-                                Potvrdi
-                            </button>
-                        </div>}
+                        {/*----- MESTO -----*/}
+                        <div className="add-new-student-dropdown">
+                            {this.state.addNewStudentDropdowns.mesta &&
+                                <div className="w-100">
+                                    <select data-statename="mesto" onChange={this.depositToState} className="w-75 add-new-student-select">
+                                        <option defaultValue>Izaberi mesto</option>
+                                        {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.mesta)}
+                                    </select>
+                                    <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddNewMestoEditor} />
+                                </div>}
+                            {this.state.addNewMestoEditor &&
+                                <div>
+                                    <input type="text" placeholder="Dodaj novo mesto" data-statename="newMesto" value={this.state.newMesto} onChange={this.depositToState} />
+                                    <div className={`d-flex justify-content-between ${this.editMestoButtonsClasses()}`}>
+                                        <button type="button" className="btn btn-warning text-success" onClick={this.closeAddNewMestoEditor}>
+                                            Ništa, nema veze...
+                                        </button>
+                                        <button type="button" className="btn btn-success text-warning" onClick={this.putNewMesto}>
+                                            Potvrdi
+                                        </button>
+                                    </div>
+                                </div>}
+                        </div>
 
 
+                        {/*----- OBRAZOVANJE -----*/}
+                        <div className="add-new-student-dropdown">
+                            {this.state.addNewStudentDropdowns.obrazovanje &&
+                                <div className="w-100">
+                                    <select data-statename="obrazovanje" onChange={this.depositToState} className="w-75 add-new-student-select">
+                                        <option defaultValue>Izaberi obrazovanje</option>
+                                        {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.obrazovanje)}
+                                    </select>
+                                    <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddNewObrazovanjeEditor} />
+                                </div>}
+                            {this.state.addNewObrazovanjeEditor &&
+                                <div>
+                                    <input type="text" placeholder="Dodaj novo obrazovanje" data-statename="newObrazovanje" value={this.state.newObrazovanje} onChange={this.depositToState} />
+                                    <div className={`d-flex justify-content-between ${this.editObrazovanjeButtonsClasses()}`}>
+                                        <button type="button" className="btn btn-warning text-success" onClick={this.closeAddNewObrazovanjeEditor}>
+                                            Ništa, nema veze...
+                                        </button>
+                                        <button type="button" className="btn btn-success text-warning" onClick={this.putNewObrazovanje}>
+                                            Potvrdi
+                                        </button>
+                                    </div>
+                                </div>}
+                        </div>
+                    </div>
+
+
+                    <input type="tel" placeholder="Broj telefona" data-statename="brojTelefona" value={this.state.brojTelefona} onChange={this.depositToState} />
                     <input type="text" placeholder="Linkedin" data-statename="linkedin" value={this.state.linkedin} onChange={this.depositToState} />
                     <input type="text" placeholder="Facebook" data-statename="facebook" value={this.state.facebook} onChange={this.depositToState} />
                     <input type="text" placeholder="Instagram" data-statename="instagram" value={this.state.instagram} onChange={this.depositToState} />
@@ -243,7 +293,7 @@ class AddNewStudentModal extends Component {
                 <div className="modal-footer d-flex">
                     {this.state.createNewStudentFailed &&
                         <div>Došlo je do greške, probaj ponovo</div>}
-                    <button type="button" className="btn btn-primary" onClick={this.createNewStudent}>
+                    <button type="button" className="btn btn-success text-warning add-new-student-button" onClick={this.createNewStudent}>
                         Potvrdi
                     </button>
                 </div>

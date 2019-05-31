@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import getFirms from "../webhooks/getFirms";
 import updateStudentPozicije from "../webhooks/updateStudentPozicije";
 import IosConstruct from 'react-ionicons/lib/IosConstruct';
-import DatePicker from 'react-date-picker';
 
 class StudentPozicije extends Component {
     constructor(props) {
@@ -27,7 +26,7 @@ class StudentPozicije extends Component {
             const dd = date.getDate();
             const mm = months[date.getMonth()];
             const yy = date.getFullYear();
-            
+
             return `${dd}. ${mm} ${yy}.`
         } else {
             return "Nemamo podatak"
@@ -138,23 +137,14 @@ class StudentPozicije extends Component {
             selectedStatus: event.target.value
         })
     }
-    
+
 
     setPocetak = (date) => {
         const newDate = new Date(date)
         this.setState({
             pocetak: newDate
         })
-        // this.setState({
-        //     pocetak: date
-        // })
     }
-
-    // setSvrsetak = (date) => {
-    //     this.setState({
-    //         svrsetak: date
-    //     })
-    // }
 
     componentDidMount() {
         this.getAndSetFirms()
@@ -179,15 +169,7 @@ class StudentPozicije extends Component {
                             <option key="zaposlen" value="Zaposlen">Zaposlen</option>
                         </select>
                         <div className="mt-3">Počevši od:</div>
-                        <DatePicker calendarIcon={null}
-                            value={this.state.pocetak}
-                            onChange={this.setPocetak}
-                        />
-                        {/* <div className="mt-3">Pa sve do:</div>
-                        <DatePicker calendarIcon={null}
-                            value={this.state.svrsetak}
-                            onChange={this.setSvrsetak}
-                        /> */}
+                        <input type="date" />
                         <button type="button" className="btn btn-success" onClick={this.dodajPoziciju}>
                             Dodaj
                         </button>

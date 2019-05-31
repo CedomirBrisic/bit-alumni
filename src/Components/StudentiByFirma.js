@@ -128,7 +128,7 @@ class StudentiByFirm extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.selectedFirmaForFilter.nazivKompanije !== this.props.selectedFirmaForFilter.nazivKompanije) {
+        if (prevProps.selectedFirmaForFilter !== this.props.selectedFirmaForFilter) {
             this.filterStudentsForRender();
             this.initState();
         }
@@ -215,9 +215,14 @@ class StudentiByFirm extends Component {
             brojTelefona: this.state.telefon,
             website: this.state.website,
         }
-        
+
         updateFirma(data).then((response) => {
-            if (response.status !== 200 && response.ok !== true) {
+            if (response.status == 200 && response.ok == true) {
+                this.props.getAndSetFirms()
+                this.setState({
+                    openFirmaDetailsEditMode: false
+                })
+            } else {
                 alert("ACHTUNG!!!")
             }
         })
@@ -255,15 +260,17 @@ class StudentiByFirm extends Component {
                         </div>
                         {/* {this.state.openFirmaDetailsEditMode &&} */}
                         <div className={`firma-details-edit-buttons-container d-flex justify-content-between ${this.editButtonsClasses()}`}>
-                            <button className="btn btn-warning" onClick={this.closeFirmaEditMode}>Ništa, nema veze...</button>
-                            <button className="btn btn-success" onClick={this.sendEditedFirma}>Potvrdi</button>
+                            <button className="btn btn-warning text-success" onClick={this.closeFirmaEditMode}>Ništa, nema veze...</button>
+                            <button className="btn btn-success text-warning" onClick={this.sendEditedFirma}>Potvrdi</button>
                         </div>
 
                         <IosConstructOutline color="#8D1717" fontSize="2vw" className="firma-details-opste-edit-button" onClick={this.openFirmaEdit} />
                     </div>
 
                     <div className="d-flex flex-column justify-content-around firma-details-stanje">
-                        <div className="d-flex align-items-center w-100"><IosClockOutline color="#8D1717" fontSize="1.8vw" /><span className="firma-details-stanje-title">Trenutno stanje</span></div>
+                        <div className="d-flex align-items-center w-100"><IosClockOutline color="#8D1717" fontSize="1.8vw" />
+                        {/* <span className="firma-details-stanje-title">Trenutno stanje</span> */}
+                        </div>
                         <div className="d-flex justify-content-between">
                             <span className="firma-details-attribute">Praktikanata:</span>
                             <span><b>{this.state.selectedFirmTrenutnoNaPraksi}</b></span>

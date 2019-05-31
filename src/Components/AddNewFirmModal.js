@@ -63,16 +63,15 @@ class AddNewFirmModal extends Component {
                 </div>
                 <div className="modal-body d-flex flex-column">
                     <input type="text" placeholder="Naziv kompanije" data-statename="nazivKompanije" value={this.state.nazivKompanije} onChange={this.depositToState} />
-                    <input type="email" placeholder="email" data-statename="emailAdresa" value={this.state.emailAdresa} onChange={this.depositToState} />
-                    <input type="tel" placeholder="Broj telefona" data-statename="brojTelefona" value={this.state.brojTelefona} onChange={this.depositToState} />
                     <input type="text" placeholder="Website" data-statename="website" value={this.state.website} onChange={this.depositToState} />
+                    <input type="email" placeholder="Email adresa" data-statename="emailAdresa" value={this.state.emailAdresa} onChange={this.depositToState} />
+                    <input type="tel" placeholder="Broj telefona" data-statename="brojTelefona" value={this.state.brojTelefona} onChange={this.depositToState} />
                 </div>
                 <div className="modal-footer">
-
-                    <button type="button" className="btn btn-warning" onClick={this.cancelPostingFirm}>
+                    <button type="button" className="btn btn-warning text-success" onClick={this.cancelPostingFirm}>
                         Ništa, nema veze...
                     </button>
-                    <button type="button" className="btn btn-primary" onClick={this.postFirm}>
+                    <button type="button" className="btn btn-success text-warning" onClick={this.postFirm}>
                         Potvrdi
                     </button>
                 </div>
