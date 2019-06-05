@@ -16,7 +16,7 @@ class AddNewClassModal extends Component {
 
 
     humanReadDate = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+        const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
         const date = new Date(inputDate)
         const dd = date.getDate();
         const mm = months[date.getMonth()];
@@ -78,8 +78,8 @@ class AddNewClassModal extends Component {
     }
 
     mapPostojeciProgrami = () => {
-        return this.state.postojeciProgrami.map((program) => {
-            return <button type="button" className="btn btn-light program-select" data-type={program} onClick={this.setType}>{program}</button>
+        return this.state.postojeciProgrami.map((program, index) => {
+            return <button key={program+index} type="button" className="btn btn-light program-select" data-type={program} onClick={this.setType}>{program}</button>
         })
     }
 
@@ -115,7 +115,7 @@ class AddNewClassModal extends Component {
                     <button type="button" className="btn btn-warning text-success" onClick={this.cancelPostingNewProgram}>
                         Ništa, nema veze...
                     </button>
-                    <button type="button" className="btn btn-success text-warning" onClick={this.postProgram}>
+                    <button type="button" className="btn btn-success" onClick={this.postProgram}>
                         Potvrdi
                     </button>
                 </div>

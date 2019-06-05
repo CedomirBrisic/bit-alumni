@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import IosConstruct from 'react-ionicons/lib/IosConstruct';
+import MdAddCircle from 'react-ionicons/lib/MdAddCircle';
 import Text from "react-format-text";
 import updateStudentKomunikacija from "../webhooks/updateStudentKomunikacija";
 
@@ -16,7 +16,7 @@ class Komunikacija extends Component {
     }
 
     dateHumanRead = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+        const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
         const date = new Date(inputDate)
         const dd = date.getDate();
         const mm = months[date.getMonth()];
@@ -26,12 +26,12 @@ class Komunikacija extends Component {
     }
 
     mapKomunikacijaData = () => {
-        return this.props.komunikacijaData.map((komunikacija) => {
-            return <div>
-                <div>
-                    <b>{komunikacija.datum}</b>
+        return this.props.komunikacijaData.map((komunikacija, index) => {
+            return <div key={komunikacija.datum+index} className="single-komunikacija-container">
+                <div className="komunikacija-datum">
+                {komunikacija.datum}
                 </div>
-                <div>
+                <div className="komunikacija-komentar">
                     <Text>{komunikacija.komentar}</Text>
                 </div>
             </div>
@@ -44,8 +44,8 @@ class Komunikacija extends Component {
             showAddNewKomunikacija: !addNewKomunikacija
         })
     }
-    setSelectedDate = (date) => {
-        const newDate = new Date(date)
+    setSelectedDate = (event) => {
+        const newDate = new Date(event.target.value)
         this.setState({
             selectedDate: newDate
         })
@@ -85,6 +85,13 @@ class Komunikacija extends Component {
             }
         })
     }
+    editButtonsClasses = () => {
+        if (this.state.showAddNewKomunikacija) {
+            return "enter-firma-edit"
+        } else {
+            return "exit-firma-edit"
+        }
+    }
 
     render() {
         return (
@@ -100,12 +107,16 @@ class Komunikacija extends Component {
                         <textarea placeholder="Komentar" rows="6" value={this.state.selectedKomentar} onChange={this.setSelectedKomentar}>
 
                         </textarea>
-                        <button type="button" className="btn btn-success" onClick={this.dodajKomunikaciju}>
-                            Dodaj
-                        </button>
+
+                        <div className={`d-flex justify-content-between ${this.editButtonsClasses()}`}>
+                            <button className="btn btn-warning text-success" onClick={this.toggleChangeKomunikacijaStatus}>Ništa, nema veze...</button>
+                            <button className="btn btn-success" onClick={this.dodajKomunikaciju}>Potvrdi</button>
+                        </div>
                     </div>
                 }
-                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.toggleChangeKomunikacijaStatus} />
+                {!this.state.showAddNewKomunikacija &&
+                <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-new-icon" onClick={this.toggleChangeKomunikacijaStatus} />
+                }
             </div>
         )
     }

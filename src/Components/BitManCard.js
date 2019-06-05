@@ -1,7 +1,7 @@
 import React from 'react';
 
 const datumRodjenjaHumanRead = (inputDate) => {
-    const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+    const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
     const date = new Date(inputDate)
     const dd = date.getDate();
     const mm = months[date.getMonth()];
@@ -21,9 +21,9 @@ const showWorkPosition = (studentData) => {
 
 const calculateCardColor = (props) => {
     if (props.zaposlen) {
-        return "working-card text-light"
+        return "bg-info text-light"
     } else if (props.naPraksi) {
-        return "internship-card text-light"
+        return "bg-primary text-light"
     } else {
         return "bg-white text-dark"
     }

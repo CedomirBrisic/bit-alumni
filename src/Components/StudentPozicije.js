@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import getFirms from "../webhooks/getFirms";
 import updateStudentPozicije from "../webhooks/updateStudentPozicije";
-import IosConstruct from 'react-ionicons/lib/IosConstruct';
+import MdAddCircle from 'react-ionicons/lib/MdAddCircle';
+
 
 class StudentPozicije extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class StudentPozicije extends Component {
     dateHumanRead = (inputDate) => {
         if (inputDate) {
 
-            const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+            const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
             const date = new Date(inputDate)
             const dd = date.getDate();
             const mm = months[date.getMonth()];
@@ -34,7 +35,7 @@ class StudentPozicije extends Component {
     }
 
 
-    openAddPozicija = () => {
+    toggleAddPozicija = () => {
         this.setState({
             showAddPozicija: !this.state.showAddPozicija
         })
@@ -110,15 +111,15 @@ class StudentPozicije extends Component {
         if (this.props.studentData.pozicije) {
             return this.props.studentData.pozicije.map((pozicija) => {
                 const output =
-                    <div>
-                        <div>
-                            <b>{pozicija.firma}</b>
+                    <div className="single-pozicija-container">
+                        <div className="pozicija-firma">
+                            {pozicija.firma}
                         </div>
-                        <div>
+                        <div className="pozicija-status">
                             <i>{pozicija.status}</i>
                         </div>
-                        <div>
-                            Od - {this.dateHumanRead(pozicija.pocetak)}<br />
+                        <div className="d-flex justify-content-between">
+                            <span>Start:</span> <span>{this.dateHumanRead(pozicija.pocetak)}</span>
                             {/* Do - {this.dateHumanRead(pozicija.svrsetak)} */}
                         </div>
                     </div>
@@ -139,8 +140,8 @@ class StudentPozicije extends Component {
     }
 
 
-    setPocetak = (date) => {
-        const newDate = new Date(date)
+    setPocetak = (event) => {
+        const newDate = new Date(event.target.value)
         this.setState({
             pocetak: newDate
         })
@@ -148,6 +149,13 @@ class StudentPozicije extends Component {
 
     componentDidMount() {
         this.getAndSetFirms()
+    }
+    editButtonsClasses = () => {
+        if (this.state.showAddPozicija) {
+            return "enter-firma-edit"
+        } else {
+            return "exit-firma-edit"
+        }
     }
 
 
@@ -158,24 +166,29 @@ class StudentPozicije extends Component {
                 <div className="section-title-horizontal-line"></div>
                 {this.mapPozicije()}
                 {this.state.showAddPozicija &&
-                    <div>
-                        <select data-statename="selectedFirma" onChange={this.depositSelectedFirma}>
+                    <div className="add-new-pozicija-container">
+                        <select className="w-100 pozicija-select-dropdown" data-statename="selectedFirma" onChange={this.depositSelectedFirma}>
                             <option>Izaberi firmu</option>
                             {this.mapStateToDropdownOptions(this.state.firmeDropdown)}
                         </select>
-                        <select data-statename="selectedStatus" onChange={this.depositSelectedStatus}>
+                        <select className="w-100 pozicija-select-dropdown" data-statename="selectedStatus" onChange={this.depositSelectedStatus}>
                             <option>Izaberi status</option>
                             <option key="naPraksi" value="Na praksi">Na praksi</option>
                             <option key="zaposlen" value="Zaposlen">Zaposlen</option>
                         </select>
-                        <div className="mt-3">Počevši od:</div>
-                        <input type="date" />
-                        <button type="button" className="btn btn-success" onClick={this.dodajPoziciju}>
-                            Dodaj
-                        </button>
+                        <div className="">Start:</div>
+                        <input className="w-100" type="date" onChange={this.setPocetak}/>
+
+                        <div className={`d-flex justify-content-between ${this.editButtonsClasses()}`}>
+                            <button className="btn btn-warning text-success" onClick={this.toggleAddPozicija}>Ništa, nema veze...</button>
+                            <button className="btn btn-success" onClick={this.dodajPoziciju}>Potvrdi</button>
+                        </div>
+
                     </div>
                 }
-                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon mt-5" onClick={this.openAddPozicija} />
+                {!this.state.showAddPozicija &&
+                <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-new-icon" onClick={this.toggleAddPozicija} />
+                }
             </div>
         )
     }

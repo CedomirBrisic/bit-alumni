@@ -217,9 +217,9 @@ class Filters extends Component {
         if (status !== undefined) {
             status.sort()
 
-            return status.map((element) => {
+            return status.map((element, index) => {
                 const output =
-                    <div className="form-check btn-light d-flex align-items-center">
+                    <div className="form-check btn-light d-flex align-items-center" key={element+index}>
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleStatusiCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>

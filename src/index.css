@@ -23,7 +23,9 @@ code {
     monospace;
 }
 
-
+.bit-people-cars-container{
+  margin-top: 2.4vw;
+}
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
@@ -201,15 +203,9 @@ input:checked {
   font-weight: 600;
 }
 
-.working-card {
-  background-image: url("./images/black-370118_640.png");
-  background-position: center;
-}
+.working-card {}
 
-.internship-card {
-  background-image: url("./images/black-370118_640.png");
-  background-position: center;
-}
+.internship-card {}
 
 .bit-man-card:hover {
   transform: scale(1.1);
@@ -288,6 +284,145 @@ input:checked {
 
 
 /* ----- STUDENTI DETAILS MODAL ----- */
+
+.student-details-container select,
+.student-details-container input {
+  font-size: 1vw;
+}
+
+.programi-sertifikati-title {
+  width: 100%;
+  text-align: start;
+  font-weight: 600;
+  padding-left: 1vw;
+  font-size: 1.1vw;
+  color: #8D1717;
+}
+
+.accordion {
+  width: 100%;
+}
+
+.programi-sertifikati-accordion-container {
+  width: 100%;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+}
+
+.add-program {
+  margin: 0.1vw auto 0.6vw auto;
+  transition: transform 1s;
+  position: relative;
+bottom: 1vw;
+}
+
+.add-program:hover {
+  cursor: pointer;
+  transform: scale(1.2)
+}
+
+.add-vestina-buttons-container{
+  width: 66%;
+  margin-top: 1vw;
+}
+
+.student-detail-card-data-vestine{
+  width: 59%;
+  font-size: 1vw;
+  /* font-weight: 400; */
+  margin-bottom: 0.5vw;
+  color: rgb(66, 66, 66);
+}
+
+
+.add-vestina-container{
+  margin-top: 1vw;
+  width: 66%;
+  outline: none;
+  border: none;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  padding: 0.2vw 0.6vw;
+}
+.details-sertifikat {
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  font-size: 1vw;
+  padding: 0.4vw 1vw;
+  margin-right: 1vw;
+}
+.add-new-sertifikat{
+  outline: none;
+  border: none;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  padding: 0.2vw 0.6vw;
+  width: 66%;
+}
+
+.student-status-header{
+  font-size: 1vw;
+  color: #8D1717;
+  font-weight: 600;
+  margin-top: 2vw;
+  width: 7vw;
+}
+.change-status-dropdown{
+  outline: none;
+  border: none;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  padding: 0.2vw 0.6vw;
+}
+.vestina-single-item{
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  padding: 0.2vw 0.6vw;
+  margin-left: 1vw;
+  margin-top: 1.2vw;
+}
+
+.add-pohadjani-program {
+  margin-top: 1vw;
+}
+.add-sertifikat-buttons-container{
+  width: 66%;
+  margin-top: 1vw;
+  margin-bottom: 0.8vw;
+}
+
+.add-pohadjani-programi-buttons-container {
+  margin-top: 1vw;
+}
+
+.add-pohadjani-program select {
+  outline: none;
+  font-size: 1vw;
+  border: none;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  padding: 0.2vw 0.6vw;
+}
+
+
+.accordion .btn-link {
+  width: 100%;
+  font-weight: 500;
+  color: rgb(66, 66, 66);
+}
+
+.programi-sertifikati-accordion-container .card-header {
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+}
 
 textarea {
   resize: none;
@@ -384,6 +519,56 @@ textarea:focus {
   padding: 1vw;
 }
 
+.single-pozicija-container {
+  width: 96%;
+  font-size: 1vw;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  margin: 0.5vw auto;
+  padding: 0.8vw;
+}
+
+.pozicija-firma,
+.komunikacija-datum {
+  color: #8D1717;
+  font-weight: 700;
+}
+
+.pozicija-status {
+  margin-top: 0.2vw;
+  margin-bottom: 0.4vw;
+}
+
+.komunikacija-komentar {
+  margin-top: 0.5vw;
+}
+
+.add-new-icon {
+  transition: transform 1s;
+  margin-top: 1vw;
+}
+
+.add-new-icon:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 0.2vw #8D1717);
+}
+
+.add-new-pozicija-container {
+  margin: 1vw 0;
+}
+
+.add-new-pozicija-container select {
+  outline: none;
+  border: none;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.8vw;
+  padding: 0.2vw 0.6vw;
+}
+
 .komunikacija-container {
   width: 48%;
   -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
@@ -392,16 +577,26 @@ textarea:focus {
   padding: 1vw;
 }
 
+.single-komunikacija-container {
+  width: 96%;
+  font-size: 1vw;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  margin: 0.5vw auto;
+  padding: 0.8vw;
+}
+
 .student-detail-card-attribute {
   width: 40%;
   margin-bottom: 0.5vw;
   font-weight: 600;
-  font-size: 0.8vw;
+  font-size: 1vw;
 }
 
 .student-detail-card-data {
   width: 59%;
-  font-size: 0.8vw;
+  font-size: 1vw;
   /* font-weight: 400; */
   margin-bottom: 0.5vw;
   color: rgb(66, 66, 66);
@@ -462,7 +657,7 @@ textarea:focus {
 }
 
 .application-buttons-container button {
-  font-size: 0.85vw;
+  font-size: 1vw;
   border: 4px double #8D1717;
 }
 
@@ -501,7 +696,7 @@ textarea:focus {
   width: 65%;
   margin-left: 35%;
   margin-bottom: 2.4vw;
-  font-size: 0.9vw;
+  font-size: 1vw;
 }
 
 .firma-details-opste-informacije {
@@ -708,14 +903,18 @@ textarea:focus {
   font-weight: 500;
   color: rgb(66, 66, 66);
   outline: none;
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  border: none;
 }
 
-.add-new-student-options-container{
+.add-new-student-options-container {
   width: 84%;
   margin: 0 auto 0.5vw;
 }
 
-.add-new-student-dropdown{
+.add-new-student-dropdown {
   width: 25%;
 }
 
@@ -723,7 +922,18 @@ textarea:focus {
   font-size: 1vw;
 }
 
-.add-new-student-button{
+.add-new-student-button {
   font-size: 1.2vw;
   padding: 0.2vw 3vw !important;
+}
+
+
+
+.open-edit {
+  transition: transform 1s;
+}
+
+.open-edit:hover {
+  cursor: pointer;
+  transform: scale(1.2);
 }

@@ -618,14 +618,14 @@ class App extends Component {
           <div className={`studenti-filters-container d-flex flex-column ${this.state.showStudentiFilter ? "enter-filters" : "exit-filters"}`}>
             <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
           </div>
-          <div className="d-flex justify-content-around mt-5" onClick={this.closeFilters}>
+          <div className="d-flex justify-content-around" onClick={this.closeFilters}>
             {!this.state.imeZaPretragu &&
               <div className="d-flex flex-column align-items-center ime-prezime-modal-header">
                 <div><i>Ukupan broj BIT studenata:</i></div>
                 <div><b>{this.state.studentiForRender.length}</b></div>
               </div>}
           </div>
-          <div className="bit-people-cars-container d-flex justify-content-around row mt-5" onClick={this.closeFilters}> {this.mapStudentsForRender()}
+          <div className="bit-people-cars-container d-flex justify-content-around row" onClick={this.closeFilters}> {this.mapStudentsForRender()}
           </div>
         </div>}
 

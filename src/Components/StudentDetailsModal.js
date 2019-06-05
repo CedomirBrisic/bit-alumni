@@ -8,9 +8,12 @@ import updatePohadjaniProgramAtStudent from "../webhooks/updateStudentPohadjaniP
 import updateStudentSertifikat from "../webhooks/updateStudentSertifikat";
 import updateStudentStatus from "../webhooks/updateStudentStatus";
 import updateVestineAtStudent from "../webhooks/updateVestineAtStudent";
-import IosConstruct from 'react-ionicons/lib/IosConstruct';
+import IosConstructOutline from 'react-ionicons/lib/IosConstructOutline';
+import MdAddCircle from 'react-ionicons/lib/MdAddCircle';
+import StudentPlacanje from "../Components/StudentPlacanje";
 import StudentPozicije from "../Components/StudentPozicije";
 import Komunikacija from "../Components/Komunikacija"
+import { CoreStitchServiceClientImpl } from 'mongodb-stitch-core-sdk';
 
 class StudentDetailsModal extends Component {
     constructor(props) {
@@ -39,7 +42,7 @@ class StudentDetailsModal extends Component {
     }
 
     dateHumanRead = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
         const date = new Date(inputDate)
         const dd = date.getDate();
         const mm = months[date.getMonth()];
@@ -122,9 +125,9 @@ class StudentDetailsModal extends Component {
         })
     }
 
-    openAddProgramToStudent = () => {
+    toggleAddProgramToStudent = () => {
         this.setState({
-            showDropdownPohadjaniProgrami: true
+            showDropdownPohadjaniProgrami: !this.state.showDropdownPohadjaniProgrami
         })
     }
 
@@ -136,9 +139,9 @@ class StudentDetailsModal extends Component {
 
 
 
-    openAddSertifikatToStudent = () => {
+    toggleAddSertifikatToStudent = () => {
         this.setState({
-            showAddSertifikatToStudent: true
+            showAddSertifikatToStudent: !this.state.showAddSertifikatToStudent
         })
     }
 
@@ -149,7 +152,7 @@ class StudentDetailsModal extends Component {
     }
 
     mapStateToDropdownOptions = (stateArray) => {
-        return stateArray.map((element) => {
+        return stateArray.sort().map((element) => {
             return <option key={element} value={element}>{element}</option>
         })
     }
@@ -181,6 +184,11 @@ class StudentDetailsModal extends Component {
     mapArrayToListItem = (data) => {
         return data.map((element) => {
             return <div>{element}</div>
+        })
+    }
+    mapVestineArrayToListItem = (data) => {
+        return data.sort().map((element) => {
+            return <div className="vestina-single-item">{element}</div>
         })
     }
 
@@ -231,11 +239,12 @@ class StudentDetailsModal extends Component {
         })
     }
 
-    openChangeStatus = () => {
+    toggleChangeStatus = () => {
         this.setState({
-            showChangeStatus: true,
+            showChangeStatus: !this.state.showChangeStatus,
         })
     }
+
 
 
     dodajStatus = () => {
@@ -257,9 +266,9 @@ class StudentDetailsModal extends Component {
     }
 
 
-    openAddVestinaToStudent = () => {
+    toggleAddVestinaToStudent = () => {
         this.setState({
-            showAddVestinaToStudent: true,
+            showAddVestinaToStudent: !this.state.showAddVestinaToStudent,
         })
     }
 
@@ -289,18 +298,153 @@ class StudentDetailsModal extends Component {
         })
     }
 
+    setStudentsProgramiSertifikati = () => {
+        let pohadjaniProgrami = [];
+        if (this.props.data.pohadjaniProgrami) {
+            pohadjaniProgrami = this.props.data.pohadjaniProgrami;
+        }
+        const sertifikati = (this.props.data.sertifikati !== undefined ? this.props.data.sertifikati : []);
+        let studentSertifikatiAccordion = {}
 
+        if (pohadjaniProgrami !== undefined && pohadjaniProgrami.length > 0) {
+
+            pohadjaniProgrami.forEach((program) => {
+                const programName = program.split(" - ")[0];
+                const programDate = program.split(" - ")[1];
+                const programSertifikati = []
+                if (sertifikati !== undefined) {
+                    sertifikati.forEach((sertifikat) => {
+                        const sertifikatProgramName = sertifikat.split(" - ")[0];
+                        const sertifikatProgramDate = sertifikat.split(" - ")[1];
+                        if (sertifikatProgramName.includes(programName) && sertifikatProgramDate.includes(programDate)) {
+                            programSertifikati.push(sertifikatProgramName.split(" (")[0])
+                        }
+                    })
+                }
+                studentSertifikatiAccordion = {
+                    ...studentSertifikatiAccordion,
+                    [program]: programSertifikati.sort()
+                }
+            })
+            this.setState({
+                studentSertifikatiAccordion
+            })
+        } else {
+            this.setState({
+                studentSertifikatiAccordion: {}
+            })
+        }
+    }
+
+
+
+    calculateSertifikati = (sertifikati) => {
+        return sertifikati.map((sertifikat, index) => {
+            return <span className="details-sertifikat">{sertifikat}</span>
+        })
+    }
+
+    renderProgramiSertifikati = () => {
+        const output = [];
+        if (this.state.studentSertifikatiAccordion !== undefined && this.state.studentSertifikatiAccordion !== null) {
+
+            const studentProgramiSertifikati = this.state.studentSertifikatiAccordion
+            const programiPropertyName = Object.getOwnPropertyNames(studentProgramiSertifikati)
+
+            programiPropertyName.forEach((program, index) => {
+                const btnTitle = program.split(" - ")
+
+                const outputElement =
+                    <div className="accordion" id="accordionProgramiSertifikati">
+                        <div className="card">
+                            <div className="card-header" id={`programSertifikat-${index}`}>
+                                <h2 className="">
+                                    <button className="btn btn-link d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target={`#sertifikatProgram-${index}`} aria-expanded="false" aria-controls={`sertifikatProgram-${index}`}>
+                                        <div>{btnTitle[0]}</div>
+                                        <div>{btnTitle[1]}</div>
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id={`sertifikatProgram-${index}`} className="collapse" aria-labelledby={`programSertifikat-${index}`} data-parent="#accordionProgramiSertifikati">
+                                <div className="card-body">
+                                    {this.calculateSertifikati(studentProgramiSertifikati[program])}
+                                    {!this.state.showAddSertifikatToStudent &&
+                                        <MdAddCircle color="#8D1717" fontSize="2.4vw" className="open-edit" onClick={this.toggleAddSertifikatToStudent} />
+                                    }
+                                </div>
+                                {this.state.showAddSertifikatToStudent &&
+                                    <div className="d-flex flex-column align-items-center">
+                                        <select data-statename="selectedSertifikat" className="add-new-sertifikat" onChange={this.depositDodatneInformacijeToState}>
+                                            <option>Izaberi Sertifikat</option>
+                                            {this.showDropdownPossibleSertifikati()}
+                                        </select>
+                                        <div className={`add-sertifikat-buttons-container d-flex justify-content-between ${this.editButtonsClassessertifikati()}`}>
+                                            <button className="btn btn-warning text-success" onClick={this.toggleAddSertifikatToStudent}>Ništa, nema veze...</button>
+                                            <button className="btn btn-success" onClick={this.dodajSertifikat}>Potvrdi</button>
+                                        </div>
+                                    </div>}
+                            </div>
+                        </div>
+                    </div>
+
+                output.push(outputElement)
+            })
+
+        }
+        return output
+    }
+
+    editButtonsClasses = () => {
+        if (this.state.showDropdownPohadjaniProgrami) {
+            return "enter-firma-edit"
+        } else {
+            return "exit-firma-edit"
+        }
+    }
+    editButtonsClassessertifikati = () => {
+        if (this.state.showAddSertifikatToStudent) {
+            return "enter-firma-edit"
+        } else {
+            return "exit-firma-edit"
+        }
+    }
+    editStatusButtonsClasses = () => {
+        if (this.state.showChangeStatus) {
+            return "enter-firma-edit"
+        } else {
+            return "exit-firma-edit"
+        }
+    }
+    editVestineButtonsClasses = () => {
+        if (this.state.showAddVestinaToStudent) {
+            return "enter-firma-edit"
+        } else {
+            return "exit-firma-edit"
+        }
+    }
+
+
+
+
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.data !== this.props.data) {
+            this.setStudentsProgramiSertifikati()
+        }
+    }
     componentDidMount() {
         this.getAndSetNewStudentDropdowns();
         this.getAndSetKlaseiSertifikati();
     };
 
 
+
     render() {
         return (
             <Modal visible={this.props.visible} onClickBackdrop={this.closeStudentDetailsModal} fade={true} className="modal-container">
-                <div>
-                    <div className="modal-header">
+                <div className="student-details-container">
+                    <div className="modal-header d-flex flex-column align-items-center">
                         <h5 className="modal-title w-100 d-flex flex-column justify-content-center align-items-center">
                             <div>
                                 {this.props.data.pol}
@@ -311,6 +455,26 @@ class StudentDetailsModal extends Component {
                             {this.state.editMode ? <input data-statename="prezime" value={this.state.data.prezime} onChange={this.depositToState} placeholder="Ime..." /> : this.props.data.prezime}
                             </div>
                         </h5>
+                        <div className="d-flex flex-column align-items-center">
+                            <div className="d-flex student-status-header justify-content-around">
+                                {this.props.data.status &&
+                                    <div>{this.props.data.status}</div>}
+                                {!this.state.showChangeStatus &&
+                                    <IosConstructOutline color="#8D1717" fontSize="1.5vw" className="open-edit" onClick={this.toggleChangeStatus} />
+                                }
+                            </div>
+                            {this.state.showChangeStatus &&
+                                <div className="d-flex flex-column">
+                                    <select className="change-status-dropdown" data-statename="selectedStatus" onChange={this.depositDodatneInformacijeToState}>
+                                        <option>Izaberi trenutni Status</option>
+                                        {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.statusi)}
+                                    </select>
+                                    <div className={`add-pohadjani-programi-buttons-container d-flex justify-content-around ${this.editStatusButtonsClasses()}`}>
+                                        <button className="btn btn-warning text-success" onClick={this.toggleChangeStatus}>Ništa, nema veze...</button>
+                                        <button className="btn btn-success" onClick={this.dodajStatus}>Potvrdi</button>
+                                    </div>
+                                </div>}
+                        </div>
                     </div>
 
                     <div className="modal-body d-flex justify-content-around">
@@ -405,7 +569,7 @@ class StudentDetailsModal extends Component {
                                             </div>
                                             <div className="d-flex">
                                                 <span className="student-detail-card-attribute">
-                                                    Napomena:
+                                                    Komentar:
                                                 </span>
                                                 <span className="student-detail-card-data">
                                                     {this.state.editMode ? <textarea placeholder="Komentar" rows="8" data-statename="komentar" value={this.state.data.komentar} onChange={this.depositToState}> </textarea> : <div className="student-details-motiv"><Text>{this.props.data.komentar}</Text></div>}
@@ -418,7 +582,7 @@ class StudentDetailsModal extends Component {
                                                     {this.state.editMode ? "Ništa, nema veze..." : "Izmeni"}
                                                 </button>
                                                 {this.state.editMode &&
-                                                    <button type="button" className="btn edit-modal-button btn-success text-warning d-flex justify-content-center align-items-center" onClick={this.okButton}>
+                                                    <button type="button" className="btn edit-modal-button btn-success d-flex justify-content-center align-items-center" onClick={this.okButton}>
                                                         Sačuvaj
                                                     </button>
                                                 }
@@ -430,93 +594,73 @@ class StudentDetailsModal extends Component {
                                     <div className="card-header" id="headingTwo">
                                         <h5 className="mb-0">
                                             <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                <h6 className="details-card-setion-title">Dodatne informacije</h6>
+                                                <h6 className="details-card-setion-title">{`Sertifikati & veštine`}</h6>
                                                 <div className="section-title-horizontal-line"></div>
                                             </button>
                                         </h5>
                                     </div>
                                     <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                                         <div className="card-body">
-                                            <div className="d-flex">
-                                                <span className="student-detail-card-attribute">
-                                                    Pohađani programi:
+                                            <div className="d-flex flex-column align-items-center justify-content-between">
+                                                <span className="programi-sertifikati-accordion-container">
+                                                    {this.renderProgramiSertifikati()}
                                                 </span>
-                                                <span className="student-detail-card-data">
-                                                    {this.props.data.pohadjaniProgrami ? this.mapArrayToListItem(this.props.data.pohadjaniProgrami) : null}
-                                                </span>
-                                                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddProgramToStudent} />
+                                                {!this.state.showDropdownPohadjaniProgrami &&
+                                                    <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-program" onClick={this.toggleAddProgramToStudent} />
+                                                }
                                                 {this.state.showDropdownPohadjaniProgrami &&
-                                                    <div>
+                                                    <div className="add-pohadjani-program">
                                                         <select data-statename="selectedPohadjaniProgrami" onChange={this.depositDodatneInformacijeToState}>
                                                             <option>Izaberi program</option>
                                                             {this.mapStateToDropdownOptions(this.state.dropdownPohadjaniProgrami)}
                                                         </select>
-                                                        <button type="button" className="btn btn-success" onClick={this.dodajPohadjaniProgram}>
-                                                            Dodaj
-                                                    </button>
+                                                        <div className={`add-pohadjani-programi-buttons-container d-flex justify-content-around ${this.editButtonsClasses()}`}>
+                                                            <button className="btn btn-warning text-success" onClick={this.toggleAddProgramToStudent}>Ništa, nema veze...</button>
+                                                            <button className="btn btn-success" onClick={this.dodajPohadjaniProgram}>Potvrdi</button>
+                                                        </div>
                                                     </div>}
                                             </div>
 
-                                            <div className="d-flex">
-                                                <span className="student-detail-card-attribute">
-                                                    Sertifikati:
-                                                </span>
-                                                <span className="student-detail-card-data">
-                                                    {this.props.data.sertifikati ? this.mapArrayToListItem(this.props.data.sertifikati) : null}
-                                                </span>
-                                                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddSertifikatToStudent} />
-                                                {this.state.showAddSertifikatToStudent &&
-                                                    <div>
-                                                        <select data-statename="selectedSertifikat" onChange={this.depositDodatneInformacijeToState}>
-                                                            <option>Izaberi Sertifikat</option>
-                                                            {this.showDropdownPossibleSertifikati()}
-                                                        </select>
-                                                        <button type="button" className="btn btn-success" onClick={this.dodajSertifikat}>
-                                                            Dodaj
-                                                        </button>
-                                                    </div>}
-                                            </div>
-
-                                            <div className="d-flex">
-                                                <span className="student-detail-card-attribute">
-                                                    Veštine:
-                                                </span>
-                                                <span className="student-detail-card-data">
-                                                    {this.props.data.vestine ? this.mapArrayToListItem(this.props.data.vestine) : null}
-                                                </span>
-                                                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddVestinaToStudent} />
+                                            <div className="d-flex flex-column">
+                                                <div className="d-flex align-items-center">
+                                                    <span className="student-detail-card-attribute">
+                                                        Veštine:
+                                                    </span>
+                                                    <span className="student-detail-card-data-vestine row">
+                                                        {this.props.data.vestine ? this.mapVestineArrayToListItem(this.props.data.vestine) : null}
+                                                    </span>
+                                                    {!this.state.showAddVestinaToStudent &&
+                                                        <MdAddCircle color="#8D1717" fontSize="2.4vw" className="open-edit" onClick={this.toggleAddVestinaToStudent} />
+                                                    }
+                                                </div>
                                                 {this.state.showAddVestinaToStudent &&
-                                                    <div>
-                                                        <select data-statename="selectedVestine" onChange={this.depositDodatneInformacijeToState}>
+                                                    <div className="d-flex flex-column align-items-center ">
+                                                        <select className="add-vestina-container" data-statename="selectedVestine" onChange={this.depositDodatneInformacijeToState}>
                                                             <option>Izaberi Veštinu</option>
                                                             {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.vestine)}
                                                         </select>
-                                                        <button type="button" className="btn btn-success" onClick={this.dodajVestinu}>
-                                                            Dodaj
-                                                        </button>
+                                                        <div className={`add-vestina-buttons-container d-flex justify-content-around ${this.editVestineButtonsClasses()}`}>
+                                                            <button className="btn btn-warning text-success" onClick={this.toggleAddVestinaToStudent}>Ništa, nema veze...</button>
+                                                            <button className="btn btn-success" onClick={this.dodajVestinu}>Potvrdi</button>
+                                                        </div>
                                                     </div>}
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                            <div className="d-flex">
-                                                <span className="student-detail-card-attribute">
-                                                    Trenutni status:
-                                                </span>
-                                                <span className="student-detail-card-data">
-                                                    {this.props.data.status &&
-                                                        <div>{this.props.data.status}</div>}
-                                                </span>
-                                                <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openChangeStatus} />
-                                                {this.state.showChangeStatus &&
-                                                    <div>
-                                                        <select data-statename="selectedStatus" onChange={this.depositDodatneInformacijeToState}>
-                                                            <option>Izaberi trenutni Status</option>
-                                                            {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.statusi)}
-                                                        </select>
-                                                        <button type="button" className="btn btn-success" onClick={this.dodajStatus}>
-                                                            Dodaj
-                                                        </button>
-                                                    </div>}
-                                            </div>
+                                <div className="card podaci-wrapper">
+                                    <div className="card-header" id="headingPlacanje">
+                                        <h5 className="mb-0">
+                                            <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePlacanje" aria-expanded="false" aria-controls="collapsePlacanje">
+                                                <h6 className="details-card-setion-title">Finansijski podaci</h6>
+                                                <div className="section-title-horizontal-line"></div>
+                                            </button>
+                                        </h5>
+                                    </div>
+                                    <div id="collapsePlacanje" className="collapse" aria-labelledby="headingPlacanje" data-parent="#accordion">
+                                        <div className="card-body">
+                                            <StudentPlacanje />
                                         </div>
                                     </div>
                                 </div>
@@ -527,15 +671,10 @@ class StudentDetailsModal extends Component {
 
                         <div className="pozicije-komunikacija-container d-flex">
                             <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
-
                             {/* ----- KOMUNIKACIJA ----- */}
-
                             <Komunikacija komunikacijaData={this.props.data.komunikacija} maticniBroj={this.props.data.maticniBroj} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
                         </div>
                     </div>
-
-
-
 
 
                     <div className="modal-footer d-flex justify-content-center align-items-center">

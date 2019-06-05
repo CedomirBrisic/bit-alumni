@@ -41,8 +41,8 @@ class AddNewStudentModal extends Component {
         })
     }
 
-    setBirthDay = (date) => {
-        const newDate = new Date(date)
+    setBirthDay = (event) => {
+        const newDate = new Date(event.target.value)
         this.setState({
             datumRodjenja: newDate
         })
@@ -238,7 +238,9 @@ class AddNewStudentModal extends Component {
                                         <option defaultValue>Izaberi mesto</option>
                                         {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.mesta)}
                                     </select>
-                                    <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddNewMestoEditor} />
+                                    {!this.state.addNewMestoEditor &&
+                                        <IosConstruct color="#0e3572" fontSize="1.5vw" className="open-edit" onClick={this.openAddNewMestoEditor} />
+                                    }
                                 </div>}
                             {this.state.addNewMestoEditor &&
                                 <div>
@@ -247,7 +249,7 @@ class AddNewStudentModal extends Component {
                                         <button type="button" className="btn btn-warning text-success" onClick={this.closeAddNewMestoEditor}>
                                             Ništa, nema veze...
                                         </button>
-                                        <button type="button" className="btn btn-success text-warning" onClick={this.putNewMesto}>
+                                        <button type="button" className="btn btn-success" onClick={this.putNewMesto}>
                                             Potvrdi
                                         </button>
                                     </div>
@@ -263,7 +265,9 @@ class AddNewStudentModal extends Component {
                                         <option defaultValue>Izaberi obrazovanje</option>
                                         {this.mapStateToDropdownOptions(this.state.addNewStudentDropdowns.obrazovanje)}
                                     </select>
-                                    <IosConstruct color="#0e3572" fontSize="1.5vw" className="add-new-icon" onClick={this.openAddNewObrazovanjeEditor} />
+                                    {!this.state.addNewObrazovanjeEditor &&
+                                        <IosConstruct color="#0e3572" fontSize="1.5vw" className="open-edit" onClick={this.openAddNewObrazovanjeEditor} />
+                                    }
                                 </div>}
                             {this.state.addNewObrazovanjeEditor &&
                                 <div>
@@ -272,7 +276,7 @@ class AddNewStudentModal extends Component {
                                         <button type="button" className="btn btn-warning text-success" onClick={this.closeAddNewObrazovanjeEditor}>
                                             Ništa, nema veze...
                                         </button>
-                                        <button type="button" className="btn btn-success text-warning" onClick={this.putNewObrazovanje}>
+                                        <button type="button" className="btn btn-success" onClick={this.putNewObrazovanje}>
                                             Potvrdi
                                         </button>
                                     </div>
@@ -293,7 +297,7 @@ class AddNewStudentModal extends Component {
                 <div className="modal-footer d-flex">
                     {this.state.createNewStudentFailed &&
                         <div>Došlo je do greške, probaj ponovo</div>}
-                    <button type="button" className="btn btn-success text-warning add-new-student-button" onClick={this.createNewStudent}>
+                    <button type="button" className="btn btn-success add-new-student-button" onClick={this.createNewStudent}>
                         Potvrdi
                     </button>
                 </div>
