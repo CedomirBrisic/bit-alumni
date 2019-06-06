@@ -5,7 +5,7 @@ import MdPersonAdd from 'react-ionicons/lib/MdPersonAdd';
 import IosPeopleOutline from 'react-ionicons/lib/IosPeopleOutline';
 import IosOptions from 'react-ionicons/lib/IosOptions';
 
-
+import LogIn from "../Components/LogIn";
 import Filters from "../Components/Filters";
 import AddNewStudentModal from './AddNewStudentModal';
 import AddNewClassModal from "./AddNewClassModal";
@@ -36,8 +36,16 @@ class App extends Component {
       firmeAll: [],
       selectedFirmaForFilter: "",
       showFirmeFilter: true,
-      showStudentiFilter: false
+      showStudentiFilter: false,
+      isLoggedIn: "xxx",
     }
+  }
+
+  secretKey = (qwe) => {
+    sessionStorage.setItem('hijeroglif', qwe);
+    this.setState ({
+      isLoggedIn: qwe
+    })
   }
 
   openNewBitManModal = () => {
@@ -148,8 +156,17 @@ class App extends Component {
     })
   }
 
-
+checkLoggingKey = () => {
+  const qwe = sessionStorage.getItem('hijeroglif');
+  console.log(qwe)
+  if (qwe !== null) {
+    this.setState({
+      isLoggedIn: qwe
+    })
+  }
+}
   componentDidMount() {
+    this.checkLoggingKey();
     this.getStudentsFromStudenti();
     this.getAndSetFirms();
   }
@@ -568,88 +585,98 @@ class App extends Component {
 
   render() {
 
-    return (<div className="p-5">
-      <div className="application-buttons-container d-flex align-items-center justify-content-between">
+    return (
+      <div>
+        {this.state.isLoggedIn.length !== 42 &&
+          <LogIn secretKey={this.secretKey} />
+        }
 
-        <div className="application-buttons-wrapper-left d-flex justify-content-around">
-          <MdPersonAdd onClick={this.openNewBitManModal}
-            color="#8D1717"
-            fontSize="2.4vw"
-            className="add-new-student-icon" />
+        {this.state.isLoggedIn.length == 42 &&
+          <div className="p-5">
+            <div className="application-buttons-container d-flex align-items-center justify-content-between">
 
-          <button type="button"
-            className="btn btn-light"
-            onClick={this.openAddNewClassModal} >
-            Dodaj novu klasu polaznika </button>
-          <button type="button" className="btn btn-light"
-            onClick={this.openAddNewFirm} >
-            Dodaj novu kompaniju</button>
-        </div>
+              <div className="application-buttons-wrapper-left d-flex justify-content-around">
+                <MdPersonAdd onClick={this.openNewBitManModal}
+                  color="#8D1717"
+                  fontSize="2.4vw"
+                  className="add-new-student-icon" />
 
-        <button type="button" className="btn btn-light application-buttons-wrapper-right"
-          onClick={this.toggleView} >
-          Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
-      </div>
+                <button type="button"
+                  className="btn btn-light"
+                  onClick={this.openAddNewClassModal} >
+                  Dodaj novu klasu polaznika </button>
+                <button type="button" className="btn btn-light"
+                  onClick={this.openAddNewFirm} >
+                  Dodaj novu kompaniju</button>
+              </div>
 
-      <AddNewStudentModal visible={this.state.addNewStudentModal}
-        closeNewBitManModal={this.closeNewBitManModal}
-        newStudentCreatedSuccessfullyModal={this.newStudentCreatedSuccessfullyModal} />
+              <button type="button" className="btn btn-light application-buttons-wrapper-right"
+                onClick={this.toggleView} >
+                Promeni prikaz na {this.state.listFirme ? "BIT Alumni" : "BIT partnerske kompanije"}</button>
+            </div>
 
-      <AddNewClassModal visible={this.state.addNewClassModal}
-        closeAddNewClassModal={this.closeAddNewClassModal} />
+            <AddNewStudentModal visible={this.state.addNewStudentModal}
+              closeNewBitManModal={this.closeNewBitManModal}
+              newStudentCreatedSuccessfullyModal={this.newStudentCreatedSuccessfullyModal} />
 
-      <AddNewFirmModal visible={this.state.showAddNewFirm}
-        closeAddNewFirm={this.closeAddNewFirm} />
-      <NewStudentCreatedSuccessfullyModal visible={this.state.newStudentCreatedSuccessfully}
-        closeNewStudentCreatedSuccessufullyModal={this.closeNewStudentCreatedSuccessufullyModal} />
-      <StudentDetailsModal data={this.state.studentZaDetaljeModal}
-        visible={this.state.showStudentDetailsModal}
-        closeStudentDetailsModal={this.closeStudentDetailsModal}
-        getStudentsFromStudenti={this.getStudentsFromStudenti} />
+            <AddNewClassModal visible={this.state.addNewClassModal}
+              closeAddNewClassModal={this.closeAddNewClassModal} />
+
+            <AddNewFirmModal visible={this.state.showAddNewFirm}
+              closeAddNewFirm={this.closeAddNewFirm} />
+            <NewStudentCreatedSuccessfullyModal visible={this.state.newStudentCreatedSuccessfully}
+              closeNewStudentCreatedSuccessufullyModal={this.closeNewStudentCreatedSuccessufullyModal} />
+            <StudentDetailsModal data={this.state.studentZaDetaljeModal}
+              visible={this.state.showStudentDetailsModal}
+              closeStudentDetailsModal={this.closeStudentDetailsModal}
+              getStudentsFromStudenti={this.getStudentsFromStudenti} />
 
 
 
-      {/* ----- STUDENTI VIEW ----- */}
+            {/* ----- STUDENTI VIEW ----- */}
 
-      {this.state.listStudenti &&
-        <div>
-          <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleStudentiFilter} className="firme-burger-menu" />
-          <input className="search-bar student-search-bar" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
-          <div className={`studenti-filters-container d-flex flex-column ${this.state.showStudentiFilter ? "enter-filters" : "exit-filters"}`}>
-            <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
-          </div>
-          <div className="d-flex justify-content-around" onClick={this.closeFilters}>
-            {!this.state.imeZaPretragu &&
-              <div className="d-flex flex-column align-items-center ime-prezime-modal-header">
-                <div><i>Ukupan broj BIT studenata:</i></div>
-                <div><b>{this.state.studentiForRender.length}</b></div>
+            {this.state.listStudenti &&
+              <div>
+                <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleStudentiFilter} className="firme-burger-menu" />
+                <input className="search-bar student-search-bar" type="text" placeholder="Pretraga studenata po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+                <div className={`studenti-filters-container d-flex flex-column ${this.state.showStudentiFilter ? "enter-filters" : "exit-filters"}`}>
+                  <Filters filterStudentsForRendering={this.filterStudentsForRendering} />
+                </div>
+                <div className="d-flex justify-content-around" onClick={this.closeFilters}>
+                  {!this.state.imeZaPretragu &&
+                    <div className="d-flex flex-column align-items-center ime-prezime-modal-header">
+                      <div><i>Ukupan broj BIT studenata:</i></div>
+                      <div><b>{this.state.studentiForRender.length}</b></div>
+                    </div>}
+                </div>
+                <div className="bit-people-cars-container d-flex justify-content-around row" onClick={this.closeFilters}> {this.mapStudentsForRender()}
+                </div>
               </div>}
-          </div>
-          <div className="bit-people-cars-container d-flex justify-content-around row" onClick={this.closeFilters}> {this.mapStudentsForRender()}
-          </div>
-        </div>}
 
 
-      {/* ----- FIRME VIEW ----- */}
-      {this.state.listFirme &&
-        <div>
-          <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleFirmeFilter} className="firme-burger-menu" />
-          <div className={`firm-filters-container d-flex flex-column ${this.state.showFirmeFilter ? "enter-filters" : "exit-filters"}`}>
-            <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
-            <div className="d-flex justify-content-around">
-              <button type="button" className="btn btn-light" onClick={this.orderFirmsByAlphabet}>A-Z</button>
-              <button type="button" className="btn btn-light" onClick={this.orderFirmsByNumberOfStudents} ><IosPeopleOutline fontSize="2vw" /></button>
-            </div>
-            <div className="btn-group firme-filters-container d-flex flex-column" role="group" aria-label="Basic example">
-              {this.mapFirmeForSelect()}
-            </div>
+            {/* ----- FIRME VIEW ----- */}
+            {this.state.listFirme &&
+              <div>
+                <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleFirmeFilter} className="firme-burger-menu" />
+                <div className={`firm-filters-container d-flex flex-column ${this.state.showFirmeFilter ? "enter-filters" : "exit-filters"}`}>
+                  <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+                  <div className="d-flex justify-content-around">
+                    <button type="button" className="btn btn-light" onClick={this.orderFirmsByAlphabet}>A-Z</button>
+                    <button type="button" className="btn btn-light" onClick={this.orderFirmsByNumberOfStudents} ><IosPeopleOutline fontSize="2vw" /></button>
+                  </div>
+                  <div className="btn-group firme-filters-container d-flex flex-column" role="group" aria-label="Basic example">
+                    {this.mapFirmeForSelect()}
+                  </div>
+                </div>
+                {this.state.selectedFirmaForFilter &&
+                  <StudentiByFirm getAndSetFirms={this.getAndSetFirms} selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters} />
+                }
+              </div>
+            }
           </div>
-          {this.state.selectedFirmaForFilter &&
-            <StudentiByFirm getAndSetFirms={this.getAndSetFirms} selectedFirmaForFilter={this.state.selectedFirmaForFilter} studentiAll={this.state.studentiAll} openStudentDetailsModal={this.openStudentDetailsModal} closeFilters={this.closeFilters} />
-          }
-        </div>
-      }
-    </div >
+        }
+
+      </div >
 
     );
   }

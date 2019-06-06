@@ -23,7 +23,7 @@ code {
     monospace;
 }
 
-.bit-people-cars-container{
+.bit-people-cars-container {
   margin-top: 2.4vw;
 }
 
@@ -314,7 +314,7 @@ input:checked {
   margin: 0.1vw auto 0.6vw auto;
   transition: transform 1s;
   position: relative;
-bottom: 1vw;
+  bottom: 1vw;
 }
 
 .add-program:hover {
@@ -322,12 +322,12 @@ bottom: 1vw;
   transform: scale(1.2)
 }
 
-.add-vestina-buttons-container{
+.add-vestina-buttons-container {
   width: 66%;
   margin-top: 1vw;
 }
 
-.student-detail-card-data-vestine{
+.student-detail-card-data-vestine {
   width: 59%;
   font-size: 1vw;
   /* font-weight: 400; */
@@ -336,7 +336,7 @@ bottom: 1vw;
 }
 
 
-.add-vestina-container{
+.add-vestina-container {
   margin-top: 1vw;
   width: 66%;
   outline: none;
@@ -346,6 +346,7 @@ bottom: 1vw;
   box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
   padding: 0.2vw 0.6vw;
 }
+
 .details-sertifikat {
   -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
@@ -354,7 +355,8 @@ bottom: 1vw;
   padding: 0.4vw 1vw;
   margin-right: 1vw;
 }
-.add-new-sertifikat{
+
+.add-new-sertifikat {
   outline: none;
   border: none;
   -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
@@ -364,14 +366,15 @@ bottom: 1vw;
   width: 66%;
 }
 
-.student-status-header{
+.student-status-header {
   font-size: 1vw;
   color: #8D1717;
   font-weight: 600;
   margin-top: 2vw;
   width: 7vw;
 }
-.change-status-dropdown{
+
+.change-status-dropdown {
   outline: none;
   border: none;
   -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
@@ -379,7 +382,8 @@ bottom: 1vw;
   box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
   padding: 0.2vw 0.6vw;
 }
-.vestina-single-item{
+
+.vestina-single-item {
   -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
@@ -391,7 +395,8 @@ bottom: 1vw;
 .add-pohadjani-program {
   margin-top: 1vw;
 }
-.add-sertifikat-buttons-container{
+
+.add-sertifikat-buttons-container {
   width: 66%;
   margin-top: 1vw;
   margin-bottom: 0.8vw;
@@ -936,4 +941,59 @@ textarea:focus {
 .open-edit:hover {
   cursor: pointer;
   transform: scale(1.2);
+}
+
+
+/*----- LOGGING IN PAGE -----*/
+
+
+.login-page-container {
+  background-image: url("./images/cogwheels-284526.jpg");
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+  /* filter: blur(0.5vw) */
+}
+
+.login-page-wrapper {}
+
+.nevidljivi {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12vw;
+  height: 12vw;
+}
+
+.login-input {
+  width: 0vw;
+  font-size: 1.6vw;
+  color: #8D1717;
+  font-weight: 600;
+  outline: none;
+  border: none;
+  -webkit-box-shadow: 0px 0px 1vw 2px rgba(255, 255, 255, 1);
+  -moz-box-shadow: 0px 0px 1vw 2px rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 1vw 2px rgba(255, 255, 255, 1);
+  animation: enterLogin 1s forwards
+}
+
+@keyframes enterLogin {
+  0% {
+    width: 0vw;
+    height: 0.1vw;
+  }
+
+  66% {
+    width: 24vw;
+    height: 0.1vw;
+    /* padding: 0.1vw 0; */
+  }
+
+  100% {
+    width: 24vw;
+    height: 1.6vw;
+    padding: 0.4vw 0.8vw;
+    box-sizing: content-box;
+  }
 }
