@@ -35,43 +35,47 @@ class Filters extends Component {
     getAndSetKlaseiSertifikati = () => {
         const kurseviIsertifikati = [];
         getKlaseiSertifikati().then((response) => {
-            let responseSortedByName = response;
-            responseSortedByName.sort(function (a, b) {
-                let nazivA = a.naziv.toLowerCase();
-                let nazivB = b.naziv.toLowerCase();
-                if (nazivA < nazivB) return -1;
-                if (nazivA > nazivB) return 1;
-                return 0
-            })
-            responseSortedByName.forEach(element => {
-                const klasa = `${element.naziv} - ${element.datumZavrsetka}`
-                kurseviIsertifikati.push(klasa)
-            });
-            this.setState({
-                kurseviIsertifikati
-            })
+                let responseSortedByName = response;
+                responseSortedByName.sort(function (a, b) {
+                    let nazivA = a.naziv.toLowerCase();
+                    let nazivB = b.naziv.toLowerCase();
+                    if (nazivA < nazivB) return -1;
+                    if (nazivA > nazivB) return 1;
+                    return 0
+                })
+                responseSortedByName.forEach(element => {
+                    const klasa = `${element.naziv} - ${element.datumZavrsetka}`
+                    kurseviIsertifikati.push(klasa)
+                });
+                this.setState({
+                    kurseviIsertifikati
+                })
+        }).catch((error) => {
+            alert (error)
         })
     }
 
     getAndSetFirms = () => {
         const firme = [];
         getFirms().then((response) => {
-            let responseSortedByName = response;
-            responseSortedByName.sort(function (a, b) {
-                let firmaA = a.nazivKompanije.toLowerCase();
-                let firmaB = b.nazivKompanije.toLowerCase();
-                if (firmaA < firmaB) return -1;
-                if (firmaA > firmaB) return 1;
-                return 0
-            })
-            responseSortedByName.forEach(element => {
-                const firma = `${element.nazivKompanije}`
-                firme.push(firma)
-            });
-            this.setState({
-                firmeDropdown: firme,
-                allFirmeiKompanije: responseSortedByName,
-            })
+                let responseSortedByName = response;
+                responseSortedByName.sort(function (a, b) {
+                    let firmaA = a.nazivKompanije.toLowerCase();
+                    let firmaB = b.nazivKompanije.toLowerCase();
+                    if (firmaA < firmaB) return -1;
+                    if (firmaA > firmaB) return 1;
+                    return 0
+                })
+                responseSortedByName.forEach(element => {
+                    const firma = `${element.nazivKompanije}`
+                    firme.push(firma)
+                });
+                this.setState({
+                    firmeDropdown: firme,
+                    allFirmeiKompanije: responseSortedByName,
+                })
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -219,7 +223,7 @@ class Filters extends Component {
 
             return status.map((element, index) => {
                 const output =
-                    <div className="form-check btn-light d-flex align-items-center" key={element+index}>
+                    <div className="form-check btn-light d-flex align-items-center" key={element + index}>
                         <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleStatusiCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>

@@ -139,15 +139,13 @@ class AddNewStudentModal extends Component {
     putNewMesto = () => {
         const payload = this.state.newMesto;
         updateMestoAtStudentiDropdowns(payload).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.setState({
                     addNewMestoEditor: false,
                     newMesto: "",
                 })
                 this.getAndSetNewStudentDropdowns();
-            } else {
-                alert("ACHTUNG!!!")
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -166,7 +164,6 @@ class AddNewStudentModal extends Component {
     putNewObrazovanje = () => {
         const payload = this.state.newObrazovanje;
         updateObrazovanjeAtStudentiDropdowns(payload).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.setState({
                     addNewObrazovanjeEditor: false,
                     newObrazovanje: "",
@@ -177,9 +174,8 @@ class AddNewStudentModal extends Component {
                         addNewStudentDropdowns
                     })
                 })
-            } else {
-                alert("ACHTUNG!!!")
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 

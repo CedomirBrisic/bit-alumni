@@ -217,14 +217,12 @@ class StudentiByFirm extends Component {
         }
 
         updateFirma(data).then((response) => {
-            if (response.status == 200 && response.ok == true) {
                 this.props.getAndSetFirms()
                 this.setState({
                     openFirmaDetailsEditMode: false
                 })
-            } else {
-                alert("ACHTUNG!!!")
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 

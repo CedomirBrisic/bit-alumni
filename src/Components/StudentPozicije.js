@@ -80,22 +80,24 @@ class StudentPozicije extends Component {
     getAndSetFirms = () => {
         const firme = [];
         getFirms().then((response) => {
-            let responseSortedByName = response;
-            responseSortedByName.sort(function (a, b) {
-                let firmaA = a.nazivKompanije.toLowerCase();
-                let firmaB = b.nazivKompanije.toLowerCase();
-                if (firmaA < firmaB) return -1;
-                if (firmaA > firmaB) return 1;
-                return 0
-            })
-            responseSortedByName.forEach(element => {
-                const firma = `${element.nazivKompanije}`
-                firme.push(firma)
-            });
-            this.setState({
-                firmeDropdown: firme,
-                allFirmeiKompanije: responseSortedByName,
-            })
+                let responseSortedByName = response;
+                responseSortedByName.sort(function (a, b) {
+                    let firmaA = a.nazivKompanije.toLowerCase();
+                    let firmaB = b.nazivKompanije.toLowerCase();
+                    if (firmaA < firmaB) return -1;
+                    if (firmaA > firmaB) return 1;
+                    return 0
+                })
+                responseSortedByName.forEach(element => {
+                    const firma = `${element.nazivKompanije}`
+                    firme.push(firma)
+                });
+                this.setState({
+                    firmeDropdown: firme,
+                    allFirmeiKompanije: responseSortedByName,
+                })
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -177,7 +179,7 @@ class StudentPozicije extends Component {
                             <option key="zaposlen" value="Zaposlen">Zaposlen</option>
                         </select>
                         <div className="">Start:</div>
-                        <input className="w-100" type="date" onChange={this.setPocetak}/>
+                        <input className="w-100" type="date" onChange={this.setPocetak} />
 
                         <div className={`d-flex justify-content-between ${this.editButtonsClasses()}`}>
                             <button className="btn btn-warning text-success" onClick={this.toggleAddPozicija}>Ništa, nema veze...</button>
@@ -187,7 +189,7 @@ class StudentPozicije extends Component {
                     </div>
                 }
                 {!this.state.showAddPozicija &&
-                <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-new-icon" onClick={this.toggleAddPozicija} />
+                    <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-new-icon" onClick={this.toggleAddPozicija} />
                 }
             </div>
         )

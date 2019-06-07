@@ -22,11 +22,9 @@ class AddNewFirmModal extends Component {
         }
 
         postAddNewKompanija(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.props.closeAddNewFirm()
-            } else {
-                alert("Došlo je do greške, ko zna šta je bilo... pokušajte ponovo")
-            }
+        }).catch((error) => {
+            alert (error)
         })
 
         this.setState({

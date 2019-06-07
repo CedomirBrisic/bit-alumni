@@ -87,12 +87,10 @@ class StudentDetailsModal extends Component {
             this.state.showStudentDetailsModal === true) {
             const data = this.state.data;
             updateStudents(data).then((response) => {
-                if (response.status === 200 && response.ok === true) {
                     this.closeStudentDetailsModal();
                     this.props.getStudentsFromStudenti();
-                } else {
-                    alert(response)
-                }
+            }).catch((error) => {
+                alert (error)
             })
         } else {
             this.props.closeStudentDetailsModal();
@@ -113,15 +111,17 @@ class StudentDetailsModal extends Component {
     getAndSetKlaseiSertifikati = () => {
         let dropdownPohadjaniProgrami = [];
         getKlaseiSertifikati().then((response) => {
-            response.forEach(element => {
-                const datumZavrsetka = this.dateHumanRead(element.datumZavrsetka);
-                const klasa = `${element.naziv} - ${datumZavrsetka}`
-                dropdownPohadjaniProgrami.push(klasa)
-            });
-            this.setState({
-                dropdownPohadjaniProgrami,
-                kurseviIsertifikati: response
-            })
+                response.forEach(element => {
+                    const datumZavrsetka = this.dateHumanRead(element.datumZavrsetka);
+                    const klasa = `${element.naziv} - ${datumZavrsetka}`
+                    dropdownPohadjaniProgrami.push(klasa)
+                });
+                this.setState({
+                    dropdownPohadjaniProgrami,
+                    kurseviIsertifikati: response
+                })
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -170,14 +170,12 @@ class StudentDetailsModal extends Component {
             pohadjaniProgrami: pohadjaniProgramiToSend
         }
         updatePohadjaniProgramAtStudent(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.props.getStudentsFromStudenti();
                 this.setState({
                     showDropdownPohadjaniProgrami: false,
                 })
-            } else {
-                alert(response)
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -205,14 +203,12 @@ class StudentDetailsModal extends Component {
             sertifikati: sertifikatToSend
         }
         updateStudentSertifikat(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.props.getStudentsFromStudenti();
                 this.setState({
                     showAddSertifikatToStudent: false,
                 })
-            } else {
-                alert(response)
-            }
+        }).catch((error) => {
+            alert (error)
         })
         this.closeAddSertifikatToStudent()
 
@@ -254,14 +250,12 @@ class StudentDetailsModal extends Component {
         }
 
         updateStudentStatus(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.props.getStudentsFromStudenti();
                 this.setState({
                     showChangeStatus: false,
                 })
-            } else {
-                alert(response)
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -287,14 +281,12 @@ class StudentDetailsModal extends Component {
         }
 
         updateVestineAtStudent(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.props.getStudentsFromStudenti();
                 this.setState({
                     showAddVestinaToStudent: false,
                 })
-            } else {
-                alert(response)
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 

@@ -52,12 +52,10 @@ class AddNewClassModal extends Component {
             sertifikati: sertifikati
         }
 
-        postNewProgramiAndSertifikati(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
+        postNewProgramiAndSertifikati(data).then(() => {
                 this.props.closeAddNewClassModal()
-            } else {
-                alert("ACHTUNG!!!")
-            }
+        }).catch((error) => {
+            alert (error)
         })
     }
 
@@ -70,16 +68,18 @@ class AddNewClassModal extends Component {
     }
 
     componentDidMount() {
-        getAddNewStudentDropdowns().then((res) => {
-            this.setState({
-                postojeciProgrami: res[0].programi
-            })
+        getAddNewStudentDropdowns().then((response) => {
+                this.setState({
+                    postojeciProgrami: response[0].programi
+                })
+        }).catch((error) => {
+            alert (error)
         })
     }
 
     mapPostojeciProgrami = () => {
         return this.state.postojeciProgrami.map((program, index) => {
-            return <button key={program+index} type="button" className="btn btn-light program-select" data-type={program} onClick={this.setType}>{program}</button>
+            return <button key={program + index} type="button" className="btn btn-light program-select" data-type={program} onClick={this.setType}>{program}</button>
         })
     }
 

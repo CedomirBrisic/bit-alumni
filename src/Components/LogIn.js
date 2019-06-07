@@ -7,16 +7,16 @@ class LogIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showInput: false,
+            // showInput: false,
             hiddenValue: "",
         }
     }
 
-    openInput = () => {
-        this.setState({
-            showInput: true
-        })
-    }
+    // openInput = () => {
+    //     this.setState({
+    //         showInput: true
+    //     })
+    // }
     tryToLogIn = (event) => {
         this.setState({
             hiddenValue: event.target.value
@@ -28,7 +28,7 @@ class LogIn extends Component {
                 if (response[0] !== undefined && response[0].qwerty) {
                     this.props.secretKey(response[0].qwerty)
                 } else {
-                    alert("ACHTUNG!!!")
+                    alert("ACHTUNG!!! \n Najverovatnije ne valja šifra", response)
                     this.setState({
                         hiddenValue: ""
                     })
@@ -37,16 +37,17 @@ class LogIn extends Component {
         }
     }
 
+
     render() {
         return (
 
             <div className="login-page-container d-flex justify-content-center align-items-center">
                 <div className="login-page-wrapper">
-                    {this.state.showInput &&
-                        <input type="text" value={this.state.hiddenValue} onChange={this.tryToLogIn} onKeyPress={this.checkKey} className="login-input" />
-                    }
+                    {/* {this.state.showInput && */}
+                        <input type="password"  value={this.state.hiddenValue} onChange={this.tryToLogIn} onKeyPress={this.checkKey} className="login-input" />
+                    {/* } */}
                 </div>
-                <div className="nevidljivi" onClick={this.openInput}></div>
+                {/* <div className="nevidljivi" onClick={this.openInput}></div> */}
             </div>
         )
     }

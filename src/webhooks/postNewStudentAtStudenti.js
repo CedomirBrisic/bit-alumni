@@ -1,5 +1,9 @@
 const postNewStudentAtStudenti = (data) => {
-    return fetch("https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/POSTstudenti", {
+    const qwe = sessionStorage.getItem('hijeroglif');
+    // if (qwe !== null) {
+    console.log("postNewStudentAtStudenti", qwe)
+
+    return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/POSTstudenti?secret=${qwe}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -10,6 +14,7 @@ const postNewStudentAtStudenti = (data) => {
     }).then((response) => {
         return response
     })
+// }
 }
 
 export default postNewStudentAtStudenti;

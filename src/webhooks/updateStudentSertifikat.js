@@ -1,5 +1,9 @@
 const updateStudentSertifikat = (data) => {
-    return fetch("https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTsertifikatAtStudent", {
+    const qwe = sessionStorage.getItem('hijeroglif');
+    // if (qwe !== null) {
+        console.log("updateStudentSertifikat", qwe)
+
+    return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTsertifikatAtStudent?secret=${qwe}`, {
         body: JSON.stringify({
             data
         }),
@@ -10,6 +14,7 @@ const updateStudentSertifikat = (data) => {
     }).then((response) => {
         return response
     })
+// }
 }
 
 export default updateStudentSertifikat;

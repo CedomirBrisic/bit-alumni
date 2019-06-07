@@ -1,5 +1,9 @@
 const updateObrazovanjeAtStudentiDropdowns = (obrazovanje) => {
-    return fetch("https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTobrazovanjeAtStudentiDropdowns", {
+    const qwe = sessionStorage.getItem('hijeroglif');
+    // if (qwe !== null) {
+    console.log("updateObrazovanjeAtStudentiDropdowns", qwe)
+
+    return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTobrazovanjeAtStudentiDropdowns?secret=${qwe}`, {
         body: JSON.stringify({
             obrazovanje
         }),
@@ -10,6 +14,7 @@ const updateObrazovanjeAtStudentiDropdowns = (obrazovanje) => {
     }).then((response) => {
         return response
     })
+// }
 }
 
 export default updateObrazovanjeAtStudentiDropdowns;

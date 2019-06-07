@@ -106,7 +106,9 @@ class App extends Component {
       this.setState({
         firmeAll: firmeSortedByName,
       })
-    })
+    }).catch((error) => {
+      alert (error)
+  })
   }
 
   orderFirmsByAlphabet = () => {
@@ -158,7 +160,6 @@ class App extends Component {
 
 checkLoggingKey = () => {
   const qwe = sessionStorage.getItem('hijeroglif');
-  console.log(qwe)
   if (qwe !== null) {
     this.setState({
       isLoggedIn: qwe
@@ -167,8 +168,7 @@ checkLoggingKey = () => {
 }
   componentDidMount() {
     this.checkLoggingKey();
-    this.getStudentsFromStudenti();
-    this.getAndSetFirms();
+
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -183,6 +183,9 @@ checkLoggingKey = () => {
       })
     } else if (prevState.firmeAll !== this.state.firmeAll) {
       this.selectFirmaForFilter()
+    } else if (prevState.isLoggedIn !== this.state.isLoggedIn && this.state.isLoggedIn.length == 42 && sessionStorage.getItem('hijeroglif') !== null) {
+      this.getStudentsFromStudenti();
+      this.getAndSetFirms();
     }
   }
 
