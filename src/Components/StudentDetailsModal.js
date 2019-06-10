@@ -13,7 +13,6 @@ import MdAddCircle from 'react-ionicons/lib/MdAddCircle';
 import StudentPlacanje from "../Components/StudentPlacanje";
 import StudentPozicije from "../Components/StudentPozicije";
 import Komunikacija from "../Components/Komunikacija"
-import { CoreStitchServiceClientImpl } from 'mongodb-stitch-core-sdk';
 
 class StudentDetailsModal extends Component {
     constructor(props) {
@@ -39,16 +38,6 @@ class StudentDetailsModal extends Component {
             selectedVestine: "",
             vestineToSend: [],
         }
-    }
-
-    dateHumanRead = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
-        const date = new Date(inputDate)
-        const dd = date.getDate();
-        const mm = months[date.getMonth()];
-        const yy = date.getFullYear();
-
-        return `${dd}. ${mm} ${yy}.`
     }
 
     editMode = () => {
@@ -112,7 +101,7 @@ class StudentDetailsModal extends Component {
         let dropdownPohadjaniProgrami = [];
         getKlaseiSertifikati().then((response) => {
                 response.forEach(element => {
-                    const datumZavrsetka = this.dateHumanRead(element.datumZavrsetka);
+                    const datumZavrsetka = element.datumZavrsetka;
                     const klasa = `${element.naziv} - ${datumZavrsetka}`
                     dropdownPohadjaniProgrami.push(klasa)
                 });
@@ -159,15 +148,31 @@ class StudentDetailsModal extends Component {
 
     dodajPohadjaniProgram = () => {
         let pohadjaniProgramiToSend = [];
+        let selectedKursPrice = 0;
         if (this.props.data.pohadjaniProgrami) {
             pohadjaniProgramiToSend = this.props.data.pohadjaniProgrami;
             pohadjaniProgramiToSend.push(this.state.selectedPohadjaniProgrami);
         } else {
             pohadjaniProgramiToSend[0] = this.state.selectedPohadjaniProgrami;
         }
+
+        const selectedPohadjaniProgramSplit = this.state.selectedPohadjaniProgrami.split(" - ");
+        this.state.kurseviIsertifikati.forEach((kurs) => {
+            if (kurs.kursPrice && kurs.naziv === selectedPohadjaniProgramSplit[0] && kurs.datumZavrsetka === selectedPohadjaniProgramSplit[1]){
+                selectedKursPrice = kurs.kursPrice.$numberInt
+            }
+        })
+
+        let totalPrice = "";
+        if (this.props.data.kursPrice){
+            totalPrice = parseInt(this.props.data.kursPrice.$numberInt, 10) + parseInt(selectedKursPrice, 10)
+        } else {
+            totalPrice = parseInt(selectedKursPrice, 10)
+        }
         const data = {
             maticniBroj: this.props.data.maticniBroj,
-            pohadjaniProgrami: pohadjaniProgramiToSend
+            pohadjaniProgrami: pohadjaniProgramiToSend,
+            kursPrice: totalPrice
         }
         updatePohadjaniProgramAtStudent(data).then((response) => {
                 this.props.getStudentsFromStudenti();
@@ -221,8 +226,8 @@ class StudentDetailsModal extends Component {
             this.props.data.pohadjaniProgrami.forEach((kurs) => {
                 let kursArr = kurs.split(" - ")
                 for (let i = 0; i < kurseviIsertifikati.length; i++) {
-                    if (kursArr[0] == kurseviIsertifikati[i].naziv &&
-                        kursArr[1] == kurseviIsertifikati[i].datumZavrsetka) {
+                    if (kursArr[0] === kurseviIsertifikati[i].naziv &&
+                        kursArr[1] === kurseviIsertifikati[i].datumZavrsetka) {
                         for (let j = 0; j < kurseviIsertifikati[i].sertifikati.length; j++) {
                             const oneSertifikatPossibility = `${kurseviIsertifikati[i].sertifikati[j]} (${kurseviIsertifikati[i].naziv} - ${kurseviIsertifikati[i].datumZavrsetka})`
                             possibilities.push(oneSertifikatPossibility)
@@ -500,7 +505,7 @@ class StudentDetailsModal extends Component {
                                                     Datum rođenja:
                                                 </span>
                                                 <span className="student-detail-card-data">
-                                                    {this.dateHumanRead(this.props.data.datumRodjenja)}
+                                                    {this.props.data.datumRodjenja}
                                                 </span>
                                             </div>
                                             <div className="d-flex">
@@ -652,7 +657,7 @@ class StudentDetailsModal extends Component {
                                     </div>
                                     <div id="collapsePlacanje" className="collapse" aria-labelledby="headingPlacanje" data-parent="#accordion">
                                         <div className="card-body">
-                                            <StudentPlacanje />
+                                            <StudentPlacanje studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti}/>
                                         </div>
                                     </div>
                                 </div>
@@ -662,7 +667,7 @@ class StudentDetailsModal extends Component {
 
 
                         <div className="pozicije-komunikacija-container d-flex">
-                            <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
+                            <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti}/>
                             {/* ----- KOMUNIKACIJA ----- */}
                             <Komunikacija komunikacijaData={this.props.data.komunikacija} maticniBroj={this.props.data.maticniBroj} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
                         </div>

@@ -22,15 +22,13 @@ class StudentPozicije extends Component {
     dateHumanRead = (inputDate) => {
         if (inputDate) {
 
-            const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
+            const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
             const date = new Date(inputDate)
             const dd = date.getDate();
             const mm = months[date.getMonth()];
             const yy = date.getFullYear();
 
             return `${dd}. ${mm} ${yy}.`
-        } else {
-            return "Nemamo podatak"
         }
     }
 
@@ -43,12 +41,13 @@ class StudentPozicije extends Component {
 
 
     dodajPoziciju = () => {
+        const startDate = this.dateHumanRead(this.state.pocetak)
 
         let pozicijeToSend = [];
         const newPozicija = {
             firma: this.state.selectedFirma,
             status: this.state.selectedStatus,
-            pocetak: this.state.pocetak,
+            pocetak: startDate,
             // svrsetak: this.state.svrsetak
         }
         if (this.props.studentData.pozicije) {
@@ -62,15 +61,13 @@ class StudentPozicije extends Component {
             pozicije: pozicijeToSend
         }
         updateStudentPozicije(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
-                this.getAndSetFirms();
+                // this.getAndSetFirms();
                 this.setState({
                     showAddPozicija: false,
                 })
                 this.props.getStudentsFromStudenti()
-            } else {
-                alert(response)
-            }
+        }).catch((error) => {
+            alert(error)
         })
     }
 
@@ -121,7 +118,7 @@ class StudentPozicije extends Component {
                             <i>{pozicija.status}</i>
                         </div>
                         <div className="d-flex justify-content-between">
-                            <span>Start:</span> <span>{this.dateHumanRead(pozicija.pocetak)}</span>
+                            <span>Start:</span> <span>{pozicija.pocetak}</span>
                             {/* Do - {this.dateHumanRead(pozicija.svrsetak)} */}
                         </div>
                     </div>

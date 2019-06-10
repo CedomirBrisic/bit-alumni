@@ -1,8 +1,5 @@
 const updateStudentKomunikacija = (data) => {
     const qwe = sessionStorage.getItem('hijeroglif');
-    console.log("updateStudentKomunikacija", qwe)
-
-    // if (qwe !== null) {
     return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTkomunikacijaAtStudent?secret=${qwe}`, {
         body: JSON.stringify({
             data
@@ -12,9 +9,15 @@ const updateStudentKomunikacija = (data) => {
             "Content-Type": "application/json",
         }
     }).then((response) => {
-        return response
+        if (response.ok) {
+            return response
+        } else {
+            console.log(response)
+            alert(`ACHTUNG !!!
+            Došlo je do neke greške pri povezivanju sa serverom...
+            Pokušaj malko kasnije opet :-)`)
+        }
     })
-// }
 }
 
 export default updateStudentKomunikacija;

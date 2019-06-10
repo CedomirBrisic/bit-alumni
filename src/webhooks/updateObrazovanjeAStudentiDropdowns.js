@@ -1,8 +1,5 @@
 const updateObrazovanjeAtStudentiDropdowns = (obrazovanje) => {
     const qwe = sessionStorage.getItem('hijeroglif');
-    // if (qwe !== null) {
-    console.log("updateObrazovanjeAtStudentiDropdowns", qwe)
-
     return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTobrazovanjeAtStudentiDropdowns?secret=${qwe}`, {
         body: JSON.stringify({
             obrazovanje
@@ -12,9 +9,15 @@ const updateObrazovanjeAtStudentiDropdowns = (obrazovanje) => {
             "Content-Type": "application/json",
         }
     }).then((response) => {
-        return response
+        if (response.ok){
+            return response
+        } else {
+            console.log(response)
+            alert(`ACHTUNG !!!
+            Došlo je do neke greške pri povezivanju sa serverom...
+            Pokušaj malko kasnije opet :-)`)
+        }
     })
-// }
 }
 
 export default updateObrazovanjeAtStudentiDropdowns;

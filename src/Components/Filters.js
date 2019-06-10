@@ -100,8 +100,8 @@ class Filters extends Component {
 
             return kurseviIsertifikati.map((element) => {
                 const output =
-                    <div className="btn btn-light form-check w-100 d-flex align-items-center">
-                        <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.togglePohadjaniProgramiCheckboxes} />
+                    <div className="btn btn-light form-check w-100 d-flex align-items-center" key={element}>
+                        <input type="checkbox" className="form-check-input" id={"id" + element} data-statename={element} onClick={this.togglePohadjaniProgramiCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
                 return output
@@ -146,8 +146,8 @@ class Filters extends Component {
 
             return mesta.map((element) => {
                 const output =
-                    <div className="form-check btn-light w-100 d-flex align-items-center">
-                        <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleMestaCheckboxes} />
+                    <div className="form-check btn-light w-100 d-flex align-items-center" key={element}>
+                        <input type="checkbox" className="form-check-input" id={"id" + element} data-statename={element} onClick={this.toggleMestaCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
                 return output
@@ -191,8 +191,8 @@ class Filters extends Component {
 
             return vestine.map((element) => {
                 const output =
-                    <div className="form-check btn-light w-100 d-flex align-items-center">
-                        <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleVestineCheckboxes} />
+                    <div className="form-check btn-light w-100 d-flex align-items-center" key={element}>
+                        <input type="checkbox" className="form-check-input" id={"id" + element} data-statename={element} onClick={this.toggleVestineCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
                 return output
@@ -253,10 +253,10 @@ class Filters extends Component {
         if (prethodnoObrazovanje !== undefined) {
             prethodnoObrazovanje.sort()
 
-            return prethodnoObrazovanje.map((element) => {
+            return prethodnoObrazovanje.map((element, index) => {
                 const output =
-                    <div className="form-check btn-light w-100 d-flex align-items-center">
-                        <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.togglePrethodnoObrazovanjeCheckboxes} />
+                    <div className="form-check btn-light w-100 d-flex align-items-center" key={element}>
+                        <input type="checkbox" className="form-check-input" id={"id" + element}  data-statename={element} onClick={this.togglePrethodnoObrazovanjeCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
                 return output
@@ -287,8 +287,8 @@ class Filters extends Component {
 
             return firmeiKompanije.map((element) => {
                 const output =
-                    <div className="form-check btn-light w-100 d-flex align-items-center">
-                        <input type="checkbox" className="form-check-input" id={"id" + element} key={element} data-statename={element} onClick={this.toggleFirmeiKompanijeCheckboxes} />
+                    <div className="form-check btn-light w-100 d-flex align-items-center" key={element}>
+                        <input type="checkbox" className="form-check-input" id={"id" + element} data-statename={element} onClick={this.toggleFirmeiKompanijeCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
                 return output
@@ -458,7 +458,7 @@ class Filters extends Component {
                         <div className="card-header btn-light" id="filteriVestine">
                             <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
                                 VEŠTINE
-                                </button>
+                            </button>
                         </div>
                         <div id="collapseEight" className="collapse" aria-labelledby="filteriVestine" data-parent="#accordionStudentiFilteri">
                             <div className="card-body d-flex flex-column justify-content-around align-items-start">
@@ -466,15 +466,7 @@ class Filters extends Component {
                             </div>
                         </div>
                     </div>
-
-
-
-
                 </div>
-
-
-
-
             </div>
         );
     }

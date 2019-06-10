@@ -34,6 +34,19 @@ class AddNewStudentModal extends Component {
         }
     }
 
+    dateHumanRead = (inputDate) => {
+        if (inputDate) {
+
+            const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
+            const date = new Date(inputDate)
+            const dd = date.getDate();
+            const mm = months[date.getMonth()];
+            const yy = date.getFullYear();
+
+            return `${dd}. ${mm} ${yy}.`
+        }
+    }
+
     mapStateToDropdownOptions = (stateArray) => {
         let outputArray = stateArray.sort()
         return outputArray.map((element) => {
@@ -66,6 +79,7 @@ class AddNewStudentModal extends Component {
 
 
     createNewStudent = () => {
+       const rodjendan = this.dateHumanRead(this.state.datumRodjenja)
         const data = {
             ime: this.state.ime,
             prezime: this.state.prezime,
@@ -77,12 +91,12 @@ class AddNewStudentModal extends Component {
             instagram: this.state.instagram,
             mesto: this.state.mesto,
             obrazovanje: this.state.obrazovanje,
-            datumRodjenja: this.state.datumRodjenja,
+            datumRodjenja: rodjendan,
             brojTelefona: this.state.brojTelefona,
             komentar: this.state.komentar
         }
 
-        if (this.state.maticniBroj.length == 13) {
+        if (this.state.maticniBroj.length === 13) {
             postNewStudentAtStudenti(data).then((response) => {
                 if (response.status === 200 && response.ok === true) {
                     this.props.closeNewBitManModal()

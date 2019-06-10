@@ -1,19 +1,10 @@
 import React from 'react';
 
-const datumRodjenjaHumanRead = (inputDate) => {
-    const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
-    const date = new Date(inputDate)
-    const dd = date.getDate();
-    const mm = months[date.getMonth()];
-    const yy = date.getFullYear();
-
-    return `${dd}. ${mm} ${yy}.`
-}
 
 const showWorkPosition = (studentData) => {
-    if (studentData.status == "Na praksi" ||
-        studentData.status == "Zaposlen") {
-        if (studentData.status == studentData.pozicije[studentData.pozicije.length - 1].status) {
+    if (studentData.status === "Na praksi" ||
+        studentData.status === "Zaposlen") {
+        if (studentData.status === studentData.pozicije[studentData.pozicije.length - 1].status) {
             return studentData.pozicije[studentData.pozicije.length - 1].firma
         }
     }
@@ -58,7 +49,7 @@ const BitManCard = (props) => {
                     </h5>
                     <p className="card-text">{props.data.mesto}</p>
                     <p className="card-text"><i>{props.data.obrazovanje}</i></p>
-                    <p className="card-text">{datumRodjenjaHumanRead(props.data.datumRodjenja)}</p>
+                    <p className="card-text">{props.data.datumRodjenja}</p>
                 </div>
                 <div className="modal-footer w-100">
 

@@ -11,12 +11,13 @@ class AddNewClassModal extends Component {
             type: "",
             datumZavrsetka: "",
             postojeciProgrami: "",
+            kursPrice: ""
         }
     }
 
 
     humanReadDate = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
+        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"]
         const date = new Date(inputDate)
         const dd = date.getDate();
         const mm = months[date.getMonth()];
@@ -49,13 +50,14 @@ class AddNewClassModal extends Component {
         const data = {
             naziv: naziv,
             datumZavrsetka: datumZavrsetkaToSend,
-            sertifikati: sertifikati
+            sertifikati: sertifikati,
+            kursPrice: parseInt(this.state.kursPrice, 10)
         }
 
-        postNewProgramiAndSertifikati(data).then(() => {
-                this.props.closeAddNewClassModal()
+        postNewProgramiAndSertifikati(data).then((response) => {
+            this.props.closeAddNewClassModal()
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
@@ -67,19 +69,28 @@ class AddNewClassModal extends Component {
         this.props.closeAddNewClassModal();
     }
 
-    componentDidMount() {
+    initialGettingStudentsDropdowns = () => {
         getAddNewStudentDropdowns().then((response) => {
-                this.setState({
-                    postojeciProgrami: response[0].programi
-                })
+            this.setState({
+                postojeciProgrami: response[0].programi
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
+    }
+
+    componentDidMount() {
+        this.initialGettingStudentsDropdowns()
     }
 
     mapPostojeciProgrami = () => {
         return this.state.postojeciProgrami.map((program, index) => {
             return <button key={program + index} type="button" className="btn btn-light program-select" data-type={program} onClick={this.setType}>{program}</button>
+        })
+    }
+    setKursPrice = (event) => {
+        this.setState({
+            kursPrice: event.target.value
         })
     }
 
@@ -103,12 +114,22 @@ class AddNewClassModal extends Component {
                         <div className="add-new-class-right-item d-flex justify-content-center">
                             <input className="new-class-input" type="date" onChange={this.setDatumZavrsetka} />
                         </div>
-
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="add-new-class-left-item">Unesi cenu kursa</div>
+                        <div className="add-new-class-right-item d-flex justify-content-center">
+                            <input className="new-class-input" placeholder="EUR" type="number" value={this.state.kursPrice} onChange={this.setKursPrice} />
+                        </div>
                     </div>
                     <div className="add-new-class-naziv">{this.state.type &&
-                        `${this.state.type} -`}
+                        `${this.state.type} - `}
                         {this.state.datumZavrsetka &&
                             this.humanReadDate(this.state.datumZavrsetka)}
+                        {this.state.kursPrice &&
+                            <div>
+                                {this.state.kursPrice}€
+                            </div>
+                        }
                     </div>
                 </div>
                 <div className="modal-footer">

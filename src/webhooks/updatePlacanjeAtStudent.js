@@ -1,13 +1,13 @@
-const updatePohadjaniProgramAtStudent = (data) => {
+const updatePaymentsAtStudent = (data) => {
     const qwe = sessionStorage.getItem('hijeroglif');
-    return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTpohadjaniProgramAtStudent?secret=${qwe}`, {
-        body: JSON.stringify({
-            data
-        }),
+    return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/PUTplacanjeAtStudent?secret=${qwe}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-        }
+        },
+        body: JSON.stringify({
+            data
+        })
     }).then((response) => {
         if (response.ok) {
             return response
@@ -20,4 +20,4 @@ const updatePohadjaniProgramAtStudent = (data) => {
     })
 }
 
-export default updatePohadjaniProgramAtStudent;
+export default updatePaymentsAtStudent;

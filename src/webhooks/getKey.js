@@ -6,8 +6,16 @@ const getKey = (key) => {
             "Content-Type": "application/json",
         },
     }).then((response) => {
-        const values = response.json()
-        return values
+        if (response.ok) {
+            const values = response.json()
+            return values
+        } else {
+            console.log(response)
+            alert(`ACHTUNG !!!
+            Došlo je do neke greške pri povezivanju sa serverom...
+            Pokušaj malko kasnije opet :-)`)
+        }
+
     })
 }
 

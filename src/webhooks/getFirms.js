@@ -1,14 +1,17 @@
 const getFirms = () => {
     const qwe = sessionStorage.getItem('hijeroglif');
-    // if (qwe !== null) {
-    console.log("getFirms", qwe)
-
     return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/GETfirm?secret=${qwe}`)
         .then((response) => {
-            const values = response.json()
-            return values
+            if (response.ok) {
+                const values = response.json()
+                return values
+            } else {
+                console.log(response)
+                alert(`ACHTUNG !!!
+                Došlo je do neke greške pri povezivanju sa serverom...
+                Pokušaj malko kasnije opet :-)`)
+            }
         })
-    // }
 };
 
 export default getFirms

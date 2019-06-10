@@ -43,9 +43,9 @@ class StudentiByFirm extends Component {
             this.props.studentiAll.forEach((student) => {
                 if (student.pozicije !== undefined) {
                     student.pozicije.forEach((pozicija, index) => {
-                        if (pozicija.firma == this.props.selectedFirmaForFilter.nazivKompanije) {
-                            if (pozicija.status == "Zaposlen") {
-                                if (index == student.pozicije.length - 1) {
+                        if (pozicija.firma === this.props.selectedFirmaForFilter.nazivKompanije) {
+                            if (pozicija.status === "Zaposlen") {
+                                if (index === student.pozicije.length - 1) {
                                     student = {
                                         ...student,
                                         aktivnaPozicija: true,
@@ -53,8 +53,8 @@ class StudentiByFirm extends Component {
                                     selectedFirmTrenutnoZaposleni++
                                 }
                                 zaposleni.push(student)
-                            } else if (pozicija.status == "Na praksi") {
-                                if (index == student.pozicije.length - 1) {
+                            } else if (pozicija.status === "Na praksi") {
+                                if (index === student.pozicije.length - 1) {
                                     student = {
                                         ...student,
                                         aktivnaPozicija: true,
@@ -74,7 +74,7 @@ class StudentiByFirm extends Component {
         const zaposleniMaticniBrojevi = [];
         zaposleni.forEach((student) => {
             const indx = zaposleniRemovedDuplicates.indexOf(student);
-            if (indx == -1) {
+            if (indx === -1) {
                 zaposleniRemovedDuplicates.push(student)
                 zaposleniMaticniBrojevi.push(student.maticniBroj)
             }
@@ -84,7 +84,7 @@ class StudentiByFirm extends Component {
         naPraksi.forEach((student) => {
             const indx = naPraksiRemovedDuplicates.indexOf(student);
             const indxmtbr = zaposleniMaticniBrojevi.indexOf(student.maticniBroj)
-            if (indx == -1 && indxmtbr == -1) {
+            if (indx === -1 && indxmtbr === -1) {
                 naPraksiRemovedDuplicates.push(student)
             } else if (indxmtbr !== -1) {
                 naPosluSaPrakseMaticniBrojevi.push(student.maticniBroj)
@@ -134,6 +134,7 @@ class StudentiByFirm extends Component {
         }
     }
     componentDidMount() {
+
         this.filterStudentsForRender();
         this.initState();
     }

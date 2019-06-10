@@ -16,7 +16,7 @@ class Komunikacija extends Component {
     }
 
     dateHumanRead = (inputDate) => {
-        const months = ["Januar", "Februar", "Mart", "April", "May", "Jun", "Jul", "August", "Septembar", "Octobar", "Novembar", "Decembar"]
+        const months = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "August", "Septembar", "Oktobar", "Novembar", "Decembar"]
         const date = new Date(inputDate)
         const dd = date.getDate();
         const mm = months[date.getMonth()];
@@ -75,14 +75,13 @@ class Komunikacija extends Component {
             komunikacija: komunikacijeToSend
         }
         updateStudentKomunikacija(data).then((response) => {
-            if (response.status === 200 && response.ok === true) {
                 this.setState({
                     showAddNewKomunikacija: false,
                 })
                 this.props.getStudentsFromStudenti()
-            } else {
-                alert(response)
-            }
+
+        }).catch((error) => {
+            alert(error)
         })
     }
     editButtonsClasses = () => {

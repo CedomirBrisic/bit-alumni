@@ -38,6 +38,7 @@ class App extends Component {
       showFirmeFilter: true,
       showStudentiFilter: false,
       isLoggedIn: "xxx",
+      filtersMemo: []
     }
   }
 
@@ -83,7 +84,7 @@ class App extends Component {
       newStudentCreatedSuccessfully: false
     })
   }
-
+  
   getStudentsFromStudenti = () => {
     getStudents().then((response) => {
       this.setState({
@@ -131,7 +132,7 @@ class App extends Component {
       this.state.studentiAll.forEach((student) => {
         if (student.pozicije !== undefined) {
           for (let i = 0; i < student.pozicije.length; i++) {
-            if (student.pozicije[i].firma == firma.nazivKompanije) {
+            if (student.pozicije[i].firma === firma.nazivKompanije) {
               firmaStudentCounter++;
               break;
             }
@@ -166,12 +167,13 @@ checkLoggingKey = () => {
     })
   }
 }
-  componentDidMount() {
+componentDidMount() {
     this.checkLoggingKey();
 
   }
 
   componentDidUpdate(prevProps, prevState) {
+    
     if (prevState.studentiAll !== this.state.studentiAll && this.state.slectedStudentMaticniBroj) {
       const maticniBroj = this.state.slectedStudentMaticniBroj
       const studenti = this.state.studentiAll
@@ -183,7 +185,8 @@ checkLoggingKey = () => {
       })
     } else if (prevState.firmeAll !== this.state.firmeAll) {
       this.selectFirmaForFilter()
-    } else if (prevState.isLoggedIn !== this.state.isLoggedIn && this.state.isLoggedIn.length == 42 && sessionStorage.getItem('hijeroglif') !== null) {
+    } else if (prevState.isLoggedIn !== this.state.isLoggedIn && this.state.isLoggedIn.length === 42 && sessionStorage.getItem('hijeroglif') !== null) {
+
       this.getStudentsFromStudenti();
       this.getAndSetFirms();
     }
@@ -231,6 +234,8 @@ checkLoggingKey = () => {
           return <BitManCard key={student.maticniBroj}
             data={student}
             openStudentDetailsModal={this.openStudentDetailsModal} />
+        } else {
+          return false
         }
       })
     }
@@ -242,6 +247,7 @@ checkLoggingKey = () => {
   filterStudentsForRendering = (filters) => {
     let studentiForRender = this.state.studentiAll;
     let isSelectedPohadjaniProgrami = false;
+    const filtersMemo = []
 
     const filterPolPropertyNames = Object.getOwnPropertyNames(filters.pol)
     const filterStatusPropertyNames = Object.getOwnPropertyNames(filters.status)
@@ -264,8 +270,9 @@ checkLoggingKey = () => {
       if (checkIfTrueValue !== -1) {
         filterPolPropertyNames.forEach((propertyName) => {
           if (filters.pol[propertyName]) {
+            filtersMemo.push(propertyName)
             studentiForRenderMezzanine.forEach(student => {
-              if (student.pol == propertyName) {
+              if (student.pol === propertyName) {
                 studentiForRender.push(student)
               }
             })
@@ -285,8 +292,9 @@ checkLoggingKey = () => {
       if (checkIfTrueValue !== -1) {
         filterStatusPropertyNames.forEach((propertyName) => {
           if (filters.status[propertyName]) {
+            filtersMemo.push(propertyName)
             studentiForRenderMezzanine.forEach(student => {
-              if (student.status == propertyName) {
+              if (student.status === propertyName) {
                 studentiForRender.push(student)
               }
             })
@@ -306,8 +314,9 @@ checkLoggingKey = () => {
       if (checkIfTrueValue !== -1) {
         filterMestoPropertyNames.forEach((propertyName) => {
           if (filters.mesto[propertyName]) {
+            filtersMemo.push(propertyName)
             studentiForRenderMezzanine.forEach(student => {
-              if (student.mesto == propertyName) {
+              if (student.mesto === propertyName) {
                 studentiForRender.push(student)
               }
             })
@@ -327,8 +336,9 @@ checkLoggingKey = () => {
       if (checkIfTrueValue !== -1) {
         filterObrazovanjePropertyNames.forEach((propertyName) => {
           if (filters.obrazovanje[propertyName]) {
+            filtersMemo.push(propertyName)
             studentiForRenderMezzanine.forEach(student => {
-              if (student.obrazovanje == propertyName) {
+              if (student.obrazovanje === propertyName) {
                 studentiForRender.push(student)
               }
             })
@@ -348,11 +358,12 @@ checkLoggingKey = () => {
       if (checkIfTrueValue !== -1) {
         filterPozicijePropertyNames.forEach((propertyName) => {
           if (filters.pozicije[propertyName]) {
+            filtersMemo.push(propertyName)
             studentiForRenderMezzanine.forEach(student => {
               let isStudentHadPoziciju = false;
               if (student.pozicije) {
                 student.pozicije.forEach((pozicija) => {
-                  if (pozicija.firma == propertyName) {
+                  if (pozicija.firma === propertyName) {
                     isStudentHadPoziciju = true
                   }
                 })
@@ -379,11 +390,12 @@ checkLoggingKey = () => {
         isSelectedPohadjaniProgrami = true;
         filterPohadjaniProgramiPropertyNames.forEach((propertyName) => {
           if (filters.pohadjaniProgrami[propertyName]) {
+            filtersMemo.push(propertyName)
             studentiForRenderMezzanine.forEach(student => {
               let isStudentHadPohadjaniProgram = false;
               if (student.pohadjaniProgrami) {
                 student.pohadjaniProgrami.forEach((pohadjaniProgram) => {
-                  if (pohadjaniProgram == propertyName) {
+                  if (pohadjaniProgram === propertyName) {
                     isStudentHadPohadjaniProgram = true
                   }
                 })
@@ -415,6 +427,7 @@ checkLoggingKey = () => {
             if (filters.pohadjaniProgrami[pohadjaniProgramPropertyName]) {
               filterSertifikatiPropertyNames.forEach((sertifikatPropertyName) => {
                 if (filters.sertifikati[sertifikatPropertyName]) {
+                filtersMemo.push(sertifikatPropertyName)
                   const formattedSertifikat = `${sertifikatPropertyName} (${pohadjaniProgramPropertyName})`;
                   sertifikatiFromFilterFormatted.push(formattedSertifikat)
                 }
@@ -427,7 +440,7 @@ checkLoggingKey = () => {
                 let srtf = sertifikat.split(" (")
                 srtf = `${srtf[0].toLowerCase().split(" ").join("-")} (${srtf[1]}`
                 sertifikatiFromFilterFormatted.forEach((filterSertifikat) => {
-                  if (srtf == filterSertifikat) {
+                  if (srtf === filterSertifikat) {
                     studentiForRender.push(student)
                   }
                 })
@@ -438,11 +451,12 @@ checkLoggingKey = () => {
         } else {
           filterSertifikatiPropertyNames.forEach((propertyName) => {
             if (filters.sertifikati[propertyName]) {
+              filtersMemo.push(propertyName)
               studentiForRenderMezzanine.forEach(student => {
                 if (student.sertifikati) {
                   student.sertifikati.forEach((sertifikat) => {
                     let srtf = sertifikat.split(" (")[0].toLowerCase().split(" ").join("-");
-                    if (srtf == propertyName) {
+                    if (srtf === propertyName) {
                       studentiForRender.push(student)
                     }
                   })
@@ -470,6 +484,7 @@ checkLoggingKey = () => {
       if (checkIfTrueValue !== -1) {
         filterVestinePropertyNames.forEach((propertyName) => {
           if (filters.vestine[propertyName]) {
+            filtersMemo.push(propertyName)
             filterVestine.push(propertyName)
           }
         })
@@ -481,7 +496,7 @@ checkLoggingKey = () => {
                 studentVestineCounter++
               }
             }
-            if (studentVestineCounter == filterVestine.length) {
+            if (studentVestineCounter === filterVestine.length) {
               studentiForRender.push(student)
             }
           }
@@ -495,13 +510,14 @@ checkLoggingKey = () => {
 
     studentiForRender.forEach((student) => {
       const indx = studentiForRenderDuplicatesRemoved.indexOf(student);
-      if (indx == -1) {
+      if (indx === -1) {
         studentiForRenderDuplicatesRemoved.push(student)
       }
     })
 
     this.setState({
-      studentiForRender: studentiForRenderDuplicatesRemoved
+      studentiForRender: studentiForRenderDuplicatesRemoved,
+      filtersMemo,
     })
   }
 
@@ -514,7 +530,7 @@ checkLoggingKey = () => {
       event.preventDefault();
       const selectedFirmaNaziv = event.target.getAttribute("data-firma");
       this.state.firmeAll.forEach((firma) => {
-        if (selectedFirmaNaziv == firma.nazivKompanije) {
+        if (selectedFirmaNaziv === firma.nazivKompanije) {
           this.setState({
             selectedFirmaForFilter: firma
           })
@@ -525,7 +541,7 @@ checkLoggingKey = () => {
       let firma = ""
       const firmeAll = this.state.firmeAll
       for (let i = 0; i < firmeAll.length; i++) {
-        if (firmeAll[i]._id.$oid == this.state.selectedFirmaForFilter._id.$oid) {
+        if (firmeAll[i]._id.$oid === this.state.selectedFirmaForFilter._id.$oid) {
           firma = firmeAll[i]
           break;
         }
@@ -538,15 +554,17 @@ checkLoggingKey = () => {
 
   mapFirmeForSelect = () => {
     if (!this.state.imeZaPretragu) {
-      return this.state.firmeAll.map((firma) => {
-        return <button type="button" className={`btn d-flex justify-content-between firma-filter-button ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<div>{firma.brojStudenata}</div></button>
+      return this.state.firmeAll.map((firma, index) => {
+        return <button key={firma.naziv+index} type="button" className={`btn d-flex justify-content-between firma-filter-button ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<div>{firma.brojStudenata}</div></button>
       })
     } else {
       const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
-      return this.state.firmeAll.map((firma) => {
+      return this.state.firmeAll.map((firma, index) => {
         const nazivFirme = firma.nazivKompanije.toLowerCase();
         if (nazivFirme.includes(imeZaPretragu)) {
-          return <button type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije == this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
+          return <button key={firma.naziv+index} type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
+        } else {
+          return false
         }
       })
     }
@@ -586,15 +604,20 @@ checkLoggingKey = () => {
     })
   }
 
-  render() {
+  displayFilters = () => {
+    return this.state.filtersMemo.map((filterName, index) => {
+      return <div className="filter-single-memo" key={filterName+index}>{filterName}</div>
+    })
+  }
 
+  render() {
     return (
       <div>
         {this.state.isLoggedIn.length !== 42 &&
           <LogIn secretKey={this.secretKey} />
         }
 
-        {this.state.isLoggedIn.length == 42 &&
+        {this.state.isLoggedIn.length === 42 &&
           <div className="p-5">
             <div className="application-buttons-container d-flex align-items-center justify-content-between">
 
@@ -650,6 +673,7 @@ checkLoggingKey = () => {
                     <div className="d-flex flex-column align-items-center ime-prezime-modal-header">
                       <div><i>Ukupan broj BIT studenata:</i></div>
                       <div><b>{this.state.studentiForRender.length}</b></div>
+                      <div className="filter-names-container row">{this.displayFilters()}</div>
                     </div>}
                 </div>
                 <div className="bit-people-cars-container d-flex justify-content-around row" onClick={this.closeFilters}> {this.mapStudentsForRender()}

@@ -1,8 +1,5 @@
 const postNewStudentAtStudenti = (data) => {
     const qwe = sessionStorage.getItem('hijeroglif');
-    // if (qwe !== null) {
-    console.log("postNewStudentAtStudenti", qwe)
-
     return fetch(`https://webhooks.mongodb-stitch.com/api/client/v2.0/app/bit-alumni-app-dqykh/service/http/incoming_webhook/POSTstudenti?secret=${qwe}`, {
         method: "POST",
         headers: {
@@ -12,9 +9,15 @@ const postNewStudentAtStudenti = (data) => {
             data
         })
     }).then((response) => {
-        return response
+        if (response.ok) {
+            return response
+        } else {
+            console.log(response)
+            alert(`ACHTUNG !!!
+            Došlo je do neke greške pri povezivanju sa serverom...
+            Pokušaj malko kasnije opet :-)`)
+        }
     })
-// }
 }
 
 export default postNewStudentAtStudenti;

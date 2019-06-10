@@ -23,7 +23,7 @@ class LogIn extends Component {
         })
     }
     checkKey = (event) => {
-        if (event.key == "Enter") {
+        if (event.key === "Enter") {
             getKey(this.state.hiddenValue).then((response) => {
                 if (response[0] !== undefined && response[0].qwerty) {
                     this.props.secretKey(response[0].qwerty)
@@ -36,16 +36,29 @@ class LogIn extends Component {
             })
         }
     }
+    enterBitAlumni = () => {
+        getKey(this.state.hiddenValue).then((response) => {
+            if (response[0] !== undefined && response[0].qwerty) {
+                this.props.secretKey(response[0].qwerty)
+            } else {
+                alert("ACHTUNG!!! \n Najverovatnije ne valja šifra", response)
+                this.setState({
+                    hiddenValue: ""
+                })
+            }
+        })
+    }
 
 
     render() {
         return (
 
             <div className="login-page-container d-flex justify-content-center align-items-center">
-                <div className="login-page-wrapper">
+                <div className="login-page-wrapper d-flex flex-column">
                     {/* {this.state.showInput && */}
                         <input type="password"  value={this.state.hiddenValue} onChange={this.tryToLogIn} onKeyPress={this.checkKey} className="login-input" />
                     {/* } */}
+                    <div className="logovanje-button" onClick={this.enterBitAlumni}>Uloguj se</div>
                 </div>
                 {/* <div className="nevidljivi" onClick={this.openInput}></div> */}
             </div>
