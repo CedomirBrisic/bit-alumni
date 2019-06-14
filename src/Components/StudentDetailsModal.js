@@ -76,10 +76,10 @@ class StudentDetailsModal extends Component {
             this.state.showStudentDetailsModal === true) {
             const data = this.state.data;
             updateStudents(data).then((response) => {
-                    this.closeStudentDetailsModal();
-                    this.props.getStudentsFromStudenti();
+                this.closeStudentDetailsModal();
+                this.props.getStudentsFromStudenti();
             }).catch((error) => {
-                alert (error)
+                alert(error)
             })
         } else {
             this.props.closeStudentDetailsModal();
@@ -100,17 +100,17 @@ class StudentDetailsModal extends Component {
     getAndSetKlaseiSertifikati = () => {
         let dropdownPohadjaniProgrami = [];
         getKlaseiSertifikati().then((response) => {
-                response.forEach(element => {
-                    const datumZavrsetka = element.datumZavrsetka;
-                    const klasa = `${element.naziv} - ${datumZavrsetka}`
-                    dropdownPohadjaniProgrami.push(klasa)
-                });
-                this.setState({
-                    dropdownPohadjaniProgrami,
-                    kurseviIsertifikati: response
-                })
+            response.forEach(element => {
+                const datumZavrsetka = element.datumZavrsetka;
+                const klasa = `${element.naziv} - ${datumZavrsetka}`
+                dropdownPohadjaniProgrami.push(klasa)
+            });
+            this.setState({
+                dropdownPohadjaniProgrami,
+                kurseviIsertifikati: response
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
@@ -158,13 +158,13 @@ class StudentDetailsModal extends Component {
 
         const selectedPohadjaniProgramSplit = this.state.selectedPohadjaniProgrami.split(" - ");
         this.state.kurseviIsertifikati.forEach((kurs) => {
-            if (kurs.kursPrice && kurs.naziv === selectedPohadjaniProgramSplit[0] && kurs.datumZavrsetka === selectedPohadjaniProgramSplit[1]){
+            if (kurs.kursPrice && kurs.naziv === selectedPohadjaniProgramSplit[0] && kurs.datumZavrsetka === selectedPohadjaniProgramSplit[1]) {
                 selectedKursPrice = kurs.kursPrice.$numberInt
             }
         })
 
         let totalPrice = "";
-        if (this.props.data.kursPrice){
+        if (this.props.data.kursPrice) {
             totalPrice = parseInt(this.props.data.kursPrice.$numberInt, 10) + parseInt(selectedKursPrice, 10)
         } else {
             totalPrice = parseInt(selectedKursPrice, 10)
@@ -175,12 +175,12 @@ class StudentDetailsModal extends Component {
             kursPrice: totalPrice
         }
         updatePohadjaniProgramAtStudent(data).then((response) => {
-                this.props.getStudentsFromStudenti();
-                this.setState({
-                    showDropdownPohadjaniProgrami: false,
-                })
+            this.props.getStudentsFromStudenti();
+            this.setState({
+                showDropdownPohadjaniProgrami: false,
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
@@ -208,12 +208,12 @@ class StudentDetailsModal extends Component {
             sertifikati: sertifikatToSend
         }
         updateStudentSertifikat(data).then((response) => {
-                this.props.getStudentsFromStudenti();
-                this.setState({
-                    showAddSertifikatToStudent: false,
-                })
+            this.props.getStudentsFromStudenti();
+            this.setState({
+                showAddSertifikatToStudent: false,
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
         this.closeAddSertifikatToStudent()
 
@@ -255,12 +255,12 @@ class StudentDetailsModal extends Component {
         }
 
         updateStudentStatus(data).then((response) => {
-                this.props.getStudentsFromStudenti();
-                this.setState({
-                    showChangeStatus: false,
-                })
+            this.props.getStudentsFromStudenti();
+            this.setState({
+                showChangeStatus: false,
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
@@ -286,12 +286,12 @@ class StudentDetailsModal extends Component {
         }
 
         updateVestineAtStudent(data).then((response) => {
-                this.props.getStudentsFromStudenti();
-                this.setState({
-                    showAddVestinaToStudent: false,
-                })
+            this.props.getStudentsFromStudenti();
+            this.setState({
+                showAddVestinaToStudent: false,
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
@@ -438,7 +438,8 @@ class StudentDetailsModal extends Component {
 
 
     render() {
-        return (
+        return ( 
+            
             <Modal visible={this.props.visible} onClickBackdrop={this.closeStudentDetailsModal} fade={true} className="modal-container">
                 <div className="student-details-container">
                     <div className="modal-header d-flex flex-column align-items-center">
@@ -536,7 +537,7 @@ class StudentDetailsModal extends Component {
                                                 <span className="student-detail-card-attribute">
                                                     Prethodno obrazovanje:
                                                 </span>
-                                                <span className="student-detail-card-data">
+                                                <span className="student-detail-card-data shortend-version">
                                                     {this.props.data.obrazovanje}
                                                 </span>
                                             </div>
@@ -544,7 +545,7 @@ class StudentDetailsModal extends Component {
                                                 <span className="student-detail-card-attribute">
                                                     Linkedin:
                                                 </span>
-                                                <span className="student-detail-card-data">
+                                                <span className={`student-detail-card-data ${this.state.editMode ? "" : "shortend-version"}`}>
                                                     {this.state.editMode ? <input data-statename="linkedin" value={this.state.data.linkedin} onChange={this.depositToState} /> : <a href={this.props.data.linkedin} target="_blank">{this.props.data.linkedin}</a>}
                                                 </span>
                                             </div>
@@ -552,7 +553,7 @@ class StudentDetailsModal extends Component {
                                                 <span className="student-detail-card-attribute">
                                                     Facebook:
                                                 </span>
-                                                <span className="student-detail-card-data">
+                                                <span className={`student-detail-card-data ${this.state.editMode ? "" : "shortend-version"}`}>
                                                     {this.state.editMode ? <input data-statename="facebook" value={this.state.data.facebook} onChange={this.depositToState} /> : <a href={this.props.data.facebook} target="_blank">{this.props.data.facebook}</a>}
                                                 </span>
                                             </div>
@@ -560,7 +561,7 @@ class StudentDetailsModal extends Component {
                                                 <span className="student-detail-card-attribute">
                                                     Instagram:
                                                 </span>
-                                                <span className="student-detail-card-data">
+                                                <span className={`student-detail-card-data ${this.state.editMode ? "" : "shortend-version"}`}>
                                                     {this.state.editMode ? <input data-statename="instagram" value={this.state.data.instagram} onChange={this.depositToState} /> : <a href={this.props.data.instagram} target="_blank">{this.props.data.instagram}</a>}
                                                 </span>
                                             </div>
@@ -603,7 +604,7 @@ class StudentDetailsModal extends Component {
                                                     {this.renderProgramiSertifikati()}
                                                 </span>
                                                 {!this.state.showDropdownPohadjaniProgrami &&
-                                                    <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-program" onClick={this.toggleAddProgramToStudent} />
+                                                        <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-program" onClick={this.toggleAddProgramToStudent} />
                                                 }
                                                 {this.state.showDropdownPohadjaniProgrami &&
                                                     <div className="add-pohadjani-program">
@@ -657,7 +658,7 @@ class StudentDetailsModal extends Component {
                                     </div>
                                     <div id="collapsePlacanje" className="collapse" aria-labelledby="headingPlacanje" data-parent="#accordion">
                                         <div className="card-body">
-                                            <StudentPlacanje studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti}/>
+                                            <StudentPlacanje studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
                                         </div>
                                     </div>
                                 </div>
@@ -667,7 +668,7 @@ class StudentDetailsModal extends Component {
 
 
                         <div className="pozicije-komunikacija-container d-flex">
-                            <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti}/>
+                            <StudentPozicije studentData={this.props.data} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
                             {/* ----- KOMUNIKACIJA ----- */}
                             <Komunikacija komunikacijaData={this.props.data.komunikacija} maticniBroj={this.props.data.maticniBroj} getStudentsFromStudenti={this.props.getStudentsFromStudenti} />
                         </div>

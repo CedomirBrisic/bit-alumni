@@ -9,6 +9,7 @@ class StudentPlacanje extends Component {
             showAddNewPayment: false,
             newPaymentDate: "",
             newPaymentAmount: "",
+            isPaid: false
         }
     }
     humanReadDate = (inputDate) => {
@@ -59,10 +60,10 @@ class StudentPlacanje extends Component {
             payments: paymentsToSend
         }
         updatePaymentsAtStudent(data).then((response) => {
-                this.props.getStudentsFromStudenti();
-                this.setState({
-                    showAddNewPayment: false,
-                })
+            this.props.getStudentsFromStudenti();
+            this.setState({
+                showAddNewPayment: false,
+            })
         }).catch((error) => {
             alert(error)
         })
@@ -83,22 +84,47 @@ class StudentPlacanje extends Component {
         }
     }
     displaySummaSummarum = () => {
+        let summaSummarum = null;
+        let summaSummarumTotal = null;
+        let output = null;
         if (this.props.studentData.payments) {
-
-            let summaSummarum = null;
             this.props.studentData.payments.forEach((payment) => {
                 summaSummarum += parseInt(payment.amount.$numberInt, 10)
             })
-            summaSummarum = this.props.studentData.kursPrice.$numberInt - summaSummarum
-            if (summaSummarum === 0){
-                summaSummarum = "Zilch"
+            summaSummarumTotal = this.props.studentData.kursPrice.$numberInt - summaSummarum
+            if (summaSummarumTotal <= 0) {
+                output =
+                    <div className="d-flex justify-content-between w-100 fully-paid-container">
+                        <span className="summa-summarum-good">Uplaćeno je sve što treba $$$</span>
+                        <img src={require('../images/check-mark-1292787.svg')} alt="check-mark" className="img-fluid fully-paid" />
+                    </div>
+                return output
+
+            } else if (summaSummarumTotal > 0) {
+                output = <div className="d-flex justify-content-between w-100">
+                    <div>Ostalo je da uplati:</div>
+                    <div>{`${summaSummarumTotal} EUR`}</div>
+                </div>
+
+                return output
             }
-            return `${summaSummarum} EUR`
-        } else if (this.props.studentData.kursPrice){
-            return this.props.studentData.kursPrice
-        } else {
-            return "Zilch"
-        }
+        } else if (this.props.studentData.kursPrice) {
+            if (this.props.studentData.kursPrice.$numberInt <= 0) {
+                output =
+                    <div className="d-flex justify-content-between w-100 fully-paid-container">
+                        <span className="summa-summarum-good">Uplaćeno je sve što treba $$$</span>
+                        <img src={require('../images/check-mark-1292787.svg')} alt="check-mark" className="img-fluid fully-paid" />
+                    </div>
+                return output
+
+            } else {
+                output = <div className="d-flex justify-content-between w-100">
+                <div>Ostalo je da uplati:</div>
+                <div>{`${this.props.studentData.kursPrice.$numberInt} EUR`}</div>
+            </div>
+            return output
+            }
+        } 
     }
 
     render() {
@@ -145,13 +171,11 @@ class StudentPlacanje extends Component {
                                 <MdAddCircle color="#8D1717" fontSize="1.6vw" className="open-edit add-new-payment" onClick={this.toggleAddNewPayment} />
                             }
                         </div>
-                        <div className="d-flex justify-content-between student-detail-card-data-placanje-total-wrapper">
-                            <span>
+                        <div className="d-flex student-detail-card-data-placanje-total-wrapper">
+                            {/* <span>
                                 Summa Summarum:
-                            </span>
-                            <span>
-                                {this.displaySummaSummarum()}
-                            </span>
+                            </span> */}
+                            {this.displaySummaSummarum()}
                         </div>
                     </div>
                 }

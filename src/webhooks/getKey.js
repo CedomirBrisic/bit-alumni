@@ -9,12 +9,12 @@ const getKey = (key) => {
         if (response.ok) {
             const values = response.json()
             return values
-        } else {
-            console.log(response)
-            alert(`ACHTUNG !!!
-            Došlo je do neke greške pri povezivanju sa serverom...
-            Pokušaj malko kasnije opet :-)`)
         }
+        //  else {
+        //     alert(`ACHTUNG !!!
+        //     Došlo je do neke greške pri povezivanju sa serverom...
+        //     Pokušaj malko kasnije opet :-)`)
+        // }
 
     })
 }

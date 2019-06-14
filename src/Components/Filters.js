@@ -19,7 +19,8 @@ class Filters extends Component {
             vestine: {},
             status: {},
             prethodnoObrazovanje: {},
-            firme: {}
+            firme: {},
+            paidNot: false
         }
     }
 
@@ -35,47 +36,47 @@ class Filters extends Component {
     getAndSetKlaseiSertifikati = () => {
         const kurseviIsertifikati = [];
         getKlaseiSertifikati().then((response) => {
-                let responseSortedByName = response;
-                responseSortedByName.sort(function (a, b) {
-                    let nazivA = a.naziv.toLowerCase();
-                    let nazivB = b.naziv.toLowerCase();
-                    if (nazivA < nazivB) return -1;
-                    if (nazivA > nazivB) return 1;
-                    return 0
-                })
-                responseSortedByName.forEach(element => {
-                    const klasa = `${element.naziv} - ${element.datumZavrsetka}`
-                    kurseviIsertifikati.push(klasa)
-                });
-                this.setState({
-                    kurseviIsertifikati
-                })
+            let responseSortedByName = response;
+            responseSortedByName.sort(function (a, b) {
+                let nazivA = a.naziv.toLowerCase();
+                let nazivB = b.naziv.toLowerCase();
+                if (nazivA < nazivB) return -1;
+                if (nazivA > nazivB) return 1;
+                return 0
+            })
+            responseSortedByName.forEach(element => {
+                const klasa = `${element.naziv} - ${element.datumZavrsetka}`
+                kurseviIsertifikati.push(klasa)
+            });
+            this.setState({
+                kurseviIsertifikati
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
     getAndSetFirms = () => {
         const firme = [];
         getFirms().then((response) => {
-                let responseSortedByName = response;
-                responseSortedByName.sort(function (a, b) {
-                    let firmaA = a.nazivKompanije.toLowerCase();
-                    let firmaB = b.nazivKompanije.toLowerCase();
-                    if (firmaA < firmaB) return -1;
-                    if (firmaA > firmaB) return 1;
-                    return 0
-                })
-                responseSortedByName.forEach(element => {
-                    const firma = `${element.nazivKompanije}`
-                    firme.push(firma)
-                });
-                this.setState({
-                    firmeDropdown: firme,
-                    allFirmeiKompanije: responseSortedByName,
-                })
+            let responseSortedByName = response;
+            responseSortedByName.sort(function (a, b) {
+                let firmaA = a.nazivKompanije.toLowerCase();
+                let firmaB = b.nazivKompanije.toLowerCase();
+                if (firmaA < firmaB) return -1;
+                if (firmaA > firmaB) return 1;
+                return 0
+            })
+            responseSortedByName.forEach(element => {
+                const firma = `${element.nazivKompanije}`
+                firme.push(firma)
+            });
+            this.setState({
+                firmeDropdown: firme,
+                allFirmeiKompanije: responseSortedByName,
+            })
         }).catch((error) => {
-            alert (error)
+            alert(error)
         })
     }
 
@@ -256,7 +257,7 @@ class Filters extends Component {
             return prethodnoObrazovanje.map((element, index) => {
                 const output =
                     <div className="form-check btn-light w-100 d-flex align-items-center" key={element}>
-                        <input type="checkbox" className="form-check-input" id={"id" + element}  data-statename={element} onClick={this.togglePrethodnoObrazovanjeCheckboxes} />
+                        <input type="checkbox" className="form-check-input" id={"id" + element} data-statename={element} onClick={this.togglePrethodnoObrazovanjeCheckboxes} />
                         <label className="form-check-label" htmlFor={"id" + element}>{element}</label>
                     </div>
                 return output
@@ -297,6 +298,13 @@ class Filters extends Component {
     }
 
 
+    togglePlacanjeCheckboxes = () => {
+        this.setState({
+            paidNot: !this.state.paidNot
+        })
+    }
+
+
     sendFilterToMainComponent = () => {
         const filters = {
             pol: this.state.pol,
@@ -307,6 +315,7 @@ class Filters extends Component {
             obrazovanje: this.state.prethodnoObrazovanje,
             pozicije: this.state.firme,
             mesto: this.state.mesta,
+            paidNot: this.state.paidNot
         }
 
         this.props.filterStudentsForRendering(filters)
@@ -463,6 +472,25 @@ class Filters extends Component {
                         <div id="collapseEight" className="collapse" aria-labelledby="filteriVestine" data-parent="#accordionStudentiFilteri">
                             <div className="card-body d-flex flex-column justify-content-around align-items-start">
                                 {this.mapVestine()}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    {/* PAID FILTERI */}
+                    <div className="card">
+                        <div className="card-header btn-light" id="filteriPlacanje">
+                            <button className="btn btn-link accordion-button" type="button" data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                PLAĆANJE
+                            </button>
+                        </div>
+                        <div id="collapseNine" className="collapse" aria-labelledby="filteriPlacanje" data-parent="#accordionStudentiFilteri">
+                            <div className="card-body d-flex flex-column justify-content-around align-items-start">
+                                <div className="form-check btn-light d-flex align-items-center" key="placanje-filter">
+                                    <input type="checkbox" className="form-check-input" id="placanje-filter" onClick={this.togglePlacanjeCheckboxes} />
+                                    <label className="form-check-label" htmlFor="placanje-filter">Preostali da uplate</label>
+                                </div>
                             </div>
                         </div>
                     </div>

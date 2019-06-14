@@ -28,10 +28,13 @@ const calculateCardImage = (props) => {
     }
 }
 
+const sendToOpenStudentDetailsModal = (event) => {
+    // openStudentDetailsModal
+}
 
 const BitManCard = (props) => {
     return (
-        <div className={`col-2 card ${calculateCardColor(props)} ${props.zaposlen || props.naPraksi ? "bit-man-card" : "bit-man-card-student-list-view-borders"}`} >
+        <div data-maticnibroj={props.data.maticniBroj} onClick={sendToOpenStudentDetailsModal} className={`col-2 card bit-man-card-for-hover ${calculateCardColor(props)} ${props.zaposlen || props.naPraksi ? "bit-man-card" : "bit-man-card-student-list-view-borders"}`} >
                 <div className={`card-header d-flex d-flex justify-content-center align-items-center ${props.zaposlen || props.naPraksi ? "" : "bit-man-card-student-list-view"}`}>
                     {calculateCardImage(props)}
                     <div className="d-flex flex-column justify-content-center align-items-center w-100">
@@ -52,10 +55,9 @@ const BitManCard = (props) => {
                     <p className="card-text">{props.data.datumRodjenja}</p>
                 </div>
                 <div className="modal-footer w-100">
-
-                    <button data-maticnibroj={props.data.maticniBroj} onClick={props.openStudentDetailsModal} type="button" className="btn student-details-button btn-light">
+                    {/* <button data-maticnibroj={props.data.maticniBroj} onClick={props.openStudentDetailsModal} type="button" className="btn student-details-button btn-light">
                         Otvori
-                    </button>
+                    </button> */}
                 </div>
         </div>
     );

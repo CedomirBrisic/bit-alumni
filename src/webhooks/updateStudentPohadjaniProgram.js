@@ -12,7 +12,6 @@ const updatePohadjaniProgramAtStudent = (data) => {
         if (response.ok) {
             return response
         } else {
-            console.log(response)
             alert(`ACHTUNG !!!
             Došlo je do neke greške pri povezivanju sa serverom...
             Pokušaj malko kasnije opet :-)`)

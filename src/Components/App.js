@@ -16,6 +16,7 @@ import getStudents from "../webhooks/getStudents";
 import getFirms from "../webhooks/getFirms";
 import BitManCard from "./BitManCard";
 import AddNewFirmModal from "./AddNewFirmModal"
+import { filter } from 'rsvp';
 
 class App extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class App extends Component {
 
   secretKey = (qwe) => {
     sessionStorage.setItem('hijeroglif', qwe);
-    this.setState ({
+    this.setState({
       isLoggedIn: qwe
     })
   }
@@ -84,7 +85,7 @@ class App extends Component {
       newStudentCreatedSuccessfully: false
     })
   }
-  
+
   getStudentsFromStudenti = () => {
     getStudents().then((response) => {
       this.setState({
@@ -108,8 +109,8 @@ class App extends Component {
         firmeAll: firmeSortedByName,
       })
     }).catch((error) => {
-      alert (error)
-  })
+      alert(error)
+    })
   }
 
   orderFirmsByAlphabet = () => {
@@ -159,21 +160,21 @@ class App extends Component {
     })
   }
 
-checkLoggingKey = () => {
-  const qwe = sessionStorage.getItem('hijeroglif');
-  if (qwe !== null) {
-    this.setState({
-      isLoggedIn: qwe
-    })
+  checkLoggingKey = () => {
+    const qwe = sessionStorage.getItem('hijeroglif');
+    if (qwe !== null) {
+      this.setState({
+        isLoggedIn: qwe
+      })
+    }
   }
-}
-componentDidMount() {
+  componentDidMount() {
     this.checkLoggingKey();
 
   }
 
   componentDidUpdate(prevProps, prevState) {
-    
+
     if (prevState.studentiAll !== this.state.studentiAll && this.state.slectedStudentMaticniBroj) {
       const maticniBroj = this.state.slectedStudentMaticniBroj
       const studenti = this.state.studentiAll
@@ -193,16 +194,16 @@ componentDidMount() {
   }
 
 
-  openStudentDetailsModal = (event) => {
-    const maticniBroj = event.target.getAttribute("data-maticnibroj")
+  openStudentDetailsModal = (mtcnBroj) => {
+    // const maticniBroj = event.target.getAttribute("data-maticnibroj")
     const studenti = this.state.studentiAll
     const studentZaDetaljeModal = studenti.find((student) => {
-      return student.maticniBroj === maticniBroj
+      return student.maticniBroj === mtcnBroj
     })
     this.setState({
       studentZaDetaljeModal,
       showStudentDetailsModal: true,
-      slectedStudentMaticniBroj: maticniBroj
+      slectedStudentMaticniBroj: mtcnBroj
     })
   }
 
@@ -245,6 +246,7 @@ componentDidMount() {
 
 
   filterStudentsForRendering = (filters) => {
+
     let studentiForRender = this.state.studentiAll;
     let isSelectedPohadjaniProgrami = false;
     const filtersMemo = []
@@ -427,7 +429,7 @@ componentDidMount() {
             if (filters.pohadjaniProgrami[pohadjaniProgramPropertyName]) {
               filterSertifikatiPropertyNames.forEach((sertifikatPropertyName) => {
                 if (filters.sertifikati[sertifikatPropertyName]) {
-                filtersMemo.push(sertifikatPropertyName)
+                  filtersMemo.push(sertifikatPropertyName)
                   const formattedSertifikat = `${sertifikatPropertyName} (${pohadjaniProgramPropertyName})`;
                   sertifikatiFromFilterFormatted.push(formattedSertifikat)
                 }
@@ -506,6 +508,31 @@ componentDidMount() {
       }
     }
 
+
+    //--- FILTER PLACANJE ---//
+    if (filters.paidNot) {
+      let studentiForRenderMezzanine = studentiForRender;
+      studentiForRender = [];
+
+      studentiForRenderMezzanine.forEach((student) => {
+        if (student.payments) {
+          let paidSumaTotal = 0;
+          student.payments.forEach((payment) => {
+            paidSumaTotal += parseInt(payment.amount.$numberInt, 10)
+          })
+          const debt = parseInt(student.kursPrice.$numberInt, 10) - paidSumaTotal
+          if (debt > 0) {
+            studentiForRender.push(student)
+          }
+        } else if (parseInt(student.kursPrice.$numberInt, 10) > 0){
+          studentiForRender.push(student)
+        }
+      })
+    }
+
+
+
+
     const studentiForRenderDuplicatesRemoved = [];
 
     studentiForRender.forEach((student) => {
@@ -520,6 +547,10 @@ componentDidMount() {
       filtersMemo,
     })
   }
+
+
+
+
 
 
 
@@ -552,17 +583,18 @@ componentDidMount() {
     }
   }
 
+
   mapFirmeForSelect = () => {
     if (!this.state.imeZaPretragu) {
       return this.state.firmeAll.map((firma, index) => {
-        return <button key={firma.naziv+index} type="button" className={`btn d-flex justify-content-between firma-filter-button ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<div>{firma.brojStudenata}</div></button>
+        return <button key={firma.naziv + index} type="button" className={`btn d-flex justify-content-between firma-filter-button ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<div>{firma.brojStudenata}</div></button>
       })
     } else {
       const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
       return this.state.firmeAll.map((firma, index) => {
         const nazivFirme = firma.nazivKompanije.toLowerCase();
         if (nazivFirme.includes(imeZaPretragu)) {
-          return <button key={firma.naziv+index} type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
+          return <button key={firma.naziv + index} type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
         } else {
           return false
         }
@@ -606,7 +638,7 @@ componentDidMount() {
 
   displayFilters = () => {
     return this.state.filtersMemo.map((filterName, index) => {
-      return <div className="filter-single-memo" key={filterName+index}>{filterName}</div>
+      return <div className="filter-single-memo" key={filterName + index}>{filterName}</div>
     })
   }
 
