@@ -62,7 +62,7 @@ class MeltingComponent extends Component {
 
     startPlacingBombs = () => {
         // this.placeBombsFilds()
-        this.timer2 = setInterval(this.placeBombs, 10)
+        this.timer2 = setInterval(this.placeBombs, 1)
     }
     // getRandomInt =() => {
     //     return Math.floor(Math.random() * Math.floor(100));

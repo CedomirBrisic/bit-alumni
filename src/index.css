@@ -1197,7 +1197,7 @@ textarea:focus {
 }
 
 .exploded {
-  animation: explode 0.8s ease-in forwards;
+  /* animation: explode 0.1s ease-in forwards; */
   background-color: #ffffff;
   margin: 0;
   padding: 0;

@@ -194,16 +194,15 @@ class App extends Component {
   }
 
 
-  openStudentDetailsModal = (mtcnBroj) => {
-    // const maticniBroj = event.target.getAttribute("data-maticnibroj")
+  openStudentDetailsModal = (maticniBroj) => {
     const studenti = this.state.studentiAll
     const studentZaDetaljeModal = studenti.find((student) => {
-      return student.maticniBroj === mtcnBroj
+      return student.maticniBroj === maticniBroj
     })
     this.setState({
       studentZaDetaljeModal,
       showStudentDetailsModal: true,
-      slectedStudentMaticniBroj: mtcnBroj
+      slectedStudentMaticniBroj: maticniBroj
     })
   }
 
