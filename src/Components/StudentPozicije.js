@@ -105,6 +105,23 @@ class StudentPozicije extends Component {
         })
     }
 
+    calculateStatus = () => {
+        const status = this.props.studentData.status;
+        const pol = this.props.studentData.pol;
+        let output = null;
+        if (pol === "alumnus"){
+            output = status
+        } else {
+            if (status === "Zaposlen"){
+                output = "Zaposlena"
+            } else if (status === "Odustao"){
+                output = "Odustala"
+            } else {
+                output = status
+            }
+        }
+        return <i>{output}</i>;
+    }
 
     mapPozicije = () => {
         if (this.props.studentData.pozicije) {
@@ -115,7 +132,7 @@ class StudentPozicije extends Component {
                             {pozicija.firma}
                         </div>
                         <div className="pozicija-status">
-                            <i>{pozicija.status}</i>
+                            <i>{this.calculateStatus()}</i>
                         </div>
                         <div className="d-flex justify-content-between">
                             <span>Start:</span> <span>{pozicija.pocetak}</span>

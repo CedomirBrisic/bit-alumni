@@ -242,7 +242,7 @@ class StudentiByFirm extends Component {
                         <div className="d-flex justify-content-between">
                             <span className="firma-details-attribute">Website:</span>
                             <span>
-                                {this.state.openFirmaDetailsEditMode ? <input data-statename="website" value={this.state.website} onChange={this.depositToState} /> : <span><b><a href={`http://${this.props.selectedFirmaForFilter.website}`} target="_blank">{this.props.selectedFirmaForFilter.website}</a></b></span>}
+                                {this.state.openFirmaDetailsEditMode ? <input data-statename="website" value={this.state.website} onChange={this.depositToState} /> : <span><b><a href={`${this.props.selectedFirmaForFilter.website}`} target="_blank">{this.props.selectedFirmaForFilter.website}</a></b></span>}
                             </span>
                         </div>
                         <div className="d-flex justify-content-between">

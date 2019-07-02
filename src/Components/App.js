@@ -32,6 +32,7 @@ class App extends Component {
       slectedStudentMaticniBroj: "",
       showAddNewFirm: false,
       imeZaPretragu: "",
+      firmaSearchValue: "",
       listStudenti: true,
       listFirme: false,
       firmeAll: [],
@@ -584,20 +585,21 @@ class App extends Component {
 
 
   mapFirmeForSelect = () => {
-    if (!this.state.imeZaPretragu) {
+    if (!this.state.firmaSearchValue) {
       return this.state.firmeAll.map((firma, index) => {
         return <button key={firma.naziv + index} type="button" className={`btn d-flex justify-content-between firma-filter-button ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<div>{firma.brojStudenata}</div></button>
       })
     } else {
-      const imeZaPretragu = this.state.imeZaPretragu.toLowerCase();
-      return this.state.firmeAll.map((firma, index) => {
+      const firmaSearchValue = this.state.firmaSearchValue.toLowerCase();
+      const filteredFirms = []
+      this.state.firmeAll.forEach((firma, index) => {
         const nazivFirme = firma.nazivKompanije.toLowerCase();
-        if (nazivFirme.includes(imeZaPretragu)) {
-          return <button key={firma.naziv + index} type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
-        } else {
-          return false
+        if (nazivFirme.includes(firmaSearchValue)) {
+          const output = <button key={firma.naziv + index} type="button" className={`btn d-flex justify-content-between firma-filter-butto ${firma.nazivKompanije === this.state.selectedFirmaForFilter.nazivKompanije ? "btn-outline-dark" : "btn-light"}`} data-firma={`${firma.nazivKompanije}`} onClick={this.selectFirmaForFilter}>{firma.nazivKompanije}<span>{firma.brojStudenata}</span></button>
+          filteredFirms.push(output)
         }
       })
+      return filteredFirms
     }
   }
 
@@ -606,6 +608,13 @@ class App extends Component {
     this.setState({
       imeZaPretragu: event.target.value,
       selectedFirmaForFilter: ""
+    })
+  }
+  setPretragaFirmeValue = (event) => {
+    this.setState({
+      imeZaPretragu: "",
+      selectedFirmaForFilter: "",
+      firmaSearchValue: event.target.value
     })
   }
 
@@ -717,7 +726,7 @@ class App extends Component {
               <div>
                 <IosOptions color="#8D1717" fontSize="2.4vw" onClick={this.toggleFirmeFilter} className="firme-burger-menu" />
                 <div className={`firm-filters-container d-flex flex-column ${this.state.showFirmeFilter ? "enter-filters" : "exit-filters"}`}>
-                  <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.imeZaPretragu} onChange={this.setPretragaValue} />
+                  <input className="search-bar" type="text" placeholder="Pretraga kompanija po imenu" value={this.state.firmaSearchValue} onChange={this.setPretragaFirmeValue} />
                   <div className="d-flex justify-content-around">
                     <button type="button" className="btn btn-light" onClick={this.orderFirmsByAlphabet}>A-Z</button>
                     <button type="button" className="btn btn-light" onClick={this.orderFirmsByNumberOfStudents} ><IosPeopleOutline fontSize="2vw" /></button>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap4-modal';
 import Text from "react-format-text";
+import InputFiles from 'react-input-files';
 import updateStudents from "../webhooks/updateStudents";
 import getAddNewStudentDropdowns from "../webhooks/getAddNewStudentDropdowns";
 import getKlaseiSertifikati from "../webhooks/getKlaseiSerifikati";
@@ -8,6 +9,7 @@ import updatePohadjaniProgramAtStudent from "../webhooks/updateStudentPohadjaniP
 import updateStudentSertifikat from "../webhooks/updateStudentSertifikat";
 import updateStudentStatus from "../webhooks/updateStudentStatus";
 import updateVestineAtStudent from "../webhooks/updateVestineAtStudent";
+import updateCvAtStudent from "../webhooks/updateCvAtStudent";
 import IosConstructOutline from 'react-ionicons/lib/IosConstructOutline';
 import MdAddCircle from 'react-ionicons/lib/MdAddCircle';
 import StudentPlacanje from "../Components/StudentPlacanje";
@@ -37,6 +39,8 @@ class StudentDetailsModal extends Component {
             showAddVestinaToStudent: false,
             selectedVestine: "",
             vestineToSend: [],
+
+            cvFileToSend: null,
         }
     }
 
@@ -421,8 +425,48 @@ class StudentDetailsModal extends Component {
         }
     }
 
+    handleCvFiles = (event) => {
+        this.setState({
+            cvFileToSend: event.target.files[0]
+        })
+    }
+
+    sendCvToStudent = () => {
+        const cvToSend = new FormData();
+        cvToSend.append("pdf", this.state.cvFileToSend, this.state.cvFileToSend.name)
+        const data = {
+            maticniBroj: this.props.data.maticniBroj,
+            cv: cvToSend
+        }
+        updateCvAtStudent(data).then((response) =>{
+            console.log("response", response)
+            this.setState({
+                cvFileToSend: null,
+            })
+            this.props.getStudentsFromStudenti();
+        }).catch((error) => {
+            alert(error)
+        })
+    }
 
 
+    calculateStatus = () => {
+        const status = this.props.data.status;
+        const pol = this.props.data.pol;
+        let output = null;
+        if (pol === "alumnus"){
+            output = status
+        } else {
+            if (status === "Zaposlen"){
+                output = "Zaposlena"
+            } else if (status === "Odustao"){
+                output = "Odustala"
+            } else {
+                output = status
+            }
+        }
+        return output;
+    }
 
 
     componentDidUpdate(prevProps) {
@@ -433,13 +477,12 @@ class StudentDetailsModal extends Component {
     componentDidMount() {
         this.getAndSetNewStudentDropdowns();
         this.getAndSetKlaseiSertifikati();
-    };
-
+    }
 
 
     render() {
-        return ( 
-            
+        // console.log("PROPS", this.props)
+        return (
             <Modal visible={this.props.visible} onClickBackdrop={this.closeStudentDetailsModal} fade={true} className="modal-container">
                 <div className="student-details-container">
                     <div className="modal-header d-flex flex-column align-items-center">
@@ -456,7 +499,7 @@ class StudentDetailsModal extends Component {
                         <div className="d-flex flex-column align-items-center">
                             <div className="d-flex student-status-header justify-content-around">
                                 {this.props.data.status &&
-                                    <div>{this.props.data.status}</div>}
+                                    <div>{this.calculateStatus()}</div>}
                                 {!this.state.showChangeStatus &&
                                     <IosConstructOutline color="#8D1717" fontSize="1.5vw" className="open-edit" onClick={this.toggleChangeStatus} />
                                 }
@@ -588,11 +631,18 @@ class StudentDetailsModal extends Component {
                                         </div>
                                     </div>
                                 </div>
+
+
+
+
+
+                                {/* ----- DODATNI PODACI ----- */}
+
                                 <div className="card podaci-wrapper">
                                     <div className="card-header" id="headingTwo">
                                         <h5 className="mb-0">
                                             <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                <h6 className="details-card-setion-title">{`Sertifikati & veštine`}</h6>
+                                                <h6 className="details-card-setion-title">{`Sertifikati, veštine & CV`}</h6>
                                                 <div className="section-title-horizontal-line"></div>
                                             </button>
                                         </h5>
@@ -604,7 +654,7 @@ class StudentDetailsModal extends Component {
                                                     {this.renderProgramiSertifikati()}
                                                 </span>
                                                 {!this.state.showDropdownPohadjaniProgrami &&
-                                                        <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-program" onClick={this.toggleAddProgramToStudent} />
+                                                    <MdAddCircle color="#8D1717" fontSize="2.4vw" className="add-program" onClick={this.toggleAddProgramToStudent} />
                                                 }
                                                 {this.state.showDropdownPohadjaniProgrami &&
                                                     <div className="add-pohadjani-program">
@@ -643,9 +693,33 @@ class StudentDetailsModal extends Component {
                                                         </div>
                                                     </div>}
                                             </div>
+                                            <div className="d-flex justify-content-center align-items-center cv-container">
+                                                <span className="student-detail-card-attribute">
+                                                    Curriculum Vitae:
+                                                    </span>
+                                                <div className="d-flex flex-column w-100">
+                                                    <div className="cv-tosend-wrapper d-flex justify-content-center align-items-center">
+                                                        {/* <InputFiles onChange={files => this.handleCvFiles(files)}>
+                                                            <button className="btn btn-secondary">Klikni za izbor CV fajla</button>
+                                                        </InputFiles> */}
+                                                        {/* {this.state.cvFileToSend &&
+                                                            <div className="student-detail-card-data cv-send-filename">
+                                                                {this.state.cvFileToSend.name}
+                                                            </div>
+                                                        } */}
+                                                        <input type="file" accept="image/*,.pdf" id="fileInput" onChange={this.handleCvFiles} />
+                                                    </div>
+                                                    {this.state.cvFileToSend &&
+                                                        <button className="btn btn-success cv-send-button enter-firma-edit" onClick={this.sendCvToStudent}>Potvrdi</button>
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
+
+
 
                                 <div className="card podaci-wrapper">
                                     <div className="card-header" id="headingPlacanje">

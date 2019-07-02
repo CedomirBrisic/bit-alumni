@@ -289,6 +289,27 @@ input:checked {
 
 /* ----- STUDENTI DETAILS MODAL ----- */
 
+.cv-container{
+  width:100%;
+  margin-top: 2.4vw;
+
+}
+
+.cv-tosend-wrapper{
+  -webkit-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 0.8vw 2px rgba(0, 0, 0, 0.2);
+  padding: 0.6vw 1.2vw;
+  width: 100%;
+}
+.cv-send-button{
+  margin-top: 1.2vw;
+}
+.cv-send-filename{
+  margin-left: 3.2vw;
+
+}
+
 .student-details-container select,
 .student-details-container input {
   font-size: 1vw;
@@ -561,7 +582,6 @@ textarea:focus {
 .add-new-icon:hover {
   cursor: pointer;
   transform: scale(1.2);
-  filter: drop-shadow(0 0 0.2vw #8D1717);
 }
 
 .add-new-pozicija-container {
@@ -1250,3 +1270,5 @@ textarea:focus {
       opacity: 0;
     }
   }
+
+

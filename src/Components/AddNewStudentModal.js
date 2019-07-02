@@ -112,13 +112,9 @@ class AddNewStudentModal extends Component {
                 prezime: "",
                 maticniBroj: "",
                 emailAdresa: "",
-                pol: "",
                 linkedin: "",
                 facebook: "",
                 instagram: "",
-                mesto: "",
-                obrazovanje: "",
-                datumRodjenja: "",
                 brojTelefona: "",
                 komentar: ""
             })
