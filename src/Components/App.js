@@ -524,7 +524,7 @@ class App extends Component {
           if (debt > 0) {
             studentiForRender.push(student)
           }
-        } else if (parseInt(student.kursPrice.$numberInt, 10) > 0){
+        } else if (!!student.kursPrice && parseInt(student.kursPrice.$numberInt, 10) > 0){
           studentiForRender.push(student)
         }
       })
